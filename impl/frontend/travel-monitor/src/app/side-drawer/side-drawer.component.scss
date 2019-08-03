@@ -1,0 +1,130 @@
+@import '../../assets/styles/variables.scss';
+
+$side-bar-primary-color: #3f51b5;
+$side-bar-backgourd-color: white;
+
+.sider-drawer-header {
+    height: 100px;
+    border-radius: 40px;
+}
+
+.small-label {
+    transition: opacity 0.1s;
+    opacity: 1;
+}
+
+
+.collapsed {
+    width: 72px !important;
+    .side-drawer-elements {
+        li {
+            padding-top: 10px !important;
+            padding-bottom: 45px !important;
+            .small-label {
+                opacity: 1 !important;
+            }
+        }
+    }
+}
+
+.opened {
+    width: 250px !important;
+    .side-drawer-elements {
+        li {
+            margin-top: 0px !important;
+            margin-bottom: 0px !important;
+            .small-label {
+                opacity: 0 !important;
+            }
+        }
+    }
+}
+
+
+.side-drawer-container {
+    transition: width 0.2s;
+    height: 100%;
+    width: $side-bar-width;
+    // background-color: $side-bar-primary-color;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.side-drawer-elements {
+    margin-top: 0 !important;
+    list-style: none;
+}
+
+.side-drawer-inner {
+    width: $side-bar-width;
+}
+
+ul.side-drawer-elements {
+    color: $side-bar-backgourd-color;
+    margin-left: -40px;
+    background-color: $side-bar-backgourd-color;
+
+    li {
+        z-index: 10;
+        cursor: pointer;
+        padding-left: 23px;
+        transition: all 0.2s;
+        position: relative;
+        padding-top: 10px;
+        padding-bottom: 10px;
+
+        .label {
+            position: relative;
+            bottom: 4.5px;
+        }
+
+        .small-label {
+            position: absolute;
+            width: calc(72px - 20px);
+            margin-left: 10px;
+            margin-right: 10px;
+            top: 40px;
+            text-align: center;
+            left: 0;
+            opacity: 0;
+        }
+        .item-icon {
+            position: relative;
+            top: 2px;
+            margin-right: 25px;
+        }
+    }
+}
+
+.curtain {
+    transition: all 0.1s;
+    background-color: $side-bar-primary-color;
+    border-radius: 30px;
+    width: calc(100% + 100px);
+    position: absolute;
+    left: -100px;
+    height: calc(100% + 100px);
+    position: absolute;
+    top: 0;
+}
+
+.curtain-upper {
+    top: -100%;
+}
+
+.curtain-down {
+}
+
+.active {
+    color: $side-bar-primary-color;
+}
+
+.bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    background-color: $side-bar-primary-color;
+    color: $side-bar-backgourd-color;
+}

@@ -1,0 +1,22 @@
+@import "../assets/styles/variables.scss";
+
+.main-container {
+  position: absolute;
+  top: 64px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.example-events {
+  width: 300px;
+  height: 200px;
+  overflow: auto;
+  border: 1px solid #555;
+}
+
+.container {
+  background-image: url("https://i.content4travel.com/cms/img/u/kraj/1/zakynthos_0.jpg?version=190530-04");
+  background-repeat: no-repeat;
+  background-size: cover;
+}

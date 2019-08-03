@@ -1,0 +1,30 @@
+
+$side-bar-width: 250px;
+
+$tablet-width: 768px;
+$desktop-width: 1024px;
+
+$phone-width: 640px;
+$tablet-width: 768px;
+$desktop-width: 1024px;
+
+
+@mixin media-phone {
+  @media (min-width: 0) and (max-width: #{$tablet-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin media-tablet {
+  @media (min-width: #{$tablet-width}) and (max-width: #{$desktop-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin media-desktop {
+  @media (min-width: #{$desktop-width}) {
+    @content;
+  }
+}
+
+$card-backgroud: #ffffffe8;

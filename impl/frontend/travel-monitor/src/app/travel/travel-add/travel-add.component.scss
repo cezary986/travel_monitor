@@ -1,0 +1,24 @@
+@import '../travel.scss';
+
+.add-travel-button {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    top: 0;
+    height: 53px;
+}
+
+.travel-add-element {
+    
+    min-height: 18px;
+}
+
+.travel-name {
+    width: 100%;
+}
+
+.buttons-container {
+    button {
+        margin-left: 10px;
+    }
+}

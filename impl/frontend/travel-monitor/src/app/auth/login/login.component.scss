@@ -1,0 +1,28 @@
+
+.full-width {
+    width: 100%;
+    margin: 10px auto 10px auto;
+}
+
+.login-button {
+    width: 100%;
+    display: block;
+    margin: 20px auto 20px auto;
+}
+
+.login-card {
+    width: 500px;
+    margin: auto;
+    position: relative;
+    top: 50%;
+    transform: translateY(50%);
+}
+
+mat-card-header {
+    text-align: center;
+}
+
+mat-card-title {
+    width: 100%;
+    display: block;
+}

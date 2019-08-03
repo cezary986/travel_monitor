@@ -1,0 +1,33 @@
+@import '../travel.scss';
+@import '../../../assets/styles/variables.scss';
+
+.right-align {
+    margin-left: auto;
+    position: relative;
+    z-index: 10;
+}
+
+.menu-button {
+
+}
+
+.travel-list-element {
+    background-color: $card-backgroud;
+
+    .mat-card-title {
+        position: relative;
+        top: 8px;
+    }
+}
+
+.travel-title-input {
+    font-size: 20px;
+    font-weight: 500;
+    font-family: Roboto,"Helvetica Neue",sans-serif;
+    color: rgba(0,0,0,.87);
+    background-color: transparent;
+    border: none !important;
+    position: absolute;
+    top: 24.4px;
+    left: 32.34px;
+}
