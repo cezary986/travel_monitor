@@ -1,0 +1,6 @@
+@import '../../../assets/styles/variables.scss';
+@import '../variables.scss';
+
+.error-snackbar {
+    background-color: $color-error !important;
+}

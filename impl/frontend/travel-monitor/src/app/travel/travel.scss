@@ -1,7 +1,8 @@
+@import '../../assets/styles/variables.scss';
 
 .travel-list-element {
     margin: 15px auto 15px auto;
-    max-width: 80%;
+    max-width: $list-elements-width;
     cursor: pointer;
     overflow: hidden;
 }

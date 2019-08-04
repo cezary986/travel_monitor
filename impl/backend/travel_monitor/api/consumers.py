@@ -1,5 +1,6 @@
-from channels.generic.websocket import WebsocketConsumer
+from channels.generic.websocket import AsyncWebsocketConsumer
 import json
+from travel_monitor.settings import DEAMON_AUTH_CODE
 from asgiref.sync import async_to_sync
 
 from channels.layers import get_channel_layer
@@ -7,44 +8,43 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
 
-class OffersConsumer(WebsocketConsumer):
+class OffersConsumer(AsyncWebsocketConsumer):
 
-    channel_name = 'offers'
+    channel_name = 'offer'
+    group_name = 'offers'
 
-    def connect(self):
-      self.channel_name = 'offers'
-      self.group_name = 'offers'
-      channel_layer = get_channel_layer()
-      if channel_layer.__dict__['groups'] == {}:
-        async_to_sync(self.channel_layer.group_add)(
-              'offers',
-              'offers'
+    async def connect(self):
+        await self.channel_layer.group_add(
+            self.group_name,
+            self.channel_name
         )
-      self.accept()
+        await self.accept()
 
-    def disconnect(self, close_code):
-      # async_to_sync(self.channel_layer.group_discard)(
-      #   'offers',
-      #   'offers'
-      # )
-      pass
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard(
+            self.group_name,
+            self.channel_name
+        )
 
-    def receive(self, text_data):
-        print(text_data)
+    async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json['message']
+        message = text_data_json.get('message', '')
+        # Send message only from deamon webscraping process
+        auth_code = text_data_json.get('auth', None)
+        if auth_code == DEAMON_AUTH_CODE:
+          await self.channel_layer.group_send(
+              self.group_name,
+              {
+                  'type': 'recieve_group_message',
+                  'message': message
+              }
+          )
 
-        self.send(text_data=json.dumps({
-            'message': 'Server: ' + message
-        }))
-        layer = get_channel_layer()
-        async_to_sync(layer.group_send)('offers', {
-          'type': 'offers.update',
-          'message': message
-        })
+    async def recieve_group_message(self, event):
+        message = event['message']
 
-    def offers_update(self, event):
-        print('\nHey')
-        self.send(text_data=json.dumps({
-            'message': 'Server: ' + event['content']
+        # Send message to WebSocket
+        await self.send(
+             text_data=json.dumps({
+            'message': message
         }))

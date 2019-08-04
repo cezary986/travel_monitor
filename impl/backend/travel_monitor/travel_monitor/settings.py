@@ -140,3 +140,5 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
 }
+
+DEAMON_AUTH_CODE = '[%RuB5#6aZ3V6+KJCzE:YnM~"S#u+KdMY\Sw^r#,3S84rQ7Z9zKg>Z'

@@ -1,0 +1,6 @@
+@import '../../../assets/styles/variables.scss';
+@import '../variables.scss';
+
+.success-snackbar {
+    background-color: $color-info !important;
+}

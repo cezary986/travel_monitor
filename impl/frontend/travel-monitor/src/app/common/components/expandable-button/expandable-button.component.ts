@@ -1,9 +1,17 @@
 import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { AnimationsFactory } from '../../animations';
 
 @Component({
   selector: 'app-expandable-button',
   templateUrl: './expandable-button.component.html',
-  styleUrls: ['./expandable-button.component.scss']
+  styleUrls: ['./expandable-button.component.scss'],
+  animations: [
+    AnimationsFactory.makeEnterLeaveAnimation(
+      'buttonAnimation',
+      AnimationsFactory.animations.enter.fadeIn,
+      AnimationsFactory.animations.leave.fadeOut
+    ),
+  ]
 })
 export class ExpandableButtonComponent implements OnInit {
 

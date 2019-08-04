@@ -1,6 +1,6 @@
 
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
-@import '../node_modules/gridlex/dist/gridlex.min.css';
+@import 'gridlex/dist/gridlex.min.css';
 
 html, body {
     width: 100%;
@@ -11,4 +11,8 @@ html, body {
 
 html {
     overflow: hidden;
+}
+
+.list-loader {
+    margin: 20px auto 20px auto;
 }

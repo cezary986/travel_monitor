@@ -1,16 +1,6 @@
 @import '../travel.scss';
 @import '../../../assets/styles/variables.scss';
 
-.add-travel-button {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    top: 0;
-    height: 53px;
-}
-
-.travel-add-element {
-}
 
 .travel-name {
     width: 100%;
@@ -22,26 +12,7 @@
     }
 }
 
-.expandable {
-    padding: 0 30px;
-    transition: all 0.2s ease-out;
-    overflow: hidden;
-}
-
-.travel-card {
-    padding-left: 16px;
-    padding-right: 16px;
-    min-height: 0;
-    max-height: 0;
-    background-color: $card-backgroud;
-    position: relative;
-    box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
-    border-radius: 4px;
-    padding-top: 53px !important;
-}
-
-mat-card-content {
-    position: relative;
-    top: -53px;
-    margin: 16px;
+.travel-add {
+    overflow: visible;
+    max-width: calc(#{$list-elements-width} + (2 * #{$card-padding})) !important;
 }

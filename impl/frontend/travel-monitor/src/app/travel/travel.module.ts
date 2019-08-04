@@ -13,7 +13,9 @@ import {MatMenuModule} from '@angular/material/menu';
 import { TravelListElementComponent } from './travel-list-element/travel-list-element.component';
 import { TravelRoutingModule } from './travel-routing.module';
 import { MatIconModule } from '@angular/material/icon';
-import { ExpandableButtonModule } from '../common/expandable-button/expandable-button.module';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { ExpandableButtonModule } from '../common/components/expandable-button/expandable-button.module';
+import { SnackbarModule } from '../snackbar/snackbar.module';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,9 @@ import { ExpandableButtonModule } from '../common/expandable-button/expandable-b
     MatSnackBarModule,
     MatMenuModule,
     MatIconModule,
-    FormsModule
+    MatProgressSpinnerModule,
+    FormsModule,
+    SnackbarModule
   ],
   exports: [
     TravelListComponent

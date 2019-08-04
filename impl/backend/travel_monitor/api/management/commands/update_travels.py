@@ -5,20 +5,36 @@ from api.models import Travel, Offer, Price
 from travel_monitor.data_providers import DATA_PROVIDERS
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from travel_monitor.settings import DEAMON_AUTH_CODE
+import asyncio
+import websockets
 
-from ws4py.client.geventclient import WebSocketClient
+"""
+Send message to API socket which propagates it to users
+"""
+async def send_notification_to_socker(message):
+    async with websockets.connect('ws://localhost:8080/ws/offer/') as websocket:
+        message = json.dumps({
+            'message': message,
+            'auth': DEAMON_AUTH_CODE # special code to identify deamon process
+        })
+        await websocket.send(message)
+
 
 class Command(BaseCommand):
-    help = 'Webscrap all travel offers, daves data to db and send them via sockets'
+    help = 'Webscrap all travel offers, saves data to db and send notification via sockets'
 
     def handle(self, *args, **kwargs):
         travels = Travel.objects.all()
-        if len(travels) > 0:
-            for travel in travels:
-                for offer in travel.offer_set.all():
-                    scrapOffer(offer)
-            self.stdout.write(datetime.datetime.now().isoformat() + ' Travels data scapper and updated!') 
-            
+        for travel in travels:
+            for offer in travel.offer_set.all():
+                scrapOffer(offer)
+        self.stdout.write(datetime.datetime.now().isoformat() + ' Travels data scapper and updated!') 
+        # TODO some more complex comminication 
+        asyncio.get_event_loop().run_until_complete(
+            send_notification_to_socker('Hello word from command!')
+        )
+        
 def scrapOffer(offer): 
     for data_provider_name in DATA_PROVIDERS:
         if (data_provider_name == offer.data_provider):

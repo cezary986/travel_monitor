@@ -4,15 +4,17 @@ import { Travel } from '../../common/models/travel';
 import { DataStoreService } from '../data-store.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ROUTES } from '../../app-routing.module';
+import { AnimationsFactory } from 'src/app/common/animations';
  
 @Component({
   selector: 'app-travel-list',
   templateUrl: './travel-list.component.html',
-  styleUrls: ['./travel-list.component.scss']
+  styleUrls: ['./travel-list.component.scss'],
 })
 export class TravelListComponent implements OnInit {
 
   public travels: Travel[] = [];
+  public loading: boolean = true;
 
   constructor(
     private travelService: TravelService,
@@ -26,6 +28,7 @@ export class TravelListComponent implements OnInit {
       this.dataStore.setTravels(travels);
       this.dataStore.getTravels().subscribe((travels: Travel[]) => {
         this.travels = travels;
+        this.loading = false;
       });
     })
   }

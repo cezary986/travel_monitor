@@ -14,7 +14,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import { TravelModule } from './travel/travel.module';
 import { SideDrawerModule } from './side-drawer/side-drawer.module';
 import { HeadersInterceptor } from './interceptors/headers-interceptor';
-import { ExpandableButtonComponent } from './common/expandable-button/expandable-button.component';
+import { ExpandableButtonComponent } from './common/components/expandable-button/expandable-button.component';
 
 @NgModule({
   declarations: [

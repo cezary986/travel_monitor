@@ -40,7 +40,9 @@ export class TravelAddComponent implements OnInit {
     this.travelService.createTravel(this.travelName).subscribe((travel) => {
       this.dataStore.addTravel(travel);
       this.clearForm();
-      this._snackBar.open("Dodano nową podróż!", null, { duration: environment.snackBarDuration })
+      this._snackBar.open("Dodano nową podróż!", null, 
+      // { duration: environment.snackBarDuration }
+      )
     }, (error) => {
       this.clearForm();
     })

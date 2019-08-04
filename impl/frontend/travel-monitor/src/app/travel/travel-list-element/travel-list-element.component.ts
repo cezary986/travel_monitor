@@ -3,11 +3,20 @@ import { Travel } from 'src/app/common/models/travel';
 import { DataStoreService } from '../data-store.service';
 import { TravelService } from 'src/app/common/services/travel.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AnimationsFactory } from 'src/app/common/animations';
+import { SnackbarService } from 'src/app/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-travel-list-element',
   templateUrl: './travel-list-element.component.html',
-  styleUrls: ['./travel-list-element.component.scss']
+  styleUrls: ['./travel-list-element.component.scss'],
+  animations: [
+    AnimationsFactory.makeEnterLeaveAnimation(
+      'listElement',
+      AnimationsFactory.animations.enter.fadeIn,
+      AnimationsFactory.animations.leave.fadeOut
+    )
+  ]
 })
 export class TravelListElementComponent implements OnInit {
 
@@ -21,7 +30,8 @@ export class TravelListElementComponent implements OnInit {
   constructor(
     private dataStore: DataStoreService,
     private travelService: TravelService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private snackbarService: SnackbarService
   ) { }
 
   ngOnInit() {
@@ -30,7 +40,8 @@ export class TravelListElementComponent implements OnInit {
   public onTravelDeleteClick() {
     this.travelService.deteleTravel(this.travel.id).subscribe((res) => {
       this.dataStore.removeTravel(this.travel);
-      this._snackBar.open('Podróż zostałą usunięta');
+      //this._snackBar.open('Podróż zostałą usunięta');
+      this.snackbarService.info('Podróż zostałą usunięta');
     })
   }
 

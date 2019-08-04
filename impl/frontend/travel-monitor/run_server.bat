@@ -1,1 +1,1 @@
-C:\Users\Cezary\Documents\Rasberry\Projects\Travello\impl\env\Scripts\python.exe C:\Users\Cezary\Documents\Rasberry\Projects\Travello\impl\backend\travello\manage.py runserver 8080
+C:\Users\Cezary\Documents\Rasberry\Projects\Travello\impl\env\Scripts\python.exe C:\Users\Cezary\Documents\Rasberry\Projects\Travello\impl\backend\travel_monitor\manage.py runserver 8080

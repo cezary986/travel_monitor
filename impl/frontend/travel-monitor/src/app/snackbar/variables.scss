@@ -1,0 +1,15 @@
+
+.snackbar-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-width: calc(100% - 32px);
+    border-radius: 4px;
+    max-height: calc(100% - 32px);
+    padding: 16px;
+}
+
+.snackbar-message {
+    position: relative;
+    top: -10px;
+}
