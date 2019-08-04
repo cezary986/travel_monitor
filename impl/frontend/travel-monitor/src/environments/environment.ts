@@ -7,7 +7,8 @@ export const environment = {
     logout: () => { return environment.serverAddress + 'auth/logout';},
     checkLogin: () => { return environment.serverAddress + 'auth/check_login';},
     travels: () => { return environment.serverAddress + 'travels';},
-    offers: () => { return environment.serverAddress + 'offers';},
+    travel: (travelId: number) => { return environment.serverAddress + 'travel/' + travelId;},
+    offers: (travelId: number) => { return environment.serverAddress + 'travels/' + travelId + '/offers';},
   },
   snackBarDuration: 3000
 };

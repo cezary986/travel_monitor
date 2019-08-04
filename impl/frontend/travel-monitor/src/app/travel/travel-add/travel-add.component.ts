@@ -12,6 +12,7 @@ import { environment } from 'src/environments/environment';
 export class TravelAddComponent implements OnInit {
 
   public collapsed: boolean = true;
+  @ViewChild('container', null) containerElement;
 
   public travelName: string = '';
 
@@ -27,13 +28,13 @@ export class TravelAddComponent implements OnInit {
   }
 
   public onAddButtonClick() {
-    this.collapsed = !this.collapsed;
-    if (!this.collapsed) {
-      setTimeout(function() {
-        this.titleInput.nativeElement.focus();
-      }.bind(this), 200)
-    }
+    this.collapsed =false;
+    setTimeout(function () {
+      this.titleInput.nativeElement.focus();
+    }.bind(this), 200)
   }
+
+
 
   public onSaveButtonClick() {
     this.travelService.createTravel(this.travelName).subscribe((travel) => {

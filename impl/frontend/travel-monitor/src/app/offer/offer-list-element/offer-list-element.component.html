@@ -1,0 +1,16 @@
+<mat-card class="offer-list-element">
+    <mat-card-header>
+        <div mat-card-avatar class="offer-eader-image"></div>
+        <mat-card-title>{{ offer.title }}</mat-card-title>
+    </mat-card-header>
+    <img mat-card-image [src]="offer.photo_url">
+    <mat-card-content>
+        <p>
+            {{ offer.current_price.value }}
+        </p>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-button>LIKE</button>
+        <button mat-button>SHARE</button>
+    </mat-card-actions>
+</mat-card>

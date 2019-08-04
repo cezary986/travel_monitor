@@ -13,6 +13,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import { TravelListElementComponent } from './travel-list-element/travel-list-element.component';
 import { TravelRoutingModule } from './travel-routing.module';
 import { MatIconModule } from '@angular/material/icon';
+import { ExpandableButtonModule } from '../common/expandable-button/expandable-button.module';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [
     CommonModule,
     TravelRoutingModule,
+    ExpandableButtonModule,
     MatCardModule,
     MatRippleModule,
     MatButtonModule,

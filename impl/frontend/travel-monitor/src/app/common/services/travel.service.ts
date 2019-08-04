@@ -29,19 +29,11 @@ export class TravelService {
     );
   }
 
-  public addOfferToTravel(
-    url: string,
-    travelId: string,
-    dataProvider: string): Observable<Offer> {
-    const body = {
-      url: url,
-      data_provider: dataProvider,
-      travel_id: travelId
-    }
-    return this.http.post<Offer>(
-      environment.endpoints.offers(),
-      JSON.stringify(body),
-      { withCredentials: true }
-    );
+  public update(travel: Travel): Observable<any> {
+    return this.http.patch<any>(environment.endpoints.travel(travel.id), JSON.stringify(travel));
+  }
+
+  public deteleTravel(travelId: number): Observable<any> {
+    return this.http.delete<any>(environment.endpoints.travel(travelId));
   }
 }

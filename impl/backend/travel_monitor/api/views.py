@@ -121,6 +121,43 @@ class TravelsListView(APIView):
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, safe=False, status=400)
 
+class TravelDetailView(APIView):
+  
+    @login_required_view
+    @swagger_auto_schema(
+      operation_id='delete_travel',
+      operation_description='Delete travel',
+      responses={200: ''}
+    )
+    def delete(self, request, travel_id, format=None):
+        travel = None
+        try:
+            travel = Travel.objects.get(pk=travel_id)
+        except ObjectDoesNotExist:
+            return JsonResponse({"message": 'No travel with given id exist'}, status=404)
+        travel.delete()
+        return JsonResponse({'message': 'Travel deleted'}, safe=False, status=200)
+      
+    @login_required_view
+    @swagger_auto_schema(
+      operation_id='update_travel',
+      operation_description='Update travel',
+      responses={200: ''}
+    )
+    def patch(self, request, travel_id, format=None):
+        data = JSONParser().parse(request)
+        serializer = TravelSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        travel = None
+        try:
+            travel = Travel.objects.get(pk=travel_id)
+        except ObjectDoesNotExist:
+            return JsonResponse({"message": 'No travel with given id exist'}, status=404)
+        travel.title = data.title
+        return JsonResponse(data.errors, safe=False, status=400)
+
 class OffersListView(APIView):
   
     @login_required_view

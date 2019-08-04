@@ -1,0 +1,8 @@
+<div #container class="expandable-card expandable">
+    <button (click)="onButtonClick(); onClick.emit($event)" *ngIf="_collapsed" [disabled]="disabled" class="expandable-button" mat-flat-button color="primary">
+        {{ text }}
+    </button>
+    <mat-card-content *ngIf="!_collapsed">
+        <ng-content></ng-content>
+    </mat-card-content>
+</div>

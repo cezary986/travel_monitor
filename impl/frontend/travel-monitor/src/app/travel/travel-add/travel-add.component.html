@@ -1,15 +1,16 @@
-<mat-card class="travel-list-element travel-add-element">
-    <button (click)="onAddButtonClick()" *ngIf="collapsed" class="add-travel-button" mat-flat-button color="primary">Dodaj podróż</button>
-    <mat-card-content *ngIf="!collapsed">
+<div class="travel-list-element">
+    <app-expandable-button class="travel-list-element" [collapsed]="collapsed" [text]="'Dodaj podróż'"
+        (onClick)="onAddButtonClick()">
         <div class="travel-add-form">
             <mat-form-field class="grid travel-name">
-                <input #titleInput [(ngModel)]="travelName" matInput placeholder="Nazwa">
+                <input #titleInput [(ngModel)]="travelName" matInput placeholder="Nazwa"
+                    (keyup.enter)="onSaveButtonClick()">
             </mat-form-field>
             <div class="grid buttons-container">
                 <div class="col"></div>
                 <button (click)="onSaveButtonClick()" mat-flat-button color="primary">Zapisz</button>
-                <button (click)="clearForm()" mat-flat-button >Anuluj</button>
+                <button (click)="clearForm()" mat-flat-button>Anuluj</button>
             </div>
         </div>
-    </mat-card-content>
-</mat-card>
+    </app-expandable-button>
+</div>

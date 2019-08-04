@@ -1,6 +1,8 @@
 import { Component, OnInit, Output, EventEmitter, Input, ViewChild } from '@angular/core';
 import { Travel } from 'src/app/common/models/travel';
 import { DataStoreService } from '../data-store.service';
+import { TravelService } from 'src/app/common/services/travel.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-travel-list-element',
@@ -17,15 +19,19 @@ export class TravelListElementComponent implements OnInit {
   public editiedTitle: string;
 
   constructor(
-    private dataStore: DataStoreService
+    private dataStore: DataStoreService,
+    private travelService: TravelService,
+    private _snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
   }
 
   public onTravelDeleteClick() {
-    this.dataStore.removeTravel(this.travel);
-
+    this.travelService.deteleTravel(this.travel.id).subscribe((res) => {
+      this.dataStore.removeTravel(this.travel);
+      this._snackBar.open('Podróż zostałą usunięta');
+    })
   }
 
   public onTravelEditClick() {
@@ -37,11 +43,11 @@ export class TravelListElementComponent implements OnInit {
   }
 
   public onSaveButtonClick() {
-    console.log('werer');
-    
     this.travel.title = this.editiedTitle;
-    // TODO zapisac w API
     this.editing = false;
+    this.travelService.update(this.travel).subscribe((res) => {
+      this._snackBar.open('Zapisano zmiany');
+    });
   }
 
   public onCancelButtonClick() {

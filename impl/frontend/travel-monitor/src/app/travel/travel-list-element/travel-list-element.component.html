@@ -2,15 +2,15 @@
     <mat-card-header>
         <mat-card-title *ngIf="!editing">{{ travel.title }}</mat-card-title>
         <input #titleInput *ngIf="editing" class="travel-title-input" type="text" [(ngModel)]="editiedTitle" (focusout)="onSaveButtonClick()" (keyup.enter)="onSaveButtonClick()">
-        <button *ngIf="!editing" class="menu-button right-align" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Dodatkowe akcje dla podróży">
+        <button (click)="$event.stopPropagation();" *ngIf="!editing" class="menu-button right-align" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Dodatkowe akcje dla podróży">
             <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="onTravelEditClick()">
+            <button mat-menu-item (click)="onTravelEditClick(); $event.stopPropagation();">
                 <mat-icon>edit</mat-icon>
                 <span>Edytuj</span>
             </button>
-            <button mat-menu-item (click)="onTravelDeleteClick()">
+            <button mat-menu-item (click)="onTravelDeleteClick(); $event.stopPropagation();">
                 <mat-icon>delete</mat-icon>
                 <span>Usuń</span>
             </button>

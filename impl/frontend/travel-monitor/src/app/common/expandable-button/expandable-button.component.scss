@@ -1,7 +1,6 @@
-@import '../travel.scss';
 @import '../../../assets/styles/variables.scss';
 
-.add-travel-button {
+.expandable-button {
     position: absolute;
     left: 0;
     width: 100%;
@@ -9,18 +8,6 @@
     height: 53px;
 }
 
-.travel-add-element {
-}
-
-.travel-name {
-    width: 100%;
-}
-
-.buttons-container {
-    button {
-        margin-left: 10px;
-    }
-}
 
 .expandable {
     padding: 0 30px;
@@ -28,7 +15,7 @@
     overflow: hidden;
 }
 
-.travel-card {
+.expandable-card {
     padding-left: 16px;
     padding-right: 16px;
     min-height: 0;

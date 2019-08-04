@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from . import disable_csrf
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'g&pl*opyg*kxrw+_4)2c2ku#illago-tmgsmj)30o-!f*poez_'
 
-TOKEN_LIFE_TIME  = 2 * 7 * 24 * 60 * 60
+TOKEN_LIFE_TIME = 2 * 7 * 24 * 60 * 60
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'travel_monitor.disable_csrf.DisableCSRF'
 ]
 
 ROOT_URLCONF = 'travel_monitor.urls'

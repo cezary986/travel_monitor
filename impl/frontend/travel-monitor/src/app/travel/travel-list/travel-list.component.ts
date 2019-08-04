@@ -3,7 +3,8 @@ import { TravelService } from '../../common/services/travel.service';
 import { Travel } from '../../common/models/travel';
 import { DataStoreService } from '../data-store.service';
 import { Router, ActivatedRoute } from '@angular/router';
-
+import { ROUTES } from '../../app-routing.module';
+ 
 @Component({
   selector: 'app-travel-list',
   templateUrl: './travel-list.component.html',
@@ -23,11 +24,13 @@ export class TravelListComponent implements OnInit {
   ngOnInit() {
     this.travelService.getTravels().subscribe((travels) => {
       this.dataStore.setTravels(travels);
-      this.travels = this.dataStore.getTravels();
+      this.dataStore.getTravels().subscribe((travels: Travel[]) => {
+        this.travels = travels;
+      });
     })
   }
 
   onTravelClick(travel: Travel) {
-    this.router.navigate(['travel/' + travel.id + '/offers'], { relativeTo: this.activeRoute })
+    this.router.navigate([ROUTES.travelDetails.url(travel.id)]);
   }
 }
