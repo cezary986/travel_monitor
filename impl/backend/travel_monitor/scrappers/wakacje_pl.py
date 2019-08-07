@@ -12,7 +12,7 @@ from selenium.webdriver.support import expected_conditions as ec
 
 from scrappers.common.common import BaseScrapper, Offer
 
-TIMEOUT = 20
+TIMEOUT = 30
 
 """
 Scaper class for page Wakacje.pl
@@ -50,5 +50,5 @@ class WakacjePlScrapper(BaseScrapper):
         return domElement.text
 
     def extract_offer_photo_url(self, driver):
-        domElement = WebDriverWait(driver, TIMEOUT).until(ec.visibility_of_element_located((By.CSS_SELECTOR, '#mainPhotoCont > img.photo')))
+        domElement = WebDriverWait(driver, TIMEOUT).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.offerCont > div.fullContainer > div.photoCont.lightBoxGallery > img')))
         return domElement.get_attribute("src")

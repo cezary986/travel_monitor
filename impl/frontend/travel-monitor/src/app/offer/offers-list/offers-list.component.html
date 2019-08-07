@@ -1,3 +1,7 @@
-
+<!-- loading spinner -->
+<mat-spinner [diameter]="50" class="list-loader" *ngIf="loading"></mat-spinner>
+<!-- list of offers -->
 <app-offer-list-element *ngFor="let offer of offers" [offer]="offer" >
 </app-offer-list-element>
+<!-- add offer component -->
+<app-offer-add [travelId]="travelId"></app-offer-add>

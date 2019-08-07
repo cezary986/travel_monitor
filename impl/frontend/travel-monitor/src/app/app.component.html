@@ -1,10 +1,12 @@
-<app-navbar (onMenuClick)="sidenav.toggle()"></app-navbar>
-<mat-sidenav-container class="main-container">
-    <mat-sidenav #sidenav mode="side" [(opened)]="opened" (opened)="events.push('open!')"
-        (closed)="events.push('close!')">
-        Sidenav content
-    </mat-sidenav>
-    <mat-sidenav-content class="container">
-        <router-outlet></router-outlet>
-    </mat-sidenav-content>
-</mat-sidenav-container>
+<div class="default-theme">
+    <app-navbar (onMenuClick)="sidenav.toggle()"></app-navbar>
+    <mat-sidenav-container class="main-container">
+        <mat-sidenav #sidenav mode="side" [(opened)]="opened" (opened)="events.push('open!')"
+            (closed)="events.push('close!')">
+            Sidenav content
+        </mat-sidenav>
+        <mat-sidenav-content class="container">
+            <router-outlet></router-outlet>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>

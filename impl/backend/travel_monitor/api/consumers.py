@@ -1,6 +1,6 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
-from travel_monitor.settings import DEAMON_AUTH_CODE
+from travel_monitor.settings import DEAMON_LOGIN, DEAMON_PASSWORD
 from asgiref.sync import async_to_sync
 
 from channels.layers import get_channel_layer
@@ -14,11 +14,16 @@ class OffersConsumer(AsyncWebsocketConsumer):
     group_name = 'offers'
 
     async def connect(self):
-        await self.channel_layer.group_add(
-            self.group_name,
-            self.channel_name
-        )
-        await self.accept()
+        self.user = self.scope["user"]
+        print(self.user.username)
+        if self.user.is_authenticated or True:
+            await self.channel_layer.group_add(
+                self.group_name,
+                self.channel_name
+            )
+            await self.accept()
+        else:
+            print('Unathorized socket access')
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
@@ -28,23 +33,16 @@ class OffersConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json.get('message', '')
-        # Send message only from deamon webscraping process
-        auth_code = text_data_json.get('auth', None)
-        if auth_code == DEAMON_AUTH_CODE:
-          await self.channel_layer.group_send(
-              self.group_name,
-              {
-                  'type': 'recieve_group_message',
-                  'message': message
-              }
-          )
+        self.user = self.scope["user"]
+        if self.user.is_authenticated and self.user.username == DEAMON_LOGIN:
+            text_data_json = json.loads(text_data)
+            await self.channel_layer.group_send(self.group_name, {
+                'type': 'receive_offers_update',
+                'message': text_data
+            })
+        
 
-    async def recieve_group_message(self, event):
-        message = event['message']
-
+    async def receive_offers_update(self, event):
         # Send message to WebSocket
         await self.send(
-             text_data=json.dumps({
-            'message': message
-        }))
+             text_data=event['message'])

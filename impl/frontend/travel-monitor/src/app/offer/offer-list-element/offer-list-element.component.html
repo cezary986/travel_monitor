@@ -1,16 +1,21 @@
-<mat-card class="offer-list-element">
-    <mat-card-header>
-        <div mat-card-avatar class="offer-eader-image"></div>
-        <mat-card-title>{{ offer.title }}</mat-card-title>
-    </mat-card-header>
-    <img mat-card-image [src]="offer.photo_url">
-    <mat-card-content>
-        <p>
-            {{ offer.current_price.value }}
-        </p>
-    </mat-card-content>
-    <mat-card-actions>
-        <button mat-button>LIKE</button>
-        <button mat-button>SHARE</button>
-    </mat-card-actions>
+<mat-card *ngIf="offer.title !== null" [@listElement] class="grid offer-list-element">
+    <div class="grid">
+        <div class="col-4 offer-photo-wrapper">
+            <img mat-card-image class="offer-photo" [src]="offer.photo_url">
+        </div>
+        <div class="col-8 content-wrapper">
+            <div class="content">
+                <div class="col-12">
+                    <mat-card-title class="offer-title">{{ offer.title }}</mat-card-title>
+                </div>
+                <div class="col-12 price-row">
+                    <span *ngIf="offer.current_price != null" class="price mat-h1">{{ offer.current_price.value }} zł</span>
+                </div>
+                <div class="col-12 action-container">
+                    <a [href]="offer.url" target="blank" mat-stroked-button color="primary" class="see-offer-button">Przejdź na strone oferty</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </mat-card>

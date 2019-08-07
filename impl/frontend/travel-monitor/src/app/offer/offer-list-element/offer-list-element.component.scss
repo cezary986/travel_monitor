@@ -1,0 +1,60 @@
+@import "../offer.scss";
+@import "../../../assets/styles/variables.scss";
+
+
+.offer-list-element {
+  background-color: $card-backgroud;
+}
+
+.offer-title {
+  margin-left: $card-padding;
+}
+
+.price {
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  padding: 8px 20px 8px 20px;
+  border-radius: 1000px;
+  color: #ffffff;
+}
+
+.price-row {
+  text-align: right;
+}
+
+.offer-photo-wrapper {
+  overflow: hidden;
+  padding: 0 !important;
+  margin: 0 !important;
+
+  .offer-photo {
+    height: auto;
+    width: 100%;
+    margin: 0;
+  }
+}
+
+.card-row {
+  min-height: 50%;
+}
+
+.content-wrapper {
+  padding: 0 !important;
+
+  .content {
+    min-height: 100%;
+    height: 100%;
+    position: relative;
+  }
+}
+
+.action-container {
+  position: absolute;
+  bottom: 0;
+  right: calc(#{$card-padding} / 2);
+  padding: 0;
+
+  .see-offer-button {
+    display: block;
+    margin-left: auto;
+  }
+}

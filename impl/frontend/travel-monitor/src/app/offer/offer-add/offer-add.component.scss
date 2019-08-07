@@ -1,0 +1,17 @@
+@import '../offer.scss';
+@import '../../../assets/styles/variables.scss';
+
+.offer-url {
+    width: 100%;
+}
+
+.buttons-container {
+    button {
+        margin-left: 10px;
+    }
+}
+
+.offer-add {
+    overflow: visible;
+    max-width: calc(#{$list-elements-width} + (2 * #{$card-padding})) !important;
+}

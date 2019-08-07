@@ -18,15 +18,9 @@ export class HeadersInterceptor implements HttpInterceptor {
         next: HttpHandler
     ): Observable<HttpEvent<any>> {
         let updatedRequest;
-        if (request.method === 'POST' || request.method === 'PATCH') {
-            updatedRequest = request.clone({
-                headers: request.headers.set("Content-Type", "application/json")
-            });
-        } else {
-            updatedRequest = request.clone({
-                headers: request.headers.set("Content-Type", "application/json")
-            });
-        }
+        updatedRequest = request.clone({
+            headers: request.headers.set("Content-Type", "application/json")
+        });
         return next.handle(updatedRequest);
     }
 }

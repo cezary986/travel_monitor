@@ -2,6 +2,7 @@
 export const environment = {
   production: false,
   serverAddress: 'http://localhost:90/mymysic-server/api/',
+  socketServerAddress: 'ws://localhost:8080/ws/',
   endpoints: {
     login: () => { return environment.serverAddress + 'auth/login';},
     logout: () => { return environment.serverAddress + 'auth/logout';},
@@ -9,6 +10,8 @@ export const environment = {
     travels: () => { return environment.serverAddress + 'travels';},
     travel: (travelId: number) => { return environment.serverAddress + 'travel/' + travelId;},
     offers: (travelId: number) => { return environment.serverAddress + 'travels/' + travelId + '/offers';},
+    supportedDomains: () => { return environment.serverAddress + 'supported_domains';},
+    offersSocket: () => { return environment.socketServerAddress + 'offer/'}
   },
   snackBarDuration: 3000
 };

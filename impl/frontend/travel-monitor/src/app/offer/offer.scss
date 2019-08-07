@@ -1,0 +1,7 @@
+@import '../../assets/styles/variables.scss';
+
+.offer-list-element {
+    margin: 15px auto 15px auto;
+    max-width: $list-elements-width;
+    overflow: hidden;
+}

@@ -28,13 +28,11 @@ export class TravelAddComponent implements OnInit {
   }
 
   public onAddButtonClick() {
-    this.collapsed =false;
+    this.collapsed = false;
     setTimeout(function () {
       this.titleInput.nativeElement.focus();
     }.bind(this), 200)
   }
-
-
 
   public onSaveButtonClick() {
     this.travelService.createTravel(this.travelName).subscribe((travel) => {

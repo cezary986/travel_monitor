@@ -29,90 +29,88 @@ from travel_monitor.settings import TOKEN_LIFE_TIME
 from drf_yasg import openapi
 from drf_yasg.inspectors import SwaggerAutoSchema
 from drf_yasg.utils import swagger_auto_schema
-
+from threading import Thread
 from api.serializers import TravelSerializer, OfferSerializer, PriceSerializer
+from travel_monitor.data_providers import DATA_PROVIDERS
 
-@swagger_auto_schema(
-    operation_id='version',
-    operation_description='Return current API version',
-    responses={200: ''}
-)
-def version(request):
-    return JsonResponse({'version': VERSION })
+class VersionView(APIView):
+  
+    @swagger_auto_schema(
+        operation_id='version',
+        operation_description='Return current API version',
+        responses={200: ''}
+    )
+    def get(self, request):
+        return JsonResponse({'version': VERSION })
 
-"""
-Login view taking two params: username and password
-"""
-@require_http_methods(["POST"])
-@swagger_auto_schema(
-    operation_id='login',
-    operation_description='Login to system with given username and password passed in json body',
-    responses={200: 'When credentials were correct'}
-)
-def login(request):
-    try:
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-        username = body['username']
-        password = body['password']
-    except KeyError:
-        return HttpResponseBadRequest('No username or password field')
+class LoginView(APIView): 
 
-    user = auth.authenticate(request, username=username, password=password)
-    if user is not None:
-        request.session.set_expiry(TOKEN_LIFE_TIME)
-        auth.login(request, user)
-        return JsonResponse({'message': 'Logged in'}, status=200)
-    else:
-        return JsonResponse({"message": 'Invalid login or password'}, status=401)
+    @swagger_auto_schema(
+        operation_id='login',
+        operation_description='Login to system with given username and password passed in json body',
+        responses={200: 'When credentials were correct'}
+    )
+    def post(self, request):
+        try:
+            body_unicode = request.body.decode('utf-8')
+            body = json.loads(body_unicode)
+            username = body['username']
+            password = body['password']
+        except KeyError:
+            return HttpResponseBadRequest('No username or password field')
 
-"""
-View for logging out
-"""
-@require_http_methods(["POST"])
-@swagger_auto_schema(
-    operation_id='logout',
-    operation_description='Logout from the system',
-    responses={200: ''}
-)
-def logout(request):
-    auth.logout(request)
-    return JsonResponse({'message': 'Logged out'}, status=200)
+        user = auth.authenticate(request, username=username, password=password)
+        if user is not None:
+            request.session.set_expiry(TOKEN_LIFE_TIME)
+            auth.login(request, user)
+            return JsonResponse({'message': 'Logged in'}, status=200)
+        else:
+            return JsonResponse({"message": 'Invalid login or password'}, status=401)
 
-"""
-View for checking if user is logged in or not
-"""
-@require_http_methods(["GET"])
-@swagger_auto_schema(
-    operation_id='check_login_status',
-    operation_description='Simple endpoint to check if user is logged in.',
-    responses={200: 'If is logged in', 403: 'If not'}
-)
-def check_login(request):    
-    return JsonResponse({
-        'logged_in': request.user.is_authenticated
-    }, status=200) 
+class LogoutView(APIView):
+
+    @swagger_auto_schema(
+        operation_id='logout',
+        operation_description='Logout from the system',
+        responses={200: ''}
+    )
+    def post(self, request):
+        auth.logout(request)
+        return JsonResponse({'message': 'Logged out'}, status=200)
+
+class LoginCheck(APIView):
+
+    @swagger_auto_schema(
+        operation_id='check_login_status',
+        operation_description='Simple endpoint to check if user is logged in.',
+        responses={200: 'If is logged in', 403: 'If not'}
+    )
+    def get(self, request):    
+        return JsonResponse({
+            'logged_in': request.user.is_authenticated
+        }, status=200) 
 
 
 class TravelsListView(APIView):
   
-    @login_required_view
     @swagger_auto_schema(
       operation_id='list_all_travels',
       operation_description='Return all travels in system',
-      responses={200: ''}
+      responses={200: TravelSerializer(many=True)}
     )
+    @login_required_view
     def get(self, request, format=None):
         travels = Travel.objects.all()
         serializer = TravelSerializer(travels, many=True)
         return JsonResponse(serializer.data, safe=False)
-      
-    @login_required_view
+    
     @swagger_auto_schema(
       operation_id='create_new_travel',
+      request_body=TravelSerializer,
       operation_description='Create new travel',
-      responses={200: ''}
+      responses={200: TravelSerializer}
     )
+    @login_required_view
     def post(self, request, format=None):
         data = JSONParser().parse(request)
         serializer = TravelSerializer(data=data)
@@ -127,7 +125,7 @@ class TravelDetailView(APIView):
     @swagger_auto_schema(
       operation_id='delete_travel',
       operation_description='Delete travel',
-      responses={200: ''}
+      responses={200: '{"message": "Travel deleted"}'}
     )
     def delete(self, request, travel_id, format=None):
         travel = None
@@ -160,12 +158,12 @@ class TravelDetailView(APIView):
 
 class OffersListView(APIView):
   
-    @login_required_view
     @swagger_auto_schema(
       operation_id='list_all_offers',
       operation_description='Return all offers connected to travel with given id',
-      responses={200: '', 404: 'If no travel with given id exist or travel has no offers'}
+      responses={200: OfferSerializer, 404: 'If no travel with given id exist or travel has no offers'}
     )
+    @login_required_view
     def get(self, request, travel_id, format=None):
         travel = None
         try:
@@ -179,28 +177,38 @@ class OffersListView(APIView):
         serializer = OfferSerializer(offers, many=True)
         return JsonResponse(serializer.data, safe=False)
     
-    @login_required_view
     @swagger_auto_schema(
       operation_id='add_offer_to_travel',
       operation_description='Create offer and save it to travel',
-      responses={200: '', 400: 'For corrupted body'}
+      responses={200: OfferSerializer, 400: 'For corrupted body'}
     )
-    def post(self, request, format=None):
+    @login_required_view
+    def post(self, request, travel_id, format=None):
+        travel = None
+        try:
+            travel = Travel.objects.get(pk=travel_id)
+        except ObjectDoesNotExist:
+            return JsonResponse({"message": 'No travel with given id exist'}, status=404)    
         data = JSONParser().parse(request)
         serializer = OfferSerializer(data=data)
         if serializer.is_valid():
-            serializer.save()
+            model = serializer.save()
+            model.travel = travel
+            model.save()
+            thread = Thread(target=scrapOffer, args = [model, True])
+            thread.start()
             return JsonResponse(serializer.data, status=201)
+        
         return JsonResponse(serializer.errors, status=400)
 
 class PricesListView(APIView):
   
-    @login_required_view
     @swagger_auto_schema(
       operation_id='list_all_offer_prices',
       operation_description='Return all prices saved for offfer',
-      responses={200: '', 404: 'If offer has no prices saved'}
+      responses={200: PriceSerializer, 404: 'If offer has no prices saved'}
     )
+    @login_required_view 
     def get(self, request, offer_id, format=None):
         offer = None
         try:
@@ -213,3 +221,17 @@ class PricesListView(APIView):
             return JsonResponse({"message": 'No prices for this offer'}, status=404)
         serializer = PriceSerializer(prices, many=True)
         return JsonResponse(serializer.data, safe=False)
+
+class SupportedDomainsView(APIView):
+  
+    @swagger_auto_schema(
+      operation_id='list_all_supported_websites_domains',
+      operation_description='Return all websites domains which could be scrapped by the system',
+      responses={200: '',}
+    )
+    @login_required_view 
+    def get(self, request, format=None):
+        supported_domains = []
+        for data_provider in DATA_PROVIDERS:
+            supported_domains.append(DATA_PROVIDERS[data_provider]['domain'])
+        return JsonResponse(supported_domains, safe=False, status=200)

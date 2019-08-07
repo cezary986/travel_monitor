@@ -141,4 +141,19 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20,
 }
 
-DEAMON_AUTH_CODE = '[%RuB5#6aZ3V6+KJCzE:YnM~"S#u+KdMY\Sw^r#,3S84rQ7Z9zKg>Z'
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'basic': {
+            'type': 'basic'
+        }
+    },
+}
+
+REDOC_SETTINGS = {
+   'LAZY_RENDERING': False,
+}
+
+PORT = 8080
+
+DEAMON_LOGIN = '2qDS2pcka9Fu5V4o'
+DEAMON_PASSWORD = "1117b2d3ae63ace3a7133a3730ab4795"

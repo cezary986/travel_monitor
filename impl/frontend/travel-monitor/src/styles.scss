@@ -1,6 +1,21 @@
 
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import 'gridlex/dist/gridlex.min.css';
+@import '~@angular/material/theming';
+
+@import './app/offer/offer-list-element/offer-list-element-mixin.scss';
+
+@include mat-core();
+
+// import our custom theme
+@import './assets/styles/themes/default-theme.scss';
+
+// specify theme class eg: <body class="my-theme"> ... </body>
+.default-theme {
+  @include angular-material-theme($default-theme);
+
+  // components mixin's
+  @include offer-list-element($default-theme);
+}
 
 html, body {
     width: 100%;
@@ -16,3 +31,4 @@ html {
 .list-loader {
     margin: 20px auto 20px auto;
 }
+
