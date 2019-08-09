@@ -22,6 +22,7 @@ export class TravelListElementComponent implements OnInit {
 
   @Output() onClick = new EventEmitter<Travel>();
   @Input() travel: Travel;
+  @Input() embeded?: boolean = false;
   @ViewChild('titleInput', null) titleInput; 
 
   private editing: boolean = false;

@@ -32,13 +32,13 @@ export class OfferService {
     );
   }
 
-  public deleteOffer(travelId: number, offerId: number): Observable<any> {
-    return this.http.delete<Offer>(environment.endpoints.offers(travelId));
+  public deleteOffer(offerId: number): Observable<any> {
+    return this.http.delete<Offer>(environment.endpoints.offer(offerId));
   }
 
-  public updateOffer(travelId: number, offer: Offer): Observable<any> {
+  public updateOffer(offer: Offer): Observable<any> {
     return this.http.patch<Offer>(
-      environment.endpoints.offers(travelId),
+      environment.endpoints.offer(offer.id),
       JSON.stringify(offer)
     );
   }
@@ -49,6 +49,8 @@ export class OfferService {
     offersSocket.onmessage = function (e) {
       const notification = <OfferNotification> JSON.parse(e.data);
       this.offersNotifications.next(notification);
+      console.log('New socket message');
+      console.log(notification);
     }.bind(this);
 
     offersSocket.onclose = function (e) {

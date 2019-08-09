@@ -1,21 +1,54 @@
-<mat-card *ngIf="offer.title !== null" [@listElement] class="grid offer-list-element">
-    <div class="grid">
+<mat-card [@listElement] class="grid offer-list-element">
+    <div *ngIf="offer.title !== null" class="grid">
         <div class="col-4 offer-photo-wrapper">
             <img mat-card-image class="offer-photo" [src]="offer.photo_url">
         </div>
         <div class="col-8 content-wrapper">
             <div class="content">
+                <div class="offer-created">
+                    dodano: {{ offer.created | date:'yyyy.MM.dd HH:MM'}}
+                    <button (click)="$event.stopPropagation();" class="menu-button right-align" mat-icon-button
+                        [matMenuTriggerFor]="menu" aria-label="Dodatkowe akcje dla oferty">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="onOfferEditClick(); $event.stopPropagation();">
+                            <mat-icon>edit</mat-icon>
+                            <span>Edytuj</span>
+                        </button>
+                        <button mat-menu-item (click)="onOfferDeleteClick(); $event.stopPropagation();">
+                            <mat-icon>delete</mat-icon>
+                            <span>Usuń</span>
+                        </button>
+                    </mat-menu>
+                </div>
                 <div class="col-12">
                     <mat-card-title class="offer-title">{{ offer.title }}</mat-card-title>
                 </div>
                 <div class="col-12 price-row">
-                    <span *ngIf="offer.current_price != null" class="price mat-h1">{{ offer.current_price.value }} zł</span>
+                    <span *ngIf="offer.current_price != null"
+                        matTooltip="{{ 'sprawdzona: ' + (offer.current_price.timestamp | date:'yyyy.MM.dd HH:MM:SS')}}"
+                        class="price mat-h1">
+                        {{ offer.current_price.value }} zł
+                    </span>
                 </div>
                 <div class="col-12 action-container">
-                    <a [href]="offer.url" target="blank" mat-stroked-button color="primary" class="see-offer-button">Przejdź na strone oferty</a>
+                    <button (click)="openPricesChartDialog()" mat-stroked-button color="primary"
+                        class="see-prices-history-button">Historia cen</button>
+                    <a [href]="offer.url" target="blank" mat-stroked-button color="primary"
+                        class="see-offer-button">Przejdź na strone oferty</a>
                 </div>
             </div>
         </div>
     </div>
-
+    <div *ngIf="(offer.title === null && offer.error === null) || retrying" class="content-wrapper loading-placeholder">
+        <!-- loading spinner -->
+        <span class="mat-title text">Trwa pobieranie danych ofery, to może chwile potrwać</span>
+        <mat-spinner [diameter]="50" class="list-loader"></mat-spinner>
+    </div>
+    <div *ngIf="offer.title === null && offer.error != null" class="content-wrapper loading-placeholder">
+        <span class="mat-title text">Uuups... nie udało się pobrać danych oferty</span>
+        <button mat-stroked-button color="primary" class="retry-button" (click)="onRetryButtonClick()">Spróbuj
+            ponownie</button>
+    </div>
 </mat-card>

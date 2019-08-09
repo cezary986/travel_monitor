@@ -18,7 +18,7 @@ import { ExpandableButtonComponent } from './common/components/expandable-button
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,

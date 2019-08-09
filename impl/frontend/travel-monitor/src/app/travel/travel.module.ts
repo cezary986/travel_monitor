@@ -40,7 +40,8 @@ import { SnackbarModule } from '../snackbar/snackbar.module';
     SnackbarModule
   ],
   exports: [
-    TravelListComponent
+    TravelListComponent,
+    TravelListElementComponent
   ]
 })
 export class TravelModule { }

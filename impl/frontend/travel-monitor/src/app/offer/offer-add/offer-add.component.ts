@@ -53,6 +53,7 @@ export class OfferAddComponent implements OnInit {
     )
       .subscribe((offer: Offer) => {
         this.dataStore.addNewOffer(offer);
+        this.clearForm();
         this.snackBarService.info('Zapisano nową oferte. Jej dane mogą być widoczne dopier po chwili');
       })
   }

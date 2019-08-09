@@ -15,16 +15,20 @@ export class TravelService {
 
   public getTravels(): Observable<Travel[]> {
     return this.http.get<Travel[]>(
-      environment.endpoints.travels(),
-      { withCredentials: true }
+      environment.endpoints.travels()
+    );
+  }
+
+  public getTravel(id: number): Observable<Travel> {
+    return this.http.get<Travel>(
+      environment.endpoints.travel(id)
     );
   }
 
   public createTravel(title: string): Observable<Travel> {
     return this.http.post<Travel>(
       environment.endpoints.travels(),
-      JSON.stringify({ title: title }),
-      { withCredentials: true }
+      JSON.stringify({ title: title })
     );
   }
 

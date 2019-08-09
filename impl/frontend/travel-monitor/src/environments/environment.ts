@@ -8,8 +8,10 @@ export const environment = {
     logout: () => { return environment.serverAddress + 'auth/logout';},
     checkLogin: () => { return environment.serverAddress + 'auth/check_login';},
     travels: () => { return environment.serverAddress + 'travels';},
-    travel: (travelId: number) => { return environment.serverAddress + 'travel/' + travelId;},
+    travel: (travelId: number) => { return environment.serverAddress + 'travels/' + travelId;},
     offers: (travelId: number) => { return environment.serverAddress + 'travels/' + travelId + '/offers';},
+    offer: (offerId: number) => { return environment.serverAddress + 'offers/' + offerId;},
+    prices: (offerId: number) => { return environment.serverAddress + 'offers/' + offerId + '/prices';},
     supportedDomains: () => { return environment.serverAddress + 'supported_domains';},
     offersSocket: () => { return environment.socketServerAddress + 'offer/'}
   },

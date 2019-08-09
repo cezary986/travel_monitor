@@ -1,8 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { OfferService } from 'src/app/common/services/offer.service';
-import {  ActivatedRoute } from '@angular/router';
+import {  ActivatedRoute, Router } from '@angular/router';
 import { Offer } from 'src/app/common/models/offer';
 import { DataStoreService } from '../data-store.service';
+import { SnackbarService } from 'src/app/snackbar/snackbar.service';
+import { Travel } from 'src/app/common/models/travel';
+import { TravelService } from 'src/app/common/services/travel.service';
 
 @Component({
   selector: 'app-offers-list',
@@ -18,13 +21,17 @@ export class OffersListComponent implements OnInit, OnDestroy {
   constructor(
     private dataStore: DataStoreService,
     private offerService: OfferService,
-    private route: ActivatedRoute
+    private travelService: TravelService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private snackBarService: SnackbarService,
   ) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       this.travelId = Number.parseInt(params.get("travelId"));
       this.fetchOffers();
+      this.fetchTravel();
     })
   }
 
@@ -43,4 +50,16 @@ export class OffersListComponent implements OnInit, OnDestroy {
     })
   }
 
+  private fetchTravel() {
+    this.travelService.getTravel(this.travelId).subscribe((travel: Travel) => {
+      this.dataStore.setTravel(travel);
+    })
+  }
+
+  public onOfferDeleteClick(offer: Offer) {
+    this.offerService.deleteOffer(offer.id).subscribe((res) => {
+      this.dataStore.removeOffer(offer);
+      this.snackBarService.info('Offerta została usunięta');
+    });
+  }
 }

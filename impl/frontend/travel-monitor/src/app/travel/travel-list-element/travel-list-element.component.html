@@ -1,4 +1,4 @@
-<mat-card [@listElement] (click)="onClick.emit(travel)" class="travel-list-element">
+<mat-card *ngIf="travel !== undefined" [@listElement] (click)="onClick.emit(travel)" class="{{ 'mat-card travel-list-element ' + (embeded ? 'embeded' : '') }}">
     <mat-card-header>
         <mat-card-title *ngIf="!editing">{{ travel.title }}</mat-card-title>
         <input #titleInput *ngIf="editing" class="travel-title-input" type="text" [(ngModel)]="editiedTitle" (focusout)="onSaveButtonClick()" (keyup.enter)="onSaveButtonClick()">

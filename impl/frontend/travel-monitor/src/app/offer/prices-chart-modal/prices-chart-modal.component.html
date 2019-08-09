@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>Historia zmian ceny oferty</h1>
+<div mat-dialog-content *ngIf="!loading">
+    <h3 class="mat-h2">{{ data.title }}</h3>
+    <div style="display: block;">
+        <canvas baseChart width="400" height="400" [datasets]="lineChartData" [labels]="lineChartLabels"
+            [options]="lineChartOptions" [colors]="lineChartColors"
+            [chartType]="lineChartType" [plugins]="lineChartPlugins">
+        </canvas>
+    </div>
+</div>
+<div mat-dialog-actions>
+    <div style="margin-left: auto"></div>
+    <button (click)="dialogRef.close()" mat-button cdkFocusInitial>OK</button>
+</div>

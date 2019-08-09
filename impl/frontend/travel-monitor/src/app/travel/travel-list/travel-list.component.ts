@@ -19,8 +19,8 @@ export class TravelListComponent implements OnInit {
   constructor(
     private travelService: TravelService,
     private dataStore: DataStoreService,
+    private offersDataStore: DataStoreService,
     private router: Router,
-    private activeRoute: ActivatedRoute
   ) { }
 
   ngOnInit() {
@@ -34,6 +34,6 @@ export class TravelListComponent implements OnInit {
   }
 
   onTravelClick(travel: Travel) {
-    this.router.navigate([ROUTES.travelDetails.url(travel.id)]);
+    this.router.navigate([ROUTES.travelDetails.url(travel.id)], { state: { travel: travel}});
   }
 }

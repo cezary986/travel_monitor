@@ -21,7 +21,7 @@ async def send_notification_to_socker(offers_that_changed, token):
         serializer = OfferSerializer(offers_that_changed, many=True)
         message = json.dumps({
             'timestamp': datetime.datetime.now().isoformat(),
-            'offers_that_changed': serializer.data,
+            'updated': serializer.data,
         })
         await websocket.send(message)
 
@@ -31,17 +31,30 @@ def scrapOffer(offer, notify):
         if (data_provider_name == offer.data_provider):
             # obtain webscrapper instance for data provider website
             scrapper = DATA_PROVIDERS[data_provider_name]['scrapper_instance']
-            new_offer_data = scrapper.scrap([offer.url])[0]
-            if offer.current_price == None or new_offer_data.price != offer.current_price.value:
+            has_changed = False
+            offer.error = None
+            try:
+                new_offer_data = scrapper.scrap([offer.url])[0]
+            except Exception:
+                offer.error = 'Failed to update offer'
                 has_changed = True
-            new_price = Price(value=new_offer_data.price, offer=offer)
-            new_price.save()
-            offer.current_price = new_price
-            offer.title = new_offer_data.title
-            offer.photo_url = new_offer_data.photo_url
+            if offer.error == None:
+                if offer.current_price == None or new_offer_data.price != offer.current_price.value:
+                    has_changed = True
+                new_price = Price(value=new_offer_data.price, offer=offer)
+                new_price.save()
+                last_price = offer.current_price
+                offer.current_price = new_price
+                if last_price != None:
+                    offer.last_price = last_price
+                offer.title = new_offer_data.title
+                offer.photo_url = new_offer_data.photo_url
+                offer.date_from = new_offer_data.date_from.isoformat()
+                offer.date_to = new_offer_data.date_to.isoformat()
+                offer.error = None
             offer.save()
-            if has_changed and notify == True:
-                send_notification([offer])
+            if has_changed and notify:
+                send_notification(offers_changed=[offer])
             return has_changed
 
 """
@@ -77,10 +90,15 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         travels = Travel.objects.all()
         offers_changed = []
+        offers_that_failed = []
         # for travel in travels:
         #     for offer in travel.offer_set.all():
-        #         has_changed = scrapOffer(offer)
+        #         try:
+        #           has_changed = scrapOffer(offer)
+        #         except Exception:
+        #           offers_ids_that_failed.append(offer)
+        #           continue
         #         if (has_changed):
         #             offers_changed.append(offer)
         self.stdout.write(datetime.datetime.now().isoformat() + ' Travels data scapper and updated!') 
-        send_notification(offers_changed)
+        send_notification(offers_changed=offers_changed)

@@ -1,0 +1,16 @@
+<h1 mat-dialog-title>Edycja oferty</h1>
+<div mat-dialog-content>
+    <form [formGroup]="editForm" class="offer-edit-form">
+        <mat-form-field class="input offer-url">
+            <input #urlInput formControlName="url" matInput placeholder="Link do storny z ofertą">
+        </mat-form-field>
+        <mat-form-field class="input offer-url">
+            <input formControlName="title" matInput placeholder="Nazwa oferty">
+        </mat-form-field>
+    </form>
+</div>
+<div mat-dialog-actions>
+    <div style="margin-left: auto"></div>
+    <button mat-button (click)="onCancelClick()">Anuluj</button>
+    <button [disabled]="!editForm.valid" mat-button (click)="onSubmitClick()" cdkFocusInitial>OK</button>
+</div>

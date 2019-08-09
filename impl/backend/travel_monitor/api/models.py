@@ -27,12 +27,17 @@ class Price(models.Model):
 
 class Offer(models.Model):
     title = models.CharField(max_length=200, null=True)
+    created = models.DateTimeField(auto_now_add=True)
     url = models.CharField(max_length=600, null=False)
     photo_url = models.CharField(max_length=600, null=True)
+    last_price = models.ForeignKey('Price', related_name='last_price', null=True, on_delete=models.SET_NULL)
     current_price = models.ForeignKey('Price', related_name='current_price', null=True, on_delete=models.SET_NULL)
     travel = models.ForeignKey('Travel', on_delete=models.CASCADE, null=True)
     data_provider = models.CharField(max_length=30, choices=DATA_PROVIDERS_LABELS)
-
+    date_from = models.DateTimeField(null=True)
+    date_to = models.DateTimeField(null=True)
+    error = models.CharField(max_length=200, null=True)
+    
     class Meta:
         app_label = 'api'
 

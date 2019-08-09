@@ -20,6 +20,8 @@ class Offer:
     title = None
     price = None
     photo_url = None
+    date_from = None
+    date_to = None
 
 """
 Base class for website scrapper

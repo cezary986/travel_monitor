@@ -1,0 +1,9 @@
+<mat-toolbar>
+    <mat-toolbar-row class="travel-row">
+        <app-travel-list-element class="travel-element" [embeded]="true" [travel]="travel | async"></app-travel-list-element>
+    </mat-toolbar-row>
+
+    <mat-toolbar-row>
+        <span>Second Row</span>
+    </mat-toolbar-row>
+</mat-toolbar>

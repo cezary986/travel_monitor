@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable, BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
+import { ROUTES } from '../app-routing.module';
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +13,15 @@ export class AuthService {
   private loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) {
     this.checkLoginStatus();
+    this.loggedIn.subscribe((loggedIn: boolean) => {
+      if (!loggedIn) {
+        this.router.navigate([ROUTES.login.route]);
+      }
+    });
   }
 
   public login(username: string, password: string) {

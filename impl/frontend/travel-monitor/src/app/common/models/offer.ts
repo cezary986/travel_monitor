@@ -6,5 +6,6 @@ export interface Offer {
     url: string,
     photo_url: string,
     data_provider: string,
-    current_price: Price
+    current_price: Price,
+    error: string
 }

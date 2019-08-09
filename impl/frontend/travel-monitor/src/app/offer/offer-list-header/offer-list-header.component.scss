@@ -1,0 +1,11 @@
+
+.travel-row {
+    cursor: unset !important;
+    padding-left: 0;
+    padding-right: 25px;
+    overflow: hidden;
+
+    .travel-element {
+        width: 100%;
+    }
+}
