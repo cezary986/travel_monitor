@@ -3,6 +3,7 @@
 @import '~@angular/material/theming';
 
 @import './app/offer/offer-list-element/offer-list-element-mixin.scss';
+@import './app/navbar/notifications-list/notifications-list-mixin.scss';
 
 @include mat-core();
 
@@ -15,6 +16,7 @@
 
   // components mixin's
   @include offer-list-element($default-theme);
+  @include notifications-list-element($default-theme);
 }
 
 html, body {

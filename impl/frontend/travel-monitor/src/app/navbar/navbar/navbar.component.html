@@ -1,0 +1,21 @@
+<mat-toolbar class="navbar" color="primary">
+  <!-- <button *ngIf="isLoggedIn | async" (click)="onMenuClick.emit()" class="menu-button" mat-icon-button
+    aria-label="Example icon-button with a heart icon">
+    <mat-icon>menu</mat-icon>
+  </button> -->
+  Travello
+  <div class="spacer"></div>
+  <!-- Notifications -->
+  <app-notifications-list *ngIf="isLoggedIn | async" class="navbar-element"></app-notifications-list>
+  <!-- User avatar -->
+  <button *ngIf="isLoggedIn | async" mat-icon-button [matMenuTriggerFor]="appMenu">
+      <app-user-avatar class="avatar" [user]="user"></app-user-avatar>
+  </button>
+  <mat-menu #appMenu="matMenu">
+      <div *ngIf="user !== undefined" class="mat-h2 username-header">{{ user.username }}</div>
+      <button mat-menu-item (click)="onLogoutClick()">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>Wyloguj</span>
+      </button>
+  </mat-menu>
+</mat-toolbar>

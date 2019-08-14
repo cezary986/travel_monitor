@@ -1,0 +1,20 @@
+$avatar-background-color: #ff9900;
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 35px;
+  background-color: $avatar-background-color;
+  transition: 1s all;
+}
+
+.avatar-letter {
+  color: white;
+  text-transform: uppercase;
+  display: block;
+  margin: auto;
+  text-align: center;
+  position: relative;
+  top: -5px;
+  font-size: 20px !important;
+}

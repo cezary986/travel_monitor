@@ -18,6 +18,13 @@ class UserSerializer(serializers.Serializer):
     first_name = serializers.CharField(max_length=200, read_only=True)
     is_superuser = serializers.BooleanField(read_only=True)
 
+class NotificationSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    timestamp = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S", read_only=True)
+    title =  serializers.CharField(max_length=100, read_only=True)
+    message =  serializers.CharField(max_length=300, read_only=True)
+    creator = UserSerializer(many=False, read_only=True)
+
 class PriceSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     value = serializers.IntegerField(read_only=False)
@@ -37,12 +44,12 @@ class OfferSerializer(serializers.Serializer):
     error = serializers.CharField(read_only=True, required=False, allow_blank=False, max_length=300)
 
     def get_domain_from_url(self, url):
-        return url.split('//')[-1].split('/')[0]
+        return (url.split('//')[-1].split('/')[0]).replace('www.', '')
 
     def determine_data_provider(self, domain):
         data_provider = None
         for provider in DATA_PROVIDERS:
-            for domain_name in DATA_PROVIDERS[provider]['domain']:
+            for domain_name in DATA_PROVIDERS[provider]['domains']:
                 if domain_name == domain:
                     data_provider = DATA_PROVIDERS[provider]
                     return data_provider

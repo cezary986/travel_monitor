@@ -2,14 +2,20 @@ from django.db import models
 from django.contrib.auth.models import User
 from travel_monitor.data_providers import DATA_PROVIDERS_LABELS
 
+class Notification(models.Model):
+    timestamp = models.DateTimeField(auto_now_add=False)
+    title = models.CharField(max_length=100, null=False)
+    message = models.CharField(max_length=300, null=True)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    
+    class Meta:
+        app_label = 'api'
+
 class Tag(models.Model):
     text = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         app_label = 'api'
-
-    def to_json(self):
-        return self.text
 
 class Price(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -18,12 +24,6 @@ class Price(models.Model):
 
     class Meta:
         app_label = 'api'
-
-    def to_json(self):
-        return {
-            'value': self.value,
-            'timestamp': self.timestamp,
-        }
 
 class Offer(models.Model):
     title = models.CharField(max_length=200, null=True)
@@ -41,20 +41,6 @@ class Offer(models.Model):
     class Meta:
         app_label = 'api'
 
-    def to_json(self):
-        json = {
-            'id': self.id,
-            'title': self.title,
-            'url': self.url,
-            'photo_url': self.photo_url,
-            'data_provider': self.data_provider
-        }
-        if self.current_price != None:
-            json['current_price'] = self.current_price.to_json()
-        else:
-            json['current_price'] = None
-        return json
-
 class Travel(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -65,20 +51,3 @@ class Travel(models.Model):
 
     class Meta:
         app_label = 'api'
-
-    def to_json(self):
-        json =  {
-            'id': self.id,
-            'title': self.title,
-            'offers': [
-                offer.to_json() for offer in Offer.objects.filter(travel=self)
-            ],
-            'created': self.created,
-            'created_by': self.created,
-            'refreshed': self.refreshed,
-        }
-        if self.best_offer != None:
-            json['best_offer'] = self.best_offer.to_json()
-        else:
-            json['best_offer'] = None
-        return json

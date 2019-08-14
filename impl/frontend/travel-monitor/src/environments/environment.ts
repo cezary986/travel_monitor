@@ -6,6 +6,7 @@ export const environment = {
   endpoints: {
     login: () => { return environment.serverAddress + 'auth/login';},
     logout: () => { return environment.serverAddress + 'auth/logout';},
+    profile: () => { return environment.serverAddress + 'user/profile';},
     checkLogin: () => { return environment.serverAddress + 'auth/check_login';},
     travels: () => { return environment.serverAddress + 'travels';},
     travel: (travelId: number) => { return environment.serverAddress + 'travels/' + travelId;},
@@ -13,7 +14,7 @@ export const environment = {
     offer: (offerId: number) => { return environment.serverAddress + 'offers/' + offerId;},
     prices: (offerId: number) => { return environment.serverAddress + 'offers/' + offerId + '/prices';},
     supportedDomains: () => { return environment.serverAddress + 'supported_domains';},
-    offersSocket: () => { return environment.socketServerAddress + 'offer/'}
+    offersSocket: () => { return environment.socketServerAddress + 'offers'}
   },
   snackBarDuration: 3000
 };

@@ -1,6 +1,6 @@
 from django.urls import path
 
-from api.views.system import VersionView, SupportedDomainsView
+from api.views.system import VersionView, SupportedDomainsView, NotificationsView
 from api.views.auth import LoginView, LogoutView, LoginCheck
 from api.views.travel import TravelsListView, TravelDetailView
 from api.views.offer import OffersListView, OfferDetailView
@@ -28,4 +28,5 @@ urlpatterns = [
     path('offers/<int:offer_id>/prices', PricesListView.as_view(), name='prices'),
     
     path('supported_domains', SupportedDomainsView.as_view(), name='supported_domains'),
+    path('notifications', NotificationsView.as_view(), name='notifications'),
 ]

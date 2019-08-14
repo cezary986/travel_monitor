@@ -5,7 +5,8 @@ import { OfferService } from 'src/app/common/services/offer.service';
 import { Offer } from 'src/app/common/models/offer';
 import { SnackbarService } from 'src/app/snackbar/snackbar.service';
 import { SupportedDomainsService } from 'src/app/common/services/supported-domains.service';
-import { determineUrlDataProvider } from '../utils';
+import { getUrlDomainIfSupported } from '../utils';
+import { supportedDomainValidator } from '../validators/supported-domain-validator';
 
 @Component({
   selector: 'app-offer-add',
@@ -19,6 +20,7 @@ export class OfferAddComponent implements OnInit {
   public offerAddForm: FormGroup;
   private supportedDomains: string[];
   @ViewChild('urlInput', null) urlInput;
+  public initialized: boolean = false;
 
   constructor(
     private dataStore: DataStoreService,
@@ -29,11 +31,13 @@ export class OfferAddComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.offerAddForm = this.formBuilder.group({
-      url: ['', [Validators.required, Validators.maxLength(600)]],
-    });
     this.supportedDomainsService.getSupportedDomains().subscribe((domains: string[]) => {
       this.supportedDomains = domains;
+      this.offerAddForm = this.formBuilder.group({
+        url: ['', [Validators.required, Validators.maxLength(600), supportedDomainValidator(domains)]],
+      });
+
+      this.initialized = true;
     });
   }
 
@@ -46,7 +50,7 @@ export class OfferAddComponent implements OnInit {
 
   public onSaveButtonClick() {
     const url = this.offerAddForm.value.url;
-    const dataProvider = determineUrlDataProvider(this.supportedDomains, url);
+    const dataProvider = getUrlDomainIfSupported(this.supportedDomains, url);
     this.offerService.addOfferToTravel(
       this.travelId,
       url

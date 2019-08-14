@@ -1,11 +1,27 @@
-
 .travel-row {
-    cursor: unset !important;
-    padding-left: 0;
-    padding-right: 25px;
-    overflow: hidden;
+  cursor: unset !important;
+  padding-left: 0;
+  padding-right: 25px;
+  overflow: hidden;
 
-    .travel-element {
+  .travel-element {
+    width: 100%;
+  }
+}
+
+.filters {
+    position: absolute;
+    bottom: 0;
+    transform: translateY(98%);
+    z-index: 100;
+    width: 100%;
+
+    .filter-panel {
         width: 100%;
     }
+}
+
+mat-toolbar {
+    position: relative;
+    margin-bottom: 65px;
 }

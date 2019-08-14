@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
+  public hasError: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -39,9 +40,14 @@ export class LoginComponent implements OnInit {
 
   public onSubmit() {
     if (this.loginForm.valid) {
+      this.hasError = false;
       this.authService.login(
         this.loginForm.value.username,
-        this.loginForm.value.password).subscribe((res) => {});
+        this.loginForm.value.password).subscribe((res) => {
+
+        }, error => {
+          this.hasError = true;
+        });
     }
   }
 

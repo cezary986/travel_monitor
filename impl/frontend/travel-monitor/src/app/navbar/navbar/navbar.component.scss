@@ -1,0 +1,35 @@
+@import '~@angular/material/theming';
+@import '../../../assets/styles/variables.scss';
+
+.navbar {
+    position: relative;
+    z-index: 100;
+    @include mat-elevation(2);
+}
+
+.menu-button {
+  margin-right: 20px;
+}
+
+.spacer {
+  margin-left: auto;
+}
+
+.navbar-element {
+  display: block;
+  margin-right: 10px;
+}
+
+.avatar {
+  position: relative;
+  margin: auto;
+  display: block;
+  left: 5px;
+}
+
+.username-header {
+  border-bottom: 1px solid #8080805c;
+  text-align: center;
+  padding-bottom: 10px;
+  margin-bottom: 0px;
+}

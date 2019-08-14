@@ -1,13 +1,17 @@
 <div class="offer-add offer-list-element">
     <app-expandable-button class="offer-list-element" [collapsed]="collapsed" [text]="'Dodaj oferte'"
         (onClick)="onAddButtonClick()">
-        <form [formGroup]="offerAddForm" class="offer-add-form">
+        <form *ngIf="initialized" [formGroup]="offerAddForm" class="offer-add-form">
             <mat-form-field class="grid offer-url">
                 <input #urlInput formControlName="url" matInput placeholder="Link do storny z ofertą">
+                <mat-error *ngIf="(offerAddForm.touched || offerAddForm.dirty) && offerAddForm.controls.url.errors?.unsupportedDomain">
+                    Ta strona niestety nie jest wspierana
+                </mat-error>
             </mat-form-field>
             <div class="grid buttons-container">
                 <div class="col"></div>
-                <button [disabled]="!offerAddForm.valid" (click)="onSaveButtonClick()" mat-flat-button color="primary">Zapisz</button>
+                <button [disabled]="!offerAddForm.valid" (click)="onSaveButtonClick()" mat-flat-button
+                    color="primary">Zapisz</button>
                 <button (click)="clearForm()" mat-flat-button>Anuluj</button>
             </div>
         </form>

@@ -16,6 +16,7 @@ from . import disable_csrf
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+TIME_ZONE = 'Europe/Warsaw'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'api',
     'rest_framework',
     'drf_yasg',
+    "fcm_django"
 ]
 
 MIDDLEWARE = [
@@ -157,3 +159,17 @@ PORT = 8080
 
 DEAMON_LOGIN = '2qDS2pcka9Fu5V4o'
 DEAMON_PASSWORD = "1117b2d3ae63ace3a7133a3730ab4795"
+
+
+FCM_DJANGO_SETTINGS = {
+        "APP_VERBOSE_NAME": "[string for AppConfig's verbose_name]",
+         # default: _('FCM Django')
+        "FCM_SERVER_KEY": "[your api key]",
+         # true if you want to have only one active device per registered user at a time
+         # default: False
+        "ONE_DEVICE_PER_USER": True,
+         # devices to which notifications cannot be sent,
+         # are deleted upon receiving error response from FCM
+         # default: False
+        "DELETE_INACTIVE_DEVICES": False,
+}

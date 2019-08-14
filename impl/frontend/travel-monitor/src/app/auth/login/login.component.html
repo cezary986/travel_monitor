@@ -12,5 +12,9 @@
             </mat-form-field>
             <button [disabled]="!loginForm.valid" (click)="onSubmit()" class="login-button" mat-raised-button color="primary">Zaloguj się</button>
         </form>
+        <div *ngIf="hasError" class="error">
+            <mat-icon>error</mat-icon>
+            Niepoprawny login lub hasło
+        </div>
     </mat-card-content>
 </mat-card>

@@ -10,13 +10,14 @@ import asyncio
 import websockets
 import requests
 from api.serializers import OfferSerializer
+from django.utils.timezone import make_aware
 
 """
 Send message to API socket which propagates it to users
 """
 async def send_notification_to_socker(offers_that_changed, token):
     async with websockets.connect(
-        'ws://localhost:' + str(PORT) + '/ws/offer/', 
+        'ws://localhost:' + str(PORT) + '/ws/offers', 
         extra_headers = [('Cookie', 'sessionid=' + token)]) as websocket:
         serializer = OfferSerializer(offers_that_changed, many=True)
         message = json.dumps({
@@ -36,24 +37,26 @@ def scrapOffer(offer, notify):
             try:
                 new_offer_data = scrapper.scrap([offer.url])[0]
             except Exception:
+                print('Failed to update offer')
                 offer.error = 'Failed to update offer'
                 has_changed = True
             if offer.error == None:
+                print(new_offer_data.price)
                 if offer.current_price == None or new_offer_data.price != offer.current_price.value:
                     has_changed = True
+                    last_price = offer.current_price
                 new_price = Price(value=new_offer_data.price, offer=offer)
                 new_price.save()
-                last_price = offer.current_price
                 offer.current_price = new_price
                 if last_price != None:
                     offer.last_price = last_price
                 offer.title = new_offer_data.title
                 offer.photo_url = new_offer_data.photo_url
-                offer.date_from = new_offer_data.date_from.isoformat()
-                offer.date_to = new_offer_data.date_to.isoformat()
+                offer.date_from = make_aware(new_offer_data.date_from).isoformat()
+                offer.date_to = make_aware(new_offer_data.date_to).isoformat()
                 offer.error = None
             offer.save()
-            if has_changed and notify:
+            if has_changed or notify:
                 send_notification(offers_changed=[offer])
             return has_changed
 
@@ -90,15 +93,13 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         travels = Travel.objects.all()
         offers_changed = []
-        offers_that_failed = []
-        # for travel in travels:
-        #     for offer in travel.offer_set.all():
-        #         try:
-        #           has_changed = scrapOffer(offer)
-        #         except Exception:
-        #           offers_ids_that_failed.append(offer)
-        #           continue
-        #         if (has_changed):
-        #             offers_changed.append(offer)
+        for travel in travels:
+            for offer in travel.offer_set.all():
+                try:
+                  has_changed = scrapOffer(offer, notify=True)
+                except Exception:
+                  continue
+                if (has_changed):
+                    offers_changed.append(offer)
         self.stdout.write(datetime.datetime.now().isoformat() + ' Travels data scapper and updated!') 
         send_notification(offers_changed=offers_changed)

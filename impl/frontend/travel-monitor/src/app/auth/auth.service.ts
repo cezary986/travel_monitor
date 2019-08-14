@@ -38,18 +38,15 @@ export class AuthService {
 
   public checkLoginStatus() {
     const status = this.http.get<{logged_in: boolean}>(
-      environment.endpoints.checkLogin(),
-      {withCredentials: true}
-    );
+      environment.endpoints.checkLogin());
     status.subscribe((res) => {
       this.loggedIn.next(res.logged_in);
     });
   }
 
   public logout(): Observable<any> {
-    const result =  this.http.get(
-      environment.endpoints.logout(),
-      {withCredentials: true});
+    const result =  this.http.post(
+      environment.endpoints.logout(), {});
     result.subscribe((res) => {
       this.loggedIn.next(false);
     });

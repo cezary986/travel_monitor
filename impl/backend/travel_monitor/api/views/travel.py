@@ -17,6 +17,7 @@ from drf_yasg.inspectors import SwaggerAutoSchema
 from drf_yasg.utils import swagger_auto_schema
 from api.serializers import TravelSerializer, MessageSerializer
 from api.utils import Message
+from api.signals import travel_create, travel_delete
 
 class TravelsListView(APIView):
   
@@ -42,7 +43,9 @@ class TravelsListView(APIView):
         data = JSONParser().parse(request)
         serializer = TravelSerializer(data=data)
         if serializer.is_valid():
-            serializer.save()
+            travel = serializer.save()
+            # send notification
+            travel_create.send(sender=self.__class__, user=request.user, travel=travel)
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, safe=False, status=400)
 
@@ -77,6 +80,8 @@ class TravelDetailView(APIView):
         except ObjectDoesNotExist:
             return JsonResponse({"message": 'No travel with given id exist'}, status=404)
         travel.delete()
+        # send notification
+        travel_delete.send(sender=self.__class__, user=request.user, travel=travel)
         return JsonResponse({'message': 'Travel deleted'}, safe=False, status=200)
       
     @login_required_view

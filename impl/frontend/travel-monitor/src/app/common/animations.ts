@@ -9,6 +9,12 @@ const AnimationsConfig = {
                 animate(duration, style({opacity: 1}))
             ]);
         },
+        scaleIn: (duration: number = AnimationsConfig.defaultDuration) => {
+            return transition('void => *', [
+                style({ transition: 'scale(0)' }), 
+                animate(duration, style({transition: 'scale(1)'}))
+            ]);
+        },
     },
     leave: {
         fadeOut: (duration: number = AnimationsConfig.defaultDuration) => {
@@ -19,7 +25,7 @@ const AnimationsConfig = {
         }
     },
     always: {
-        // fadeIn: { opacity: 0 },
+        // fadeIn: { opacity: 0 }
     }
 }
 
@@ -29,6 +35,7 @@ export class AnimationsFactory {
     public static animations = {
         enter: {
             fadeIn: 'fadeIn',
+            scaleIn: 'scaleIn',
         },
         leave: {
             fadeOut: 'fadeOut',
@@ -58,6 +65,6 @@ export class AnimationsFactory {
         const a =  trigger(triggerName, animationArray);
         console.log(a);
         return a;
-        
     }
+
 }

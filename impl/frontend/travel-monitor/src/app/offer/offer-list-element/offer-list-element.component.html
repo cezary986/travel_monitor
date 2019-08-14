@@ -1,12 +1,14 @@
 <mat-card [@listElement] class="grid offer-list-element">
     <div *ngIf="offer.title !== null" class="grid">
-        <div class="col-4 offer-photo-wrapper">
+        <div class="col-4_sm-12 offer-photo-wrapper">
             <img mat-card-image class="offer-photo" [src]="offer.photo_url">
         </div>
-        <div class="col-8 content-wrapper">
+        <div class="col-8_sm-12 content-wrapper">
             <div class="content">
+                <!-- Creation date -->
                 <div class="offer-created">
                     dodano: {{ offer.created | date:'yyyy.MM.dd HH:MM'}}
+                    <!-- Menu button -->
                     <button (click)="$event.stopPropagation();" class="menu-button right-align" mat-icon-button
                         [matMenuTriggerFor]="menu" aria-label="Dodatkowe akcje dla oferty">
                         <mat-icon>more_vert</mat-icon>
@@ -23,20 +25,35 @@
                     </mat-menu>
                 </div>
                 <div class="col-12">
+                    <!-- Title of offer -->
                     <mat-card-title class="offer-title">{{ offer.title }}</mat-card-title>
                 </div>
-                <div class="col-12 price-row">
-                    <span *ngIf="offer.current_price != null"
-                        matTooltip="{{ 'sprawdzona: ' + (offer.current_price.timestamp | date:'yyyy.MM.dd HH:MM:SS')}}"
-                        class="price mat-h1">
-                        {{ offer.current_price.value }} zł
-                    </span>
+                <div class="col-12 price-row grid">
+                    <div class="col-4_sm-12">
+                        <span class=" date-range">
+                            {{ offer.date_from | date:'dd.MM'}} -
+                            {{ offer.date_to | date:'dd.MM'}}
+                            <mat-icon class="date-range-icon">date_range</mat-icon>
+                        </span>
+                    </div>
+                    <div class="col-1"></div>
+                    <!-- Prices -->
+                    <div class="col-6_sm-12 grid">
+                        <span class="col-6 last-price" *ngIf="offer.last_price != null"
+                            matTooltip="{{ 'cena z: ' + (offer.last_price.timestamp | date:'dd.MM.yyyy HH:MM:SS')}}">
+                            {{ offer.last_price.value }} zł
+                        </span>
+                        <span class="col-6 price mat-h1" *ngIf="offer.current_price != null"
+                            matTooltip="{{ 'sprawdzona: ' + (offer.current_price.timestamp | date:'dd.MM.yyyy HH:MM:SS')}}">
+                            {{ offer.current_price.value }} zł
+                        </span>
+                    </div>
                 </div>
                 <div class="col-12 action-container">
                     <button (click)="openPricesChartDialog()" mat-stroked-button color="primary"
-                        class="see-prices-history-button">Historia cen</button>
+                        class="col see-prices-history-button">Historia cen</button>
                     <a [href]="offer.url" target="blank" mat-stroked-button color="primary"
-                        class="see-offer-button">Przejdź na strone oferty</a>
+                        class="col see-offer-button">Przejdź na strone oferty</a>
                 </div>
             </div>
         </div>
@@ -45,6 +62,10 @@
         <!-- loading spinner -->
         <span class="mat-title text">Trwa pobieranie danych ofery, to może chwile potrwać</span>
         <mat-spinner [diameter]="50" class="list-loader"></mat-spinner>
+        <button (click)="onOfferDeleteClick()" mat-stroked-button color="primary">
+            Anuluj
+            <mat-icon>delete</mat-icon>
+        </button>
     </div>
     <div *ngIf="offer.title === null && offer.error != null" class="content-wrapper loading-placeholder">
         <span class="mat-title text">Uuups... nie udało się pobrać danych oferty</span>

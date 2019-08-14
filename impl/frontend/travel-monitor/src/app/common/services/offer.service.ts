@@ -4,6 +4,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { Offer } from '../models/offer';
 import { environment } from 'src/environments/environment';
 import { OfferNotification } from '../models/offer-notification';
+import { NotificationService } from './notification.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class OfferService {
 
   constructor(
     private http: HttpClient,
+    private notificationService: NotificationService
   ) {
     this.connectToNotificationSocket();
   }
@@ -49,8 +51,8 @@ export class OfferService {
     offersSocket.onmessage = function (e) {
       const notification = <OfferNotification> JSON.parse(e.data);
       this.offersNotifications.next(notification);
-      console.log('New socket message');
       console.log(notification);
+      this.notificationService.addOffersNotification(notification);
     }.bind(this);
 
     offersSocket.onclose = function (e) {

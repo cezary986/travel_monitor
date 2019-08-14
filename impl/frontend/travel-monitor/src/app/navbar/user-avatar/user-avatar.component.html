@@ -1,0 +1,5 @@
+<div *ngIf="user !== undefined" [@avatar] class="avatar">
+    <span class="avatar-letter" *ngIf="user != undefined">
+        {{ user.username[0] }}
+    </span>
+</div>

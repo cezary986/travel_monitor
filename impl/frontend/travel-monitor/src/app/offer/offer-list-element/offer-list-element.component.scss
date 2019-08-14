@@ -1,7 +1,6 @@
 @import "../offer.scss";
 @import "../../../assets/styles/variables.scss";
 
-
 .offer-list-element {
   background-color: $card-backgroud;
 }
@@ -20,8 +19,17 @@
   border-radius: 1000px;
   color: #ffffff;
   position: relative;
-  top: -5px;
+  top: -8px;
   cursor: pointer;
+}
+
+.last-price {
+  cursor: pointer;
+  text-decoration: line-through;
+  padding: 16px;
+  position: relative;
+  top: -8px;
+  opacity: 0.75;
 }
 
 .price-row {
@@ -32,11 +40,15 @@
   overflow: hidden;
   padding: 0 !important;
   margin: 0 !important;
+  position: relative;
 
   .offer-photo {
-    height: auto;
-    width: 100%;
-    margin: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: auto;
+    margin: 0 !important;
   }
 }
 
@@ -55,10 +67,9 @@
 }
 
 .action-container {
-  position: absolute;
-  bottom: 0;
-  right: calc(#{$card-padding} / 2);
-  padding: 0;
+  text-align: right;
+  padding-right: 16px;
+  padding-bottom: 0 !important;
 
   .see-offer-button {
     margin-left: auto;
@@ -75,16 +86,14 @@
     text-align: center;
     display: block;
   }
-
 }
 
-.offer-price-refresh  {
+.offer-price-refresh {
   margin-right: 10px;
 }
 
 .example-tooltip-red {
   background: #b71c1c !important;
-  
 }
 
 .md-tooltip .md-content {
@@ -96,4 +105,46 @@
 .retry-button {
   display: block;
   margin: auto;
+}
+
+
+.date-range {
+  border: 1px solid grey;
+  border-radius: 5px;
+  padding: 10px;
+  margin-left: 7px;
+  position: relative;
+  top: -2px;
+
+  .date-range-icon {
+    position: relative;
+    top: 5px;
+    margin-left: 1px;
+  }
+}
+
+
+.loading-placeholder {
+  button {
+    display: block;
+    margin: auto;
+  }
+}
+
+
+@include media-phone {
+  .offer-photo-wrapper {
+    height: 150px;
+
+    .offer-photo {
+      width: 100% !important;
+      height: auto !important;
+    }
+  }
+
+  .action-container {
+    .col {
+      margin: 10px !important;
+    }
+  }
 }
