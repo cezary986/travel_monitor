@@ -13,7 +13,7 @@ from drf_yasg import openapi
 from drf_yasg.inspectors import SwaggerAutoSchema
 from drf_yasg.utils import swagger_auto_schema
 from threading import Thread
-from api.serializers import UserSerializer
+from api.serializers import UserSerializer, UserProfileSerializer
 from api.utils import Message
 from django.contrib.auth.models import User
 
@@ -28,7 +28,7 @@ class ProfileView(APIView):
     )
     def get(self, request, format=None):
         user = request.user
-        serializer = UserSerializer(user)
+        serializer = UserProfileSerializer(user)
         return JsonResponse(serializer.data, safe=False, status=200)
         
     @login_required_view
@@ -46,7 +46,7 @@ class ProfileView(APIView):
             user.last_name = data.get('last_name', user.last_name)
             user.email = data.get('email', user.email)
             user.save()
-            serializer = UserSerializer(user)
+            serializer = UserProfileSerializer(user)
             return JsonResponse(serializer.data, status=201)
         else:
             return JsonResponse(serializer.errors, safe=False, status=400)

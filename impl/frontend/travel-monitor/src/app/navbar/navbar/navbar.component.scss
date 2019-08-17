@@ -1,10 +1,10 @@
-@import '~@angular/material/theming';
-@import '../../../assets/styles/variables.scss';
+@import "~@angular/material/theming";
+@import "../../../assets/styles/variables.scss";
 
 .navbar {
-    position: relative;
-    z-index: 100;
-    @include mat-elevation(2);
+  position: relative;
+  z-index: 100;
+  @include mat-elevation(2);
 }
 
 .menu-button {
@@ -24,12 +24,35 @@
   position: relative;
   margin: auto;
   display: block;
-  left: 5px;
 }
 
 .username-header {
+  padding: 16px;
   border-bottom: 1px solid #8080805c;
-  text-align: center;
   padding-bottom: 10px;
   margin-bottom: 0px;
+  min-width: 300px;
+}
+
+.navbar-logo {
+  height: 54px;
+  margin-right: 5px;
+}
+
+.option-text {
+  margin-left: auto;
+}
+
+.avatar-big {
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
+}
+
+.user-popover {
+  padding: 0 !important;
+}
+
+.app-loading-bar {
+  z-index: 10;
 }

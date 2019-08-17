@@ -18,6 +18,7 @@ export class ExpandableButtonComponent implements OnInit {
   @ViewChild('container', null) containerElement;
   @Input() text: string;
   @Input() disabled?: boolean = false;
+  @Input() icon: string = null;
   private _collapsed: boolean = true;
   @Input() set collapsed(value: boolean) {
     this._collapsed = value;

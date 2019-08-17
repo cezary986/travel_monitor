@@ -1,0 +1,2 @@
+
+AVATAR_SIZE = 100

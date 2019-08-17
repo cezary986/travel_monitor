@@ -9,4 +9,17 @@
             <router-outlet></router-outlet>
         </mat-sidenav-content>
     </mat-sidenav-container>
+    <!-- Side Panel -->
+    <ngx-aside #sidePanel
+           [title]="'Title'"
+           [cancelButtonTitle]="'Discard'"
+           [submitButtonTitle]="'Send'"
+
+           [closeOnEscape]="false"
+           [showOverlay]="false"
+
+           [showDefaultFooter]="true"
+           [showDefaultHeader]="true">
+           <div #sidePanelContainer style="width: 100vw"></div>
+    </ngx-aside>
 </div>

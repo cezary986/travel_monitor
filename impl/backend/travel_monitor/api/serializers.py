@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from api.models import Travel, Offer
+from api.models import Travel, Offer, Avatar
 from travel_monitor.data_providers import DATA_PROVIDERS
+from django.core.exceptions import ObjectDoesNotExist
 
 class VersionSerializer(serializers.Serializer):
     version = serializers.CharField(max_length=100)
@@ -11,12 +12,72 @@ class MessageSerializer(serializers.Serializer):
 class LoginCheckSerializer(serializers.Serializer):
     logged_in = serializers.BooleanField(required=True)
 
-class UserSerializer(serializers.Serializer):
+class AvatarSerializer(serializers.Serializer):
+    image = serializers.ImageField(max_length=None, use_url=True, allow_null=True, required=False)
+
+class UserProfileSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     username = serializers.CharField(max_length=200, read_only=True)
     email = serializers.EmailField(max_length=400, read_only=True)
     first_name = serializers.CharField(max_length=200, read_only=True)
     is_superuser = serializers.BooleanField(read_only=True)
+    
+    """
+    Overriding serialization to inject avatar field
+    """
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        avatar = None
+        try:
+            avatar = Avatar.objects.get(user=instance)
+            serializer = AvatarSerializer(avatar)
+            ret['avatar'] = serializer.data
+        except ObjectDoesNotExist:
+            ret['avatar'] = avatar
+        return ret
+
+class UserSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    username = serializers.CharField(max_length=200, read_only=True)
+    email = serializers.EmailField(max_length=400, read_only=True)
+    first_name = serializers.CharField(max_length=200, read_only=True)
+
+    """
+    Overriding serialization to inject avatar field
+    """
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        avatar = None
+        try:
+            avatar = Avatar.objects.get(user=instance)
+            serializer = AvatarSerializer(avatar)
+            ret['avatar'] = serializer.data
+        except ObjectDoesNotExist:
+            ret['avatar'] = avatar
+        return ret
+
+"""
+Serializer for comment that isn't reponse - has no parent comment
+"""
+class OfferCommentSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    timestamp = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S", read_only=True)
+    edited = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S", read_only=False)
+    creator = UserSerializer(many=False, read_only=True)
+    content =  serializers.CharField(max_length=2000, read_only=False)
+    offer = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
+
+"""
+Serializer for comments that have reponses comments - it serializes them
+"""
+class OfferCommentWithResponsesSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    timestamp = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S", read_only=True)
+    edited = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S", read_only=False)
+    creator = UserSerializer(many=False, read_only=True)
+    content =  serializers.CharField(max_length=2000, read_only=False)
+    offer = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
+    responses = OfferCommentSerializer(many=True, read_only=False, source='offercomment_set')
 
 class NotificationSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)

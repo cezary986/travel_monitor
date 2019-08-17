@@ -173,3 +173,13 @@ FCM_DJANGO_SETTINGS = {
          # default: False
         "DELETE_INACTIVE_DEVICES": False,
 }
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'images')
+MEDIA_URL = '/images/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'www', 'static', 'images')
+STATIC_URL = '/static/'
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = [
+  os.path.join(BASE_DIR, 'backend', 'static')
+]

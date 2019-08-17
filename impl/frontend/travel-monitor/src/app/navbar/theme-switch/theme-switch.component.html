@@ -1,0 +1,11 @@
+<button [mdePopoverTriggerFor]="appPopover" mdePopoverTriggerOn="click" #popoverTrigger=""  matTooltip="Ciemny motyw"
+    mat-icon-button aria-label="Wybór motywu">
+    <mat-icon>brightness_3</mat-icon>
+</button>
+<mde-popover #appPopover="mdePopover" [mdePopoverOverlapTrigger]="false">
+    <mat-card style="max-width: 300px">
+        <mat-card-content>
+            <mat-slide-toggle (change)="onThemeToogleChange($event)"></mat-slide-toggle>
+        </mat-card-content>
+    </mat-card>
+</mde-popover>

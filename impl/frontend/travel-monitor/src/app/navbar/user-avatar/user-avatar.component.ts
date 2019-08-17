@@ -21,6 +21,7 @@ import { AnimationsFactory } from 'src/app/common/animations';
 export class UserAvatarComponent implements OnInit {
 
   @Input() user: User;
+  @Input() size: number = null;
 
   constructor() { }
 

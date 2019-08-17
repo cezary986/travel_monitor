@@ -1,14 +1,25 @@
 
 @import 'gridlex/dist/gridlex.min.css';
 @import '~@angular/material/theming';
+@import '~@angular/cdk/overlay-prebuilt.css';
 
 @import './app/offer/offer-list-element/offer-list-element-mixin.scss';
 @import './app/navbar/notifications-list/notifications-list-mixin.scss';
+@import './app/app.component-mixin.scss';
+@import './assets/styles/variables.scss';
 
 @include mat-core();
 
 // import our custom theme
 @import './assets/styles/themes/default-theme.scss';
+@import './assets/styles/themes/dark-theme.scss';
+
+@mixin common-mixin($theme) {
+  
+  .mde-popover-direction-arrow {
+    border-color: transparent transparent mat-color(map-get($theme, background)) !important;
+  }
+}
 
 // specify theme class eg: <body class="my-theme"> ... </body>
 .default-theme {
@@ -17,6 +28,20 @@
   // components mixin's
   @include offer-list-element($default-theme);
   @include notifications-list-element($default-theme);
+  @include variables-mixin($default-theme);
+  @include common-mixin($default-theme);
+  @include app-component-mixin('default');
+}
+
+.dark-theme {
+  @include angular-material-theme($dark-theme);
+
+  // components mixin's
+  @include offer-list-element($dark-theme);
+  @include notifications-list-element($dark-theme);
+  @include variables-mixin($dark-theme);
+  @include common-mixin($dark-theme);
+  @include app-component-mixin('dark');
 }
 
 html, body {
@@ -34,3 +59,10 @@ html {
     margin: 20px auto 20px auto;
 }
 
+.mat-menu-panel {
+  overflow-x: hidden !important;
+}
+
+aside.right {
+  max-width: 100vw !important;
+}

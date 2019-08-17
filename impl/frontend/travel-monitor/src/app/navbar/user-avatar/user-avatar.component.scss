@@ -1,11 +1,20 @@
+
+:host {
+  display: table !important;
+}
+
 $avatar-background-color: #ff9900;
+$avatar-size: 30px;
 
 .avatar {
-  width: 30px;
-  height: 30px;
-  border-radius: 35px;
+  width: $avatar-size;
+  height: 0;
+  padding-bottom: 100%;
+  border-radius: 100%;
   background-color: $avatar-background-color;
   transition: 1s all;
+  overflow: hidden;
+  
 }
 
 .avatar-letter {
@@ -17,4 +26,9 @@ $avatar-background-color: #ff9900;
   position: relative;
   top: -5px;
   font-size: 20px !important;
+}
+
+.avatar-img {
+  height: auto;
+  width: 100%;
 }

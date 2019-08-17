@@ -7,6 +7,7 @@
     top: 0;
     height: 53px;
     opacity: 1;
+    z-index: 2;
 }
 
 
@@ -17,8 +18,8 @@
 }
 
 .expandable-card {
-    padding-left: 16px;
-    padding-right: 16px;
+    // padding-left: 16px;
+    // padding-right: 16px;
     min-height: 0;
     max-height: 0;
     background-color: $card-backgroud;
@@ -30,6 +31,16 @@
 
 mat-card-content {
     position: relative;
+    z-index: 2;
     top: -53px;
     margin: 16px;
+}
+
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: 1;
 }

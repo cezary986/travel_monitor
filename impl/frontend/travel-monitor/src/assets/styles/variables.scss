@@ -28,7 +28,7 @@ $desktop-width: 1024px;
 }
 
 $list-elements-width: 80%;
-$card-backgroud: #ffffffe8;
+//$card-backgroud: #ffffffe8 !default;
 $card-padding: 16px;
 
 $color-error: #b00030;
@@ -38,4 +38,9 @@ $color-success: green;
 
 .more-info-icon {
   cursor: pointer;
+}
+
+
+@mixin variables-mixin($theme) {
+  $card-backgroud:  map-get($theme, background) !global;
 }

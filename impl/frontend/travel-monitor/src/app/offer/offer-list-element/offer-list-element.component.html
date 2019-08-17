@@ -1,7 +1,7 @@
 <mat-card [@listElement] class="grid offer-list-element">
     <div *ngIf="offer.title !== null" class="grid">
         <div class="col-4_sm-12 offer-photo-wrapper">
-            <img mat-card-image class="offer-photo" [src]="offer.photo_url">
+            <img mat-card-image class="offer-photo" [src]="offer.photo_url" [alt]="offer.title">
         </div>
         <div class="col-8_sm-12 content-wrapper">
             <div class="content">

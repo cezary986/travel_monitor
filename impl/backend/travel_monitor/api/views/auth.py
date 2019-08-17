@@ -45,7 +45,7 @@ class LoginView(APIView):
         if user is not None:
             request.session.set_expiry(TOKEN_LIFE_TIME)
             auth.login(request, user)
-            serializer = MessageSerializer(Message('No username or password field'))
+            serializer = MessageSerializer(Message('Logged in'))
             return JsonResponse(serializer.data, status=200)
         else:
             serializer = MessageSerializer(Message('Invalid login or password'))

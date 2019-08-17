@@ -1,20 +1,21 @@
 
 export const environment = {
   production: false,
-  serverAddress: 'http://localhost:90/mymysic-server/api/',
-  socketServerAddress: 'ws://localhost:8080/ws/',
+  apiAddress: 'http://localhost:90/mymysic-server/api/',
+  socketApiAddress: 'ws://localhost:8080/ws/',
+  fileServerAddress: 'http://localhost:90/mymysic-server',
   endpoints: {
-    login: () => { return environment.serverAddress + 'auth/login';},
-    logout: () => { return environment.serverAddress + 'auth/logout';},
-    profile: () => { return environment.serverAddress + 'user/profile';},
-    checkLogin: () => { return environment.serverAddress + 'auth/check_login';},
-    travels: () => { return environment.serverAddress + 'travels';},
-    travel: (travelId: number) => { return environment.serverAddress + 'travels/' + travelId;},
-    offers: (travelId: number) => { return environment.serverAddress + 'travels/' + travelId + '/offers';},
-    offer: (offerId: number) => { return environment.serverAddress + 'offers/' + offerId;},
-    prices: (offerId: number) => { return environment.serverAddress + 'offers/' + offerId + '/prices';},
-    supportedDomains: () => { return environment.serverAddress + 'supported_domains';},
-    offersSocket: () => { return environment.socketServerAddress + 'offers'}
+    login: () => { return environment.apiAddress + 'auth/login';},
+    logout: () => { return environment.apiAddress + 'auth/logout';},
+    profile: () => { return environment.apiAddress + 'user/profile';},
+    checkLogin: () => { return environment.apiAddress + 'auth/check_login';},
+    travels: () => { return environment.apiAddress + 'travels';},
+    travel: (travelId: number) => { return environment.apiAddress + 'travels/' + travelId;},
+    offers: (travelId: number) => { return environment.apiAddress + 'travels/' + travelId + '/offers';},
+    offer: (offerId: number) => { return environment.apiAddress + 'offers/' + offerId;},
+    prices: (offerId: number) => { return environment.apiAddress + 'offers/' + offerId + '/prices';},
+    supportedDomains: () => { return environment.apiAddress + 'supported_domains';},
+    offersSocket: () => { return environment.socketApiAddress + 'offers'}
   },
   snackBarDuration: 3000
 };

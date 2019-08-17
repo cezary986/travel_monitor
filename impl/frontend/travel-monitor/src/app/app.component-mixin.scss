@@ -1,0 +1,12 @@
+
+@mixin app-component-mixin($dark) {
+  @if $dark == "dark" {
+    .container {
+      background-image: url("https://images.unsplash.com/photo-1524296283994-25cd19b76fa5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80");
+    }
+  } @else {
+    .container {
+      background-image: url("https://i.content4travel.com/cms/img/u/kraj/1/zakynthos_0.jpg?version=190530-04");
+    }
+  }
+}

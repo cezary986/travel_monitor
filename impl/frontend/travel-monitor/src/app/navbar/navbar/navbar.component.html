@@ -3,19 +3,42 @@
     aria-label="Example icon-button with a heart icon">
     <mat-icon>menu</mat-icon>
   </button> -->
-  Travello
+  <img src="assets/images/logo.svg" alt="logo" class="navbar-logo">
+  Travel Monitor
   <div class="spacer"></div>
+  <!-- Theme selection component -->
+  <app-theme-switch class="navbar-element"></app-theme-switch>
   <!-- Notifications -->
   <app-notifications-list *ngIf="isLoggedIn | async" class="navbar-element"></app-notifications-list>
   <!-- User avatar -->
-  <button *ngIf="isLoggedIn | async" mat-icon-button [matMenuTriggerFor]="appMenu">
-      <app-user-avatar class="avatar" [user]="user"></app-user-avatar>
+  <button (click)="userPopupOpened = true;" *ngIf="isLoggedIn | async" mat-icon-button [mdePopoverTriggerFor]="userPopover" mdePopoverTriggerOn="click" #popoverTrigger="mdePopoverTrigger">
+    <app-user-avatar class="avatar" [user]="user"></app-user-avatar>
   </button>
-  <mat-menu #appMenu="matMenu">
-      <div *ngIf="user !== undefined" class="mat-h2 username-header">{{ user.username }}</div>
-      <button mat-menu-item (click)="onLogoutClick()">
-          <mat-icon>exit_to_app</mat-icon>
-          <span>Wyloguj</span>
-      </button>
-  </mat-menu>
+
+  <mde-popover #userPopover="mdePopover" [mdePopoverOverlapTrigger]="false">
+      <mat-card class="user-popover">
+          <div class="mat-h2 username-header">
+              <div class="grid">
+                <div class="col-3">
+                  <img [src]="user.avatar.image" class="avatar-big">
+                </div>
+                <div class="col-8">
+                  <div>{{ user.username }}</div>
+                  <div>
+                    <span>{{ user.email }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button mat-menu-item (click)="onLogoutClick()">
+              <mat-icon>exit_to_app</mat-icon>
+              <span class="option-text">Wyloguj się</span>
+            </button>
+            <button mat-menu-item (click)="onProfileEditClick()">
+              <mat-icon>person</mat-icon>
+              <span class="option-text">Edytuj profil</span>
+            </button>
+      </mat-card>
+  </mde-popover>
 </mat-toolbar>
+<mat-progress-bar *ngIf="appLoading | async" [color]="'accent'" class="app-loading-bar" mode="indeterminate"></mat-progress-bar>

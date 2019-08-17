@@ -1,5 +1,5 @@
 <div class="offer-add offer-list-element">
-    <app-expandable-button class="offer-list-element" [collapsed]="collapsed" [text]="'Dodaj oferte'"
+    <app-expandable-button class="offer-list-element" [icon]="'add'" [collapsed]="collapsed" [text]="'Dodaj oferte'"
         (onClick)="onAddButtonClick()">
         <form *ngIf="initialized" [formGroup]="offerAddForm" class="offer-add-form">
             <mat-form-field class="grid offer-url">

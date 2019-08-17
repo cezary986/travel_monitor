@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ExpandableButtonComponent } from './expandable-button.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -11,6 +12,7 @@ import { MatCardModule } from '@angular/material/card';
   imports: [
     CommonModule,
     MatButtonModule,
+    MatIconModule,
     MatCardModule
   ],
   exports: [

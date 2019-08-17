@@ -14,6 +14,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import { TravelModule } from './travel/travel.module';
 import { SideDrawerModule } from './side-drawer/side-drawer.module';
 import { HeadersInterceptor } from './interceptors/headers-interceptor';
+import { NgxAsideModule } from 'ngx-aside';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { HeadersInterceptor } from './interceptors/headers-interceptor';
     NavbarModule,
     MatSidenavModule,
     SideDrawerModule,
+    NgxAsideModule,
     TravelModule
   ],
   providers: [
