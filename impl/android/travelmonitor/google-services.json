@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "802742362191",
+    "firebase_url": "https://travel-monitor-1c234.firebaseio.com",
+    "project_id": "travel-monitor-1c234",
+    "storage_bucket": "travel-monitor-1c234.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:802742362191:android:f1cb62b0a445ac8d",
+        "android_client_info": {
+          "package_name": "pl.cmaszczyk.travelmonitor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "802742362191-q3g3k5bvmds2i8l9fg0a3hofo8g38vft.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCh_fB_wjVouBgCDa7YX2UaEPSi-pteEI4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "802742362191-q3g3k5bvmds2i8l9fg0a3hofo8g38vft.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

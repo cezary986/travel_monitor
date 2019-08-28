@@ -24,7 +24,7 @@ class ProfileView(APIView):
     @swagger_auto_schema(
         operation_id='get_user_data',
         operation_description='Get current user profile data',
-        responses={200: UserSerializer}
+        responses={200: UserProfileSerializer()}
     )
     def get(self, request, format=None):
         user = request.user
@@ -35,7 +35,7 @@ class ProfileView(APIView):
     @swagger_auto_schema(
         operation_id='update_profile_data',
         operation_description='Update current user data',
-        responses={200: UserSerializer}
+        responses={200: UserProfileSerializer}
     )
     def patch(self, request, offer_id, format=None):
         data = JSONParser().parse(request)

@@ -46,7 +46,9 @@ INSTALLED_APPS = [
     'api',
     'rest_framework',
     'drf_yasg',
-    "fcm_django"
+    "fcm_django",
+    "avatars",
+    "notifications"
 ]
 
 MIDDLEWARE = [
@@ -139,7 +141,7 @@ CHANNEL_LAYERS = {
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 20,
 }
 
@@ -183,3 +185,49 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
   os.path.join(BASE_DIR, 'backend', 'static')
 ]
+
+import travel_monitor.firebase_settings as firebase_settings
+
+API_KEY = firebase_settings.API_KEY
+
+
+
+
+# <AVATARS>
+AVATAR_SIZE = 100
+# </AVATARS>
+
+# <NOTIFICATIONS>
+EVENTS = [
+    {
+        'name': 'travel_create',
+        'title': 'Utworzenie podróży',
+        'description': None,
+    },
+    {
+        'name': 'travel_delete',
+        'title': 'Usunięcie podróży',
+    },
+    {
+        'name': 'offer_elapse',
+        'title': 'Wygaśnięcie oferty',
+    },
+    {
+        'name': 'offer_create',
+        'title': 'Utworzenie oferty',
+    },
+    {
+        'name': 'offer_delete',
+        'title': 'Usunięcie oferty',
+    },
+    {
+        'name': 'test',
+        'title': 'Testowe powiadomienia',
+    },
+]
+
+EVENT_TYPES = []
+
+for el in EVENTS:
+    EVENT_TYPES.append((el['name'], el['name']))
+# </NOTIFICATIONS>

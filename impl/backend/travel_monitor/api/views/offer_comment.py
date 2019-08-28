@@ -20,13 +20,15 @@ from drf_yasg.utils import swagger_auto_schema
 from api.serializers import OfferCommentSerializer, OfferCommentWithResponsesSerializer, MessageSerializer
 from api.utils import Message
 from datetime import datetime
+from rest_framework.pagination import LimitOffsetPagination
+from api.schema import OfferCommentsListReponse
 
 class OfferCommentsListView(APIView):
   
     @swagger_auto_schema(
       operation_id='list_all_offer_comments',
       operation_description='Return all offer comments',
-      responses={200: OfferCommentSerializer, 404: 'If no travel with given id exist or travel has no comments'}
+      responses={200: OfferCommentsListReponse, 404: 'If no travel with given id exist or travel has no comments'}
     )
     @login_required_view
     def get(self, request, offer_id, format=None):
@@ -42,9 +44,14 @@ class OfferCommentsListView(APIView):
         except ObjectDoesNotExist:
             serializer = MessageSerializer(Message('No comments for this travel'))
             return JsonResponse(serializer.data, status=404)
-        serializer = OfferCommentWithResponsesSerializer(top_level_comments, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        return self._make_paginated_response(top_level_comments)
     
+    def _make_paginated_response(self, queryset):
+        paginator = LimitOffsetPagination()
+        queryset = paginator.paginate_queryset(queryset, self.request)
+        serializer = OfferCommentWithResponsesSerializer(queryset, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
     @swagger_auto_schema(
       operation_id='add_comment_to_offer',
       operation_description='Adds comment to offer',

@@ -4,7 +4,7 @@
 @import '~@angular/cdk/overlay-prebuilt.css';
 
 @import './app/offer/offer-list-element/offer-list-element-mixin.scss';
-@import './app/navbar/notifications-list/notifications-list-mixin.scss';
+@import './app/notifications/notifications-button/notifications-button-mixin.scss';
 @import './app/app.component-mixin.scss';
 @import './assets/styles/variables.scss';
 
@@ -27,7 +27,7 @@
 
   // components mixin's
   @include offer-list-element($default-theme);
-  @include notifications-list-element($default-theme);
+  @include notifications-button($default-theme);
   @include variables-mixin($default-theme);
   @include common-mixin($default-theme);
   @include app-component-mixin('default');
@@ -38,7 +38,7 @@
 
   // components mixin's
   @include offer-list-element($dark-theme);
-  @include notifications-list-element($dark-theme);
+  @include notifications-button($dark-theme);
   @include variables-mixin($dark-theme);
   @include common-mixin($dark-theme);
   @include app-component-mixin('dark');

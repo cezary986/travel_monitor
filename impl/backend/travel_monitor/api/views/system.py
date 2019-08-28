@@ -11,7 +11,7 @@ from drf_yasg.inspectors import SwaggerAutoSchema
 from drf_yasg.utils import swagger_auto_schema
 from travel_monitor.data_providers import DATA_PROVIDERS
 from api.decorators import login_required_view
-from api.serializers import VersionSerializer, NotificationSerializer
+from api.serializers import VersionSerializer
 
 class VersionView(APIView):
   
@@ -38,14 +38,3 @@ class SupportedDomainsView(APIView):
             for domain in DATA_PROVIDERS[data_provider]['domains']:
                 supported_domains.append(domain)
         return JsonResponse(supported_domains, safe=False, status=200)
-
-class NotificationsView(APIView):
-
-    @swagger_auto_schema(
-        operation_id='notifications_list',
-        operation_description='Return all notifications',
-        responses={200: NotificationSerializer(many=True)}
-    )
-    def get(self, request):
-        serializer = NotificationSerializer({'version': VERSION})
-        return JsonResponse(serializer.data)

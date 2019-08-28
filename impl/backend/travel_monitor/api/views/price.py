@@ -14,13 +14,15 @@ from drf_yasg import openapi
 from drf_yasg.inspectors import SwaggerAutoSchema
 from drf_yasg.utils import swagger_auto_schema
 from api.serializers import PriceSerializer
+from rest_framework.pagination import LimitOffsetPagination
+from api.schema import PricesListReponse
 
 class PricesListView(APIView):
   
     @swagger_auto_schema(
       operation_id='list_all_offer_prices',
       operation_description='Return all prices saved for offfer',
-      responses={200: PriceSerializer, 404: 'If offer has no prices saved'}
+      responses={200: PricesListReponse, 404: 'If offer has no prices saved'}
     )
     @login_required_view 
     def get(self, request, offer_id, format=None):
@@ -33,5 +35,10 @@ class PricesListView(APIView):
             prices = Price.objects.filter(offer=offer)
         except ObjectDoesNotExist:
             return JsonResponse({"message": 'No prices for this offer'}, status=404)
-        serializer = PriceSerializer(prices, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        return self._make_paginated_response(prices)
+
+    def _make_paginated_response(self, queryset):
+        paginator = LimitOffsetPagination()
+        queryset = paginator.paginate_queryset(queryset, self.request)
+        serializer = PriceSerializer(queryset, many=True)
+        return paginator.get_paginated_response(serializer.data)

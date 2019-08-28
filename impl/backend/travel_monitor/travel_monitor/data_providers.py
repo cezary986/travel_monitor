@@ -9,7 +9,7 @@ DATA_PROVIDERS = {
         'name': 'wakacje_pl',
         'label': 'Wakacje.pl',
         'domains': ['wakacje.pl', 'm.wakacje.pl'],
-        'replace_in_url': [('wakacje.pl/', 'm.wakacje.pl/')],
+        'replace_in_url': [('/wakacje.pl/', '/m.wakacje.pl/')],
         'scrapper_instance': WakacjePlScrapper()
     },
 }

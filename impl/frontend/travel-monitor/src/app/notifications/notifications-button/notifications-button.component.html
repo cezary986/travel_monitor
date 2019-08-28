@@ -1,0 +1,6 @@
+<mat-menu #appMenu="matMenu">
+    <app-notifications-short-list [notifications]="notifications"></app-notifications-short-list>
+</mat-menu>
+<button mat-icon-button [matMenuTriggerFor]="appMenu">
+    <mat-icon matBadge="{{ count !== undefined ? count : ''}}" matBadgeColor="accent">notifications</mat-icon>
+</button>

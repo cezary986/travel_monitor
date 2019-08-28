@@ -21,7 +21,7 @@ def login_required_view(func):
     """
     def wrapper(self, request, *args, **kwargs):
         if not request.user.is_authenticated:            
-            return HttpResponseForbidden({"message": "You must be logged in"})
+            return HttpResponseForbidden("You must be logged in")
         else:
             return func(self, request, *args, **kwargs)
         

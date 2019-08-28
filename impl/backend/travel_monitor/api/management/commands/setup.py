@@ -18,8 +18,12 @@ class Command(BaseCommand):
     def migrate_db(self):
         os.system('python manage.py makemigrations')
         os.system('python manage.py makemigrations api')
+        os.system('python manage.py makemigrations notifications')
+        os.system('python manage.py makemigrations avatars')
         os.system('python manage.py migrate')
         os.system('python manage.py migrate api')
+        os.system('python manage.py migrate notifications')
+        os.system('python manage.py migrate avatars')
        
     def create_webscraper_deamon_user(self):
         webscraper_deamon_user = None

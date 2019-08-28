@@ -5,6 +5,8 @@ import { DataStoreService } from '../data-store.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ROUTES } from '../../app-routing.module';
 import { AnimationsFactory } from 'src/app/common/animations';
+import { PaginatedResponse } from 'src/app/common/paginated-response';
+import { Observable } from 'rxjs';
  
 @Component({
   selector: 'app-travel-list',
@@ -13,8 +15,10 @@ import { AnimationsFactory } from 'src/app/common/animations';
 })
 export class TravelListComponent implements OnInit {
 
-  public travels: Travel[] = [];
+  public travels: Observable<Travel[]> = null;
   public loading: boolean = true;
+
+  private paginatedResponse: PaginatedResponse<Travel> = null;
 
   constructor(
     private travelService: TravelService,
@@ -24,13 +28,15 @@ export class TravelListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.travelService.getTravels().subscribe((travels) => {
+    this.paginatedResponse = this.travelService.getTravels();
+    const paginationData = this.paginatedResponse.getDataObservable();
+    this.paginatedResponse.firstPage();
+    
+    paginationData.subscribe((travels: Travel[]) => {
       this.dataStore.setTravels(travels);
-      this.dataStore.getTravels().subscribe((travels: Travel[]) => {
-        this.travels = travels;
-        this.loading = false;
-      });
-    })
+      this.travels = this.dataStore.getTravels();
+      this.loading = false;
+    });
   }
 
   onTravelClick(travel: Travel) {

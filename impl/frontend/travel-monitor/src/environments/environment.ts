@@ -12,12 +12,34 @@ export const environment = {
     travels: () => { return environment.apiAddress + 'travels';},
     travel: (travelId: number) => { return environment.apiAddress + 'travels/' + travelId;},
     offers: (travelId: number) => { return environment.apiAddress + 'travels/' + travelId + '/offers';},
+    offerArchived: (travelId: number) => { return environment.apiAddress + 'travels/' + travelId + '/offers/archived';},
     offer: (offerId: number) => { return environment.apiAddress + 'offers/' + offerId;},
+    offerComments: (offerId: number) => { return environment.apiAddress + 'offers/' + offerId + '/comments';},
     prices: (offerId: number) => { return environment.apiAddress + 'offers/' + offerId + '/prices';},
+    notifications: (readed?: string) => { 
+      let url = environment.apiAddress + 'notifications';
+      if (readed !== undefined) {
+        url += '?readed=' + readed;
+      }
+      return url;
+    },
+    notification: (notificationId: number) => { return environment.apiAddress + 'notifications/' + notificationId;},
+    notificationsFilter: () => { return environment.apiAddress + 'notifications/filter';},
+    notificationsTypes: () => { return environment.apiAddress + 'notifications/types';},
     supportedDomains: () => { return environment.apiAddress + 'supported_domains';},
-    offersSocket: () => { return environment.socketApiAddress + 'offers'}
+    offersSocket: () => { return environment.socketApiAddress + 'offers'},
+    notificationsSocket: () => { return environment.socketApiAddress + 'notifications'}
   },
-  snackBarDuration: 3000
+  snackBarDuration: 3000,
+  firebase: {
+    apiKey: "AIzaSyDiDRUFQz9lOxkHVPYMkLqAR3IZv8uReN0",
+    authDomain: "travel-monitor-1c234.firebaseapp.com",
+    databaseURL: "https://travel-monitor-1c234.firebaseio.com",
+    projectId: "travel-monitor-1c234",
+    storageBucket: "",
+    messagingSenderId: "802742362191",
+    appId: "1:802742362191:web:4882b1a92622785f"
+  }
 };
 
 /*

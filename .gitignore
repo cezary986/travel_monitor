@@ -2,3 +2,4 @@
 /impl/env/
 /impl/.vscode/
 impl/frontend/travel-monitor/src/assets/images/logo.png
+impl/backend/travel_monitor/travel_monitor/firebase_settings.py

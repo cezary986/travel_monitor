@@ -1,16 +1,21 @@
 from django.urls import path
 
-from api.views.system import VersionView, SupportedDomainsView, NotificationsView
+from api.views.system import VersionView, SupportedDomainsView
 from api.views.auth import LoginView, LogoutView, LoginCheck
 from api.views.travel import TravelsListView, TravelDetailView
-from api.views.offer import OffersListView, OfferDetailView
+from api.views.offer import OffersListView, OfferDetailView, OffersArchivedListView
 from api.views.offer_comment import OfferCommentsListView, OfferCommentDetailView
 from api.views.price import PricesListView
 from api.views.user import ProfileView
-from api.views.avatar import AvatarView
+from avatars.views import AvatarView
+from notifications.views import NotificationsListView, NotificationDetailView, NotificationFilterView
 
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
+
+from django.conf.urls import url
+from fcm_django.api.rest_framework import FCMDeviceAuthorizedViewSet
+from api.signals_receivers import connect_receivers
 
 urlpatterns = [
     path('version', VersionView.as_view(), name='version'),
@@ -26,6 +31,7 @@ urlpatterns = [
     path('travels/<int:travel_id>', TravelDetailView.as_view(), name='travel_detail'),
     
     path('travels/<int:travel_id>/offers', OffersListView.as_view(), name='offers'),
+    path('travels/<int:travel_id>/offers/archived', OffersArchivedListView.as_view(), name='offers_archived'),
     path('offers/<int:offer_id>', OfferDetailView.as_view(), name='offers'),
     
     path('offers/<int:offer_id>/prices', PricesListView.as_view(), name='prices'),
@@ -33,6 +39,12 @@ urlpatterns = [
     path('offers/<int:offer_id>/comments', OfferCommentsListView.as_view(), name='offer_comments'),
     path('offers/comments/<int:comment_id>', OfferCommentDetailView.as_view(), name='offer_comment'),
     
+    path('notifications', NotificationsListView.as_view(), name='notifications'),
+    path('notifications/<int:notification_id>', NotificationDetailView.as_view(), name='notification'),
+    path('notifications/filter', NotificationFilterView.as_view(), name='notification_filter'),
+    path('notifications/types', NotificationFilterView.as_view(), name='notification_filter'),
+    
     path('supported_domains', SupportedDomainsView.as_view(), name='supported_domains'),
-    path('notifications', NotificationsView.as_view(), name='notifications'),
 ]
+
+connect_receivers()

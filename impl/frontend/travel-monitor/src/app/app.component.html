@@ -1,5 +1,6 @@
 <div>
     <app-navbar (onMenuClick)="sidenav.toggle()"></app-navbar>
+    {{ message | async | json}}
     <mat-sidenav-container class="main-container">
         <mat-sidenav #sidenav mode="side" [(opened)]="opened" (opened)="events.push('open!')"
             (closed)="events.push('close!')">

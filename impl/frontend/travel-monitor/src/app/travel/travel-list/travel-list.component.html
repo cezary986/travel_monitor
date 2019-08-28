@@ -4,5 +4,5 @@
 <!-- add travel component -->
 <app-travel-add></app-travel-add>
 <!-- list of travels -->
-<app-travel-list-element *ngFor="let travel of travels" [travel]="travel" (onClick)="onTravelClick($event)">
+<app-travel-list-element *ngFor="let travel of (travels | async)" [travel]="travel" (onClick)="onTravelClick($event)">
 </app-travel-list-element >

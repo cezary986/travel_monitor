@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Travel } from '../models/travel';
+import { PaginatedResponse } from '../paginated-response';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +14,8 @@ export class TravelService {
     private http: HttpClient
   ) { }
 
-  public getTravels(): Observable<Travel[]> {
-    return this.http.get<Travel[]>(
-      environment.endpoints.travels()
-    );
+  public getTravels(): PaginatedResponse<Travel> {
+    return new PaginatedResponse<Travel>(this.http, environment.endpoints.travels())
   }
 
   public getTravel(id: number): Observable<Travel> {

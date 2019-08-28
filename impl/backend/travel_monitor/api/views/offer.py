@@ -20,13 +20,16 @@ from drf_yasg.utils import swagger_auto_schema
 from threading import Thread
 from api.serializers import OfferSerializer, MessageSerializer
 from api.utils import Message
+from rest_framework.pagination import LimitOffsetPagination
+from api.schema import OffersListReponse
+import datetime
 
 class OffersListView(APIView):
   
     @swagger_auto_schema(
       operation_id='list_all_offers',
       operation_description='Return all offers connected to travel with given id',
-      responses={200: OfferSerializer, 404: 'If no travel with given id exist or travel has no offers'}
+      responses={200: OffersListReponse, 404: 'If no travel with given id exist or travel has no offers'}
     )
     @login_required_view
     def get(self, request, travel_id, format=None):
@@ -35,13 +38,15 @@ class OffersListView(APIView):
             travel = Travel.objects.get(pk=travel_id)
         except ObjectDoesNotExist:
             return JsonResponse({"message": 'No travel with given id exist'}, status=404)
-        try:
-            offers = Offer.objects.filter(travel=travel)
-        except ObjectDoesNotExist:
-            return JsonResponse({"message": 'No offers for this travel'}, status=404)
-        serializer = OfferSerializer(offers, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        offers = Offer.objects.filter(travel=travel, date_from__gt=datetime.datetime.now())
+        return self._make_paginated_response(offers)
     
+    def _make_paginated_response(self, queryset):
+        paginator = LimitOffsetPagination()
+        queryset = paginator.paginate_queryset(queryset, self.request)
+        serializer = OfferSerializer(queryset, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
     @swagger_auto_schema(
       operation_id='add_offer_to_travel',
       operation_description='Create offer and save it to travel',
@@ -110,3 +115,29 @@ class OfferDetailView(APIView):
             return JsonResponse(serializer.data, status=201)
         else:
             return JsonResponse(serializer.errors, safe=False, status=400)
+
+class OffersArchivedListView(APIView):
+  
+    @swagger_auto_schema(
+      operation_id='list_archived_offers',
+      operation_description='Return all offers that have already started ar finished',
+      responses={200: OffersListReponse}
+    )
+    @login_required_view
+    def get(self, request, format=None, **kwargs):
+        travel_id = kwargs.get('travel_id', None)
+        offers = Offer.objects.filter(date_from__gt=datetime.datetime.now())
+        if travel_id != None:
+            travel = None
+            try:
+                travel = Travel.objects.get(pk=travel_id)
+            except ObjectDoesNotExist:
+                return JsonResponse({"message": 'No travel with given id exist'}, status=404)
+            offers = offers.filter(travel=travel)
+        return self._make_paginated_response(offers)
+
+    def _make_paginated_response(self, queryset):
+        paginator = LimitOffsetPagination()
+        queryset = paginator.paginate_queryset(queryset, self.request)
+        serializer = OfferSerializer(queryset, many=True)
+        return paginator.get_paginated_response(serializer.data)

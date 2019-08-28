@@ -1,0 +1,5 @@
+<div *ngIf="notification !== undefined">
+    <app-user-avatar *ngIf="notification.event.author != null" [user]="notification.event.author"></app-user-avatar>
+    <mat-icon>info</mat-icon>
+    <span>{{ notification.event.title }}</span>
+</div>

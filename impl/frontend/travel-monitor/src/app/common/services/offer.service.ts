@@ -4,7 +4,8 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { Offer } from '../models/offer';
 import { environment } from 'src/environments/environment';
 import { OfferNotification } from '../models/offer-notification';
-import { NotificationService } from './notification.service';
+import { NotificationService } from '../../notifications/service/notification.service';
+import { SocketConnection } from '../sockets/socket-connection';
 
 @Injectable({
   providedIn: 'root'
@@ -46,18 +47,22 @@ export class OfferService {
   }
 
   private connectToNotificationSocket() {
-    var offersSocket = new WebSocket(environment.endpoints.offersSocket());
-
-    offersSocket.onmessage = function (e) {
-      const notification = <OfferNotification> JSON.parse(e.data);
-      this.offersNotifications.next(notification);
-      console.log(notification);
-      this.notificationService.addOffersNotification(notification);
-    }.bind(this);
-
-    offersSocket.onclose = function (e) {
-      console.error('Offers notification socket closed unexpectedly');
-    }.bind(this);
+    const socketConnection = new SocketConnection<OfferNotification>(environment.endpoints.offersSocket());
+    socketConnection.connect().subscribe((state: string) => {
+      switch(state) {
+        case 'opened': {
+          console.log('Offers socket connected');
+        }
+        case 'closed': {
+          console.log('Offers socket closed');
+        }
+      }
+    });
+    socketConnection.getData().subscribe((offerNotification: OfferNotification) => {
+      this.offersNotifications.next(offerNotification);
+      console.log(offerNotification);
+      this.notificationService.addOffersNotification(offerNotification);
+    });
   }
 
   public listenToOffersNotifications(): Observable<OfferNotification> {

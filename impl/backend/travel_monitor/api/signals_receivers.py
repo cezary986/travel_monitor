@@ -1,74 +1,81 @@
 import api.signals as signals
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
-from api.serializers import NotificationSerializer
-from api.models import Notification
+
+from notifications.helpers import send_notification
+from notifications.serializers import EventSerializer
 
 def connect_receivers():
+    print('Connecting receivers')
     signals.travel_create.connect(travel_create)
     signals.travel_delete.connect(travel_delete)
     signals.offer_create.connect(offer_create)
     signals.offer_delete.connect(offer_delete)
     signals.offer_elapse.connect(offer_elapse)
-
-def raiseNotification(notification):
-    channel_layer = get_channel_layer()
-    serializer = NotificationSerializer(notification)
-    async_to_sync(channel_layer.group_send)("notifications",{
-        "type": "receive_notification",
-        "message": serializer.data
-    })
+    signals.test.connect(test)
     
 def travel_create(sender, **kwargs):
     user = kwargs['user']
     travel = kwargs['travel']
-    notification = Notification.objects.create(
-        title='Dodano nową podróż!',
-        message=user.username + ' dodał(a) nową podróż o nazwie: ' + travel.title,
-        creator=user
+    title='Dodano nową podróż!'
+    message=user.username + ' dodał(a) nową podróż o nazwie: ' + travel.title
+    author=user
+    data = {'travel_id': travel.pk}
+    event = send_notification(
+        type='travel_create', 
+        title=title, 
+        author=author, 
+        message=message, 
+        data=data
     )
-    notification.save()
-    raiseNotification(notification)
+    serializer = EventSerializer(event)
     
 def travel_delete(sender, **kwargs):
     user = kwargs['user']
     travel = kwargs['travel']
-    notification = Notification.objects.create(
-        title='Usunięto podróż!',
-        message=user.username + ' usunął(a) podróż o nazwie: ' + travel.title,
-        creator=user
+    title = 'Usunięto podróż!'
+    message = user.username + ' usunął(a) podróż o nazwie: ' + travel.title
+    author = user
+    send_notification(
+        type='travel_delete', 
+        title=title, 
+        author=author, 
+        message=message
     )
-    notification.save()
-    raiseNotification(notification)
 
 def offer_elapse(sender, **kwargs):
     offer = kwargs['offer']
-    notification = Notification.objects.create(
-        title='Oferta wygasła!',
-        message='Oferta: ' + offer.title + ' wygasła',
-        creator=None
+    send_notification(
+        type='offer_elapse', 
+        title='Oferta wygasła!', 
+        message= 'Oferta: ' + offer.title + ' wygasła'
     )
-    notification.save()
-    raiseNotification(notification)
 
 def offer_create(sender, **kwargs):
     user = kwargs['user']
     offer = kwargs['offer']
-    notification = Notification.objects.create(
-        title='Dodano nową oferte!',
-        message=user.username + ' dodał(a) nową oferte o nazwie: ' + offer.title + 'do podróży: ' + offer.travel.title,
-        creator=user
+    message = user.username + ' dodał(a) nową oferte o nazwie: ' + offer.title + 'do podróży: ' + offer.travel.title
+    send_notification(
+        type='offer_create', 
+        title='Dodano nową oferte!', 
+        message=message,
+        author=user,
+        data={'offer_id': offer.pk}
     )
-    notification.save()
-    raiseNotification(notification)
     
 def offer_delete(sender, **kwargs):
     user = kwargs['user']
     offer = kwargs['offer']
-    notification = Notification.objects.create(
-        title='Usunięto oferte!',
-        message=user.username + ' usunął(a) oferte o nazwie: ' + offer.title + ' z podróży: ' + offer.travel.title,
-        creator=user
+    message = user.username + ' usunął(a) oferte o nazwie: ' + offer.title + ' z podróży: ' + offer.travel.title
+    send_notification(
+        type='offer_delete', 
+        title='Usunięto oferte!', 
+        message=message,
+        author=user,
     )
-    notification.save()
-    raiseNotification(notification)
+
+def test(sender, **kwargs):
+    message = 'Test message'
+    send_notification(
+        type='test', 
+        title='Test', 
+        message=message,
+    )

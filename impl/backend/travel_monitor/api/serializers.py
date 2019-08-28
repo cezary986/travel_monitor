@@ -1,7 +1,9 @@
 from rest_framework import serializers
-from api.models import Travel, Offer, Avatar
+from api.models import Travel, Offer
 from travel_monitor.data_providers import DATA_PROVIDERS
 from django.core.exceptions import ObjectDoesNotExist
+
+from avatars.serializers import UserSerializer as AvatarUserSerializer
 
 class VersionSerializer(serializers.Serializer):
     version = serializers.CharField(max_length=100)
@@ -12,49 +14,20 @@ class MessageSerializer(serializers.Serializer):
 class LoginCheckSerializer(serializers.Serializer):
     logged_in = serializers.BooleanField(required=True)
 
-class AvatarSerializer(serializers.Serializer):
-    image = serializers.ImageField(max_length=None, use_url=True, allow_null=True, required=False)
-
-class UserProfileSerializer(serializers.Serializer):
+class UserProfileSerializer(AvatarUserSerializer):
     id = serializers.IntegerField(read_only=True)
     username = serializers.CharField(max_length=200, read_only=True)
     email = serializers.EmailField(max_length=400, read_only=True)
     first_name = serializers.CharField(max_length=200, read_only=True)
     is_superuser = serializers.BooleanField(read_only=True)
-    
-    """
-    Overriding serialization to inject avatar field
-    """
-    def to_representation(self, instance):
-        ret = super().to_representation(instance)
-        avatar = None
-        try:
-            avatar = Avatar.objects.get(user=instance)
-            serializer = AvatarSerializer(avatar)
-            ret['avatar'] = serializer.data
-        except ObjectDoesNotExist:
-            ret['avatar'] = avatar
-        return ret
+    '''Here will be avatar field injected by  avatars.serializers.UserSerializer'''
 
-class UserSerializer(serializers.Serializer):
+class UserSerializer(AvatarUserSerializer):
     id = serializers.IntegerField(read_only=True)
     username = serializers.CharField(max_length=200, read_only=True)
     email = serializers.EmailField(max_length=400, read_only=True)
     first_name = serializers.CharField(max_length=200, read_only=True)
-
-    """
-    Overriding serialization to inject avatar field
-    """
-    def to_representation(self, instance):
-        ret = super().to_representation(instance)
-        avatar = None
-        try:
-            avatar = Avatar.objects.get(user=instance)
-            serializer = AvatarSerializer(avatar)
-            ret['avatar'] = serializer.data
-        except ObjectDoesNotExist:
-            ret['avatar'] = avatar
-        return ret
+    '''Here will be avatar field injected by  avatars.serializers.UserSerializer'''
 
 """
 Serializer for comment that isn't reponse - has no parent comment
@@ -79,20 +52,13 @@ class OfferCommentWithResponsesSerializer(serializers.Serializer):
     offer = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
     responses = OfferCommentSerializer(many=True, read_only=False, source='offercomment_set')
 
-class NotificationSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
-    timestamp = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S", read_only=True)
-    title =  serializers.CharField(max_length=100, read_only=True)
-    message =  serializers.CharField(max_length=300, read_only=True)
-    creator = UserSerializer(many=False, read_only=True)
-
 class PriceSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     value = serializers.IntegerField(read_only=False)
     timestamp = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S", read_only=True)
 
 class OfferSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=False, required=True)
+    id = serializers.IntegerField(read_only=False, required=False)
     title = serializers.CharField(required=False, allow_null=True, max_length=200)
     url = serializers.CharField(required=True, allow_blank=False, max_length=1000)
     created = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S", read_only=True, required=False)

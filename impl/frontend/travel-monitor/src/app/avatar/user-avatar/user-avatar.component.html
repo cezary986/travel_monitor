@@ -1,0 +1,12 @@
+<!-- Default avatar generated from first username letter -->
+<div *ngIf="user !== undefined && user.avatar == null" class="avatar"
+    [ngStyle]="(size != null) ? {'width': size} : {}">
+    <span class="avatar-letter" [ngStyle]="{'font-size': 'calc(0.666666 * ' + size  +')', 'line-height': size}" *ngIf="user != undefined">
+        {{ user.username[0] }}
+    </span>
+</div>
+<!-- User avatar image -->
+<div *ngIf="user !== undefined && user.avatar != null" class="avatar"
+    [ngStyle]="(size != null) ? {'width': size} : {}">
+    <img class="avatar-img" [src]="user.avatar.image" alt="avatar">
+</div>

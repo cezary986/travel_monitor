@@ -15,6 +15,12 @@ import { TravelModule } from './travel/travel.module';
 import { SideDrawerModule } from './side-drawer/side-drawer.module';
 import { HeadersInterceptor } from './interceptors/headers-interceptor';
 import { NgxAsideModule } from 'ngx-aside';
+import { MessagingService } from './common/services/messaging.service';
+import { environment } from 'src/environments/environment';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
 
 @NgModule({
   declarations: [
@@ -30,12 +36,17 @@ import { NgxAsideModule } from 'ngx-aside';
     MatSidenavModule,
     SideDrawerModule,
     NgxAsideModule,
-    TravelModule
+    TravelModule,
+    AngularFireModule.initializeApp(environment.firebase),                                       
+    AngularFireDatabaseModule,
+    AngularFireAuthModule,
+    AngularFireMessagingModule
   ],
   providers: [
     CookieService,
     AuthService,
     AuthGuardService,
+    MessagingService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HeadersInterceptor,

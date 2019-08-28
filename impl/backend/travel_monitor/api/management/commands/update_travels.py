@@ -34,14 +34,15 @@ def scrapOffer(offer, notify):
             scrapper = DATA_PROVIDERS[data_provider_name]['scrapper_instance']
             has_changed = False
             offer.error = None
+            print(offer.url)
             try:
                 new_offer_data = scrapper.scrap([offer.url])[0]
-            except Exception:
-                print('Failed to update offer')
+            except Exception as e:
+                print('Failed to update offer with error:')
+                print(str(e))
                 offer.error = 'Failed to update offer'
                 has_changed = True
             if offer.error == None:
-                print(new_offer_data.price)
                 if offer.current_price == None or new_offer_data.price != offer.current_price.value:
                     has_changed = True
                     last_price = offer.current_price
@@ -93,8 +94,10 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         travels = Travel.objects.all()
         offers_changed = []
+        now = datetime.datetime.now()
         for travel in travels:
-            for offer in travel.offer_set.all():
+            # check only travel offers that haven't started
+            for offer in travel.offer_set.all().filter(date_from__gt=now):
                 try:
                   has_changed = scrapOffer(offer, notify=True)
                 except Exception:

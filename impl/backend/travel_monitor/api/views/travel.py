@@ -18,19 +18,26 @@ from drf_yasg.utils import swagger_auto_schema
 from api.serializers import TravelSerializer, MessageSerializer
 from api.utils import Message
 from api.signals import travel_create, travel_delete
-
+from rest_framework.pagination import LimitOffsetPagination
+from api.schema import TravelsListReponse
+import datetime
 class TravelsListView(APIView):
   
     @swagger_auto_schema(
       operation_id='list_all_travels',
       operation_description='Return all travels in system',
-      responses={200: TravelSerializer(many=True)}
+      responses={200: TravelsListReponse()}
     )
     @login_required_view
     def get(self, request, format=None):
         travels = Travel.objects.all()
-        serializer = TravelSerializer(travels, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        return self._make_paginated_response(travels)
+
+    def _make_paginated_response(self, queryset):
+        paginator = LimitOffsetPagination()
+        queryset = paginator.paginate_queryset(queryset, self.request)
+        serializer = TravelSerializer(queryset, many=True)
+        return paginator.get_paginated_response(serializer.data)
     
     @swagger_auto_schema(
       operation_id='create_new_travel',

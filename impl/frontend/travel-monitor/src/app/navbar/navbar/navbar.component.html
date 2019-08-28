@@ -9,18 +9,18 @@
   <!-- Theme selection component -->
   <app-theme-switch class="navbar-element"></app-theme-switch>
   <!-- Notifications -->
-  <app-notifications-list *ngIf="isLoggedIn | async" class="navbar-element"></app-notifications-list>
+  <app-notifications-button *ngIf="isLoggedIn | async" class="navbar-element"></app-notifications-button>
   <!-- User avatar -->
   <button (click)="userPopupOpened = true;" *ngIf="isLoggedIn | async" mat-icon-button [mdePopoverTriggerFor]="userPopover" mdePopoverTriggerOn="click" #popoverTrigger="mdePopoverTrigger">
     <app-user-avatar class="avatar" [user]="user"></app-user-avatar>
   </button>
 
   <mde-popover #userPopover="mdePopover" [mdePopoverOverlapTrigger]="false">
-      <mat-card class="user-popover">
+      <mat-card *ngIf="user != undefined" class="user-popover">
           <div class="mat-h2 username-header">
               <div class="grid">
                 <div class="col-3">
-                  <img [src]="user.avatar.image" class="avatar-big">
+                  <app-user-avatar [user]="user" [size]="'60px'"></app-user-avatar>
                 </div>
                 <div class="col-8">
                   <div>{{ user.username }}</div>

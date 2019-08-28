@@ -3,35 +3,19 @@ from django.contrib.auth.models import User
 from travel_monitor.data_providers import DATA_PROVIDERS_LABELS
 from api.helpers import OverwriteStorage
 
-class Avatar(models.Model):
-    image = models.ImageField(storage=OverwriteStorage(), upload_to="avatars/")
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
-
-    class Meta:
-        app_label = 'api'
-
 class OfferComment(models.Model):
     timestamp = models.DateTimeField(auto_now_add=False)
-    edited = models.DateTimeField(null=True)
+    edited = models.DateTimeField(null=True, blank=True)
     content = models.TextField(max_length=2000, null=False)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
     offer = models.ForeignKey('Offer', on_delete=models.CASCADE, null=False)
-    parent = models.ForeignKey('OfferComment', on_delete=models.CASCADE, null=True)
+    parent = models.ForeignKey('OfferComment', on_delete=models.CASCADE, null=True, blank=True)
 
-    class Meta:
-        app_label = 'api'
-
-class Notification(models.Model):
-    timestamp = models.DateTimeField(auto_now_add=False)
-    title = models.CharField(max_length=100, null=False)
-    message = models.CharField(max_length=300, null=True)
-    creator = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    
     class Meta:
         app_label = 'api'
 
 class Tag(models.Model):
-    text = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.CharField(max_length=50, null=False)
 
     class Meta:
         app_label = 'api'
@@ -43,6 +27,8 @@ class Price(models.Model):
 
     class Meta:
         app_label = 'api'
+        unique_together = ('offer', 'timestamp')
+    
 
 class Offer(models.Model):
     title = models.CharField(max_length=200, null=True)
@@ -59,6 +45,7 @@ class Offer(models.Model):
     
     class Meta:
         app_label = 'api'
+        unique_together = ('travel', 'url')
 
 class Travel(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
@@ -70,3 +57,4 @@ class Travel(models.Model):
 
     class Meta:
         app_label = 'api'
+        unique_together = ('title', 'creator')
