@@ -1,0 +1,35 @@
+@mixin side-drawer-mixin($theme, $is-dark) {
+  $foreground: map-get($theme, foreground);
+  $accent: map-get($theme, accent);
+
+  .active {
+    .border {
+      width: 5px;
+      background-color: mat-color($accent);
+    }
+  }
+
+  .active {
+    color: mat-color($foreground, text);
+    background-color: rgba(mat-color($accent), 0.15);
+  }
+
+  @if $is-dark == "dark" {
+    .side-drawer-container {
+        background-color: #424242 !important;
+      }
+  
+      .sider-drawer-header {
+        background-color: #424242 !important;
+      }
+  } @else {
+    .side-drawer-container {
+        background-color: white !important;
+      }
+  
+      .sider-drawer-header {
+        background-color: white !important;
+      }
+  }
+
+}

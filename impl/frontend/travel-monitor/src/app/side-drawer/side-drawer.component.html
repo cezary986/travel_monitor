@@ -1,17 +1,17 @@
-<div #sideDrawerContainer class="side-drawer-container">
+<!-- Side navigation on big screen -->
+<div #sideDrawerContainer class="side-drawer-container collapsed">
     <div class="side-drawer-inner">
         <div class="sider-drawer-header">
 
         </div>
-        <div #curtainUpper class='curtain curtain-upper'></div>
         <ul class="side-drawer-elements">
             <li (click)="onItemSelect(i)" *ngFor="let element of elements; let i = index" class="side-drawer-element" matRipple [matRippleColor]="'#ffffff26'">
+                <div class="border"></div>
                 <mat-icon class="item-icon" aria-hidden="true">{{ element.icon }}</mat-icon>
                 <span class="small-label mat-small">{{ element.label }}</span>
                 <span class="label mat-body-strong">{{ element.label }}</span> 
             </li>
         </ul>
-        <div #curtainDown class='curtain curtain-down'></div>
     </div>
 </div>
-<ngx-bottom-nav class="bottom-nav" [items]="elements"></ngx-bottom-nav>
+<ngx-bottom-nav hide-gt-sm class="bottom-nav" [items]="elements"></ngx-bottom-nav>

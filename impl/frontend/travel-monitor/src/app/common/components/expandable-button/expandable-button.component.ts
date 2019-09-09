@@ -37,8 +37,6 @@ export class ExpandableButtonComponent implements OnInit {
   }
 
   private expand() {
-    console.log('sfsdf');
-
     const domElement = this.containerElement.nativeElement;
     const elementHeight = domElement.offsetHeight;
     domElement.style.maxHeight = elementHeight + 16 + 'px';
@@ -51,7 +49,6 @@ export class ExpandableButtonComponent implements OnInit {
   }
 
   public onButtonClick() {
-    console.log('dasdas');
     this._collapsed = false;
     setTimeout(function () {
       this.expand();

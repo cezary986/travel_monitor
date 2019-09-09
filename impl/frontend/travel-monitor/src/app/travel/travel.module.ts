@@ -16,6 +16,8 @@ import { MatIconModule } from '@angular/material/icon';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { ExpandableButtonModule } from '../common/components/expandable-button/expandable-button.module';
 import { SnackbarModule } from '../snackbar/snackbar.module';
+import { TimeagoIntl } from 'ngx-timeago';
+import { AvatarModule } from '../avatar/avatar.module';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,8 @@ import { SnackbarModule } from '../snackbar/snackbar.module';
     MatIconModule,
     MatProgressSpinnerModule,
     FormsModule,
-    SnackbarModule
+    SnackbarModule,
+    AvatarModule
   ],
   exports: [
     TravelListComponent,

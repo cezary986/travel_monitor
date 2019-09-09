@@ -1,5 +1,18 @@
-<div *ngIf="notification !== undefined">
-    <app-user-avatar *ngIf="notification.event.author != null" [user]="notification.event.author"></app-user-avatar>
-    <mat-icon>info</mat-icon>
-    <span>{{ notification.event.title }}</span>
+<div class="notification" *ngIf="notification !== undefined">
+    <span>
+        <span class="avatar-wrapper"
+            *ngIf="notification.event.data !== null && notification.event.data.author !== undefined">
+            <app-user-avatar [user]="notification.event.data.author"></app-user-avatar>
+        </span>
+        <span class="avatar-wrapper"
+            *ngIf="notification.event.data !== null">
+            <mat-icon class="notification-icon" *ngIf="notification.event.data.author == undefined">info</mat-icon>
+        </span>
+        <div class="notification-content">
+            
+            <div class="notification-title">{{ notification.event.title }} </div>
+            <span class="notification-date">{{ notification.event.timestamp | timeago:intl:live }} </span>
+        </div>
+        
+    </span>
 </div>

@@ -1,8 +1,8 @@
 
-<!-- loading spinner -->
-<mat-spinner [diameter]="50" class="list-loader" *ngIf="loading"></mat-spinner>
 <!-- add travel component -->
 <app-travel-add></app-travel-add>
 <!-- list of travels -->
 <app-travel-list-element *ngFor="let travel of (travels | async)" [travel]="travel" (onClick)="onTravelClick($event)">
 </app-travel-list-element >
+<!-- loading spinner -->
+<mat-spinner [diameter]="50" class="list-loader" *ngIf="loading != null && loading | async"></mat-spinner>

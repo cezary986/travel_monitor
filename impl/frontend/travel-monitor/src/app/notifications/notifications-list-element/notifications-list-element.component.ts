@@ -1,5 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Notification } from '../models/notification';
+import { strings as polishStrings } from 'ngx-timeago/language-strings/pl';
+import { TimeagoIntl } from 'ngx-timeago';
+import { console } from 'src/app/common/debug-console';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-notifications-list-element',
@@ -9,8 +13,11 @@ import { Notification } from '../models/notification';
 export class NotificationsListElementComponent implements OnInit {
 
   @Input() notification: Notification;
-
-  constructor() { }
+  
+  constructor(public intl: TimeagoIntl) {    
+    intl.strings = polishStrings;
+    intl.changes.next();
+  }
 
   ngOnInit() {
     this.notification.event.author;

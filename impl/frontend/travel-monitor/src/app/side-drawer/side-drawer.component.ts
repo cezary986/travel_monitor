@@ -1,6 +1,10 @@
 import { Component, OnInit, Input, ElementRef, ViewChild, Renderer2 } from '@angular/core';
 import { timeout } from 'q';
-import {BottomNavItem} from 'ngx-bottom-nav';
+import { BottomNavItem } from 'ngx-bottom-nav';
+import { SideDrawerService } from './service/side-drawer.service';
+import { ROUTES } from '../app-routing.module';
+import { Router, Event, NavigationStart, NavigationEnd, NavigationError, ActivatedRoute } from '@angular/router';
+import { SIDE_DRAWER_CONFIG } from './side-drawe-config';
 
 @Component({
   selector: 'app-side-drawer',
@@ -13,35 +17,78 @@ export class SideDrawerComponent implements OnInit {
   @ViewChild('sideDrawerContainer', null) sideDrawerContainer: ElementRef;
   @ViewChild('curtainDown', null) curtainDown: ElementRef;
   @ViewChild('curtainUpper', null) curtainUpper: ElementRef;
-  private opened: boolean = true;
-  private selectedElementIndex: number = 0;
+  private opened: boolean = false;
+  private selectedElementIndex: number = null;
+  private collapsedWidth: string = '72px';
+  private expandedWidth: string = '250px';
 
-  public elements: BottomNavItem[] = [
-    {icon: 'home', label: 'Home', routerLink: ''},
-    {icon: 'home', label: 'Home', routerLink: ''},
-    {icon: 'home', label: 'Home', routerLink: ''},
-    {icon: 'home', label: 'Home', routerLink: ''},
-  ]
+  public elements: any[] = SIDE_DRAWER_CONFIG;
 
-  constructor(private renderer: Renderer2) { }
+  constructor(
+    private renderer: Renderer2,
+    private sideDrawerService: SideDrawerService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit() {
-    setTimeout(function(){ this.onItemSelect(this.selectedElementIndex); }.bind(this), 10);
+    this.sideDrawerService.isOpened().subscribe((isOpened) => {
+      if (isOpened !== null && isOpened != this.opened) {
+        this.toogle();
+      }
+    })
+    this.subscribeToRouteChanges();
+    setTimeout(function () {
+      if (this.opened) {
+        this.opened = false;
+        this.toogle();
+      } else {
+        this.opened = true;
+        this.toogle();
+      }
+      this.onItemSelect(this.selectedElementIndex);
+    }.bind(this), 0);
   }
 
   public toogle() {
+    this.setupContainer();
     if (this.opened) {
       this.renderer.removeClass(this.sideDrawerContainer.nativeElement, 'opened')
       this.renderer.addClass(this.sideDrawerContainer.nativeElement, 'collapsed')
-      this.contentContainer.style.marginLeft = this.sideDrawerContainer.nativeElement.offsetWidth;;
+      this.setContainerMargin();
     } else {
       this.renderer.removeClass(this.sideDrawerContainer.nativeElement, 'collapsed')
       this.renderer.addClass(this.sideDrawerContainer.nativeElement, 'opened')
-      this.contentContainer.style.marginLeft = this.sideDrawerContainer.nativeElement.offsetWidth;;
+      this.setContainerMargin();
+      if (this.collapsedWidth === undefined) {
+        this.collapsedWidth = this.contentContainer.style.marginLeft
+      }
     }
-    this.setupCurtains();
-    setTimeout(function(){ this.setupCurtains(); }.bind(this), 120);
     this.opened = !this.opened;
+  }
+
+  private setupContainer() {
+    if (this.contentContainer.length !== undefined) {
+      for (let i = 0; i < this.contentContainer.length; i++) {
+        if (this.contentContainer[i].style == undefined) {
+          this.contentContainer[i] = this.contentContainer[i].elementRef.nativeElement;
+        }
+      }
+    } else {
+      if (this.contentContainer.style == undefined) {
+        this.contentContainer = this.contentContainer.elementRef.nativeElement;
+      }
+    }
+  }
+
+  private setContainerMargin() {
+    if (this.contentContainer.length !== undefined) {
+      for (let i = 0; i < this.contentContainer.length; i++) {
+        this.contentContainer[i].style.marginLeft = (this.opened) ? this.collapsedWidth : this.expandedWidth;
+      }
+    } else {
+      this.contentContainer.style.marginLeft = (this.opened) ? this.collapsedWidth : this.expandedWidth;
+    }
   }
 
   private getListElementByIndex(index: number): any {
@@ -49,32 +96,54 @@ export class SideDrawerComponent implements OnInit {
     return listElements[index];
   }
 
-  private setupCurtains(clickedElement?: any) {
-    if (clickedElement === undefined) {
-      clickedElement =  this.getListElementByIndex(this.selectedElementIndex);
-    }
-    const listElementHeight = clickedElement.offsetHeight;
-    const listElementOffsetTop = clickedElement.offsetTop;
-    let tmp2;
-    let tmp = listElementOffsetTop + listElementHeight;
-    if (this.opened) {
-      tmp2 = listElementOffsetTop - 2* listElementHeight + 4;
-    } else {
-      tmp2 = listElementOffsetTop - 1.1 * listElementHeight - 2;
-      tmp = tmp + 3;
-    }
-  
-    this.curtainDown.nativeElement.style.transform = 'translateY(' + tmp + 'px)'
-    this.curtainUpper.nativeElement.style.transform = 'translateY(' + tmp2  +'px)'
-  }
 
   public onItemSelect(index: number) {
-    const lastSelectedItem = this.getListElementByIndex(this.selectedElementIndex);
+    this.router.navigateByUrl(this.elements[index].routerLink);
+    this.markItemAsSelected(index);
+  }
+
+  private markItemAsSelected(index: number) {
+    this.deselectCurrentElement();
     this.selectedElementIndex = index;
     const clickedElement = this.getListElementByIndex(index);
-    this.setupCurtains(clickedElement);
-    this.renderer.removeClass(lastSelectedItem, 'active');
     this.renderer.addClass(clickedElement, 'active');
   }
 
+  private deselectCurrentElement() {
+    if (this.selectedElementIndex != null) {
+      const lastSelectedItem = this.getListElementByIndex(this.selectedElementIndex);
+      this.renderer.removeClass(lastSelectedItem, 'active');
+    }
+  }
+
+  private tryToMatchElementToRoute(route: string) {
+    const res = this.elements.filter((element) => {
+      return new RegExp(element.matchRouteRegex).test(route);
+    });
+    return this.elements.indexOf(res[0]);
+  }
+
+  private subscribeToRouteChanges() {
+    this.router.events.subscribe((event: Event) => {
+
+      if (event instanceof NavigationStart) {
+        const index = this.tryToMatchElementToRoute(event.url);
+        if (this.selectedElementIndex != index) {
+          this.markItemAsSelected(index);
+        }
+      }
+      if (event instanceof NavigationEnd) {
+        if (this.selectedElementIndex == null) {
+          const index = this.tryToMatchElementToRoute(event.url);
+          if (this.selectedElementIndex != index) {
+            this.markItemAsSelected(index);
+          }
+        }
+
+      }
+      if (event instanceof NavigationError) {
+        this.deselectCurrentElement();
+      }
+    });
+  }
 }

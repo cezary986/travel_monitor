@@ -114,7 +114,7 @@ class OfferSerializer(serializers.Serializer):
 class TravelSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     title = serializers.CharField(required=True, allow_blank=False, max_length=200)
-    creator = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
+    creator = UserProfileSerializer(many=False, read_only=True)
     created = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S", read_only=True)
     best_offer = OfferSerializer(many=False, read_only=True)
 

@@ -1,26 +1,41 @@
+<app-side-drawer style="position: absolute" [contentContainer]="mainContainer"></app-side-drawer>
 <div>
     <app-navbar (onMenuClick)="sidenav.toggle()"></app-navbar>
     {{ message | async | json}}
-    <mat-sidenav-container class="main-container">
-        <mat-sidenav #sidenav mode="side" [(opened)]="opened" (opened)="events.push('open!')"
-            (closed)="events.push('close!')">
-            Sidenav content
-        </mat-sidenav>
-        <mat-sidenav-content class="container">
+    <mat-sidenav-container  class="main-container">
+        <mat-sidenav-content
+            #mainContainer
+            class="container"
+            infiniteScroll
+            [infiniteScrollDistance]="2"
+            [infiniteScrollThrottle]="90"
+            [scrollWindow]="false"
+            (scrolled)="onContainerScroll()">
             <router-outlet></router-outlet>
         </mat-sidenav-content>
     </mat-sidenav-container>
     <!-- Side Panel -->
     <ngx-aside #sidePanel
-           [title]="'Title'"
-           [cancelButtonTitle]="'Discard'"
-           [submitButtonTitle]="'Send'"
-
-           [closeOnEscape]="false"
-           [showOverlay]="false"
-
-           [showDefaultFooter]="true"
-           [showDefaultHeader]="true">
-           <div #sidePanelContainer style="width: 100vw"></div>
+            [title]="'Title'"
+            [closeOnEscape]="false"
+            [showOverlay]="false"
+            [showDefaultFooter]="true"
+            [showDefaultHeader]="true">
+            <mat-toolbar class="side-panel-toolbar" [ngClass]="{'opened': (sideDrawerOpened | async)}">
+                <button mat-icon-button (click)="onSidePanelCloseClick()">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+            </mat-toolbar>
+            <div 
+                #sidePanelContainer 
+                style="width: 100vw"
+                class="side-panel"
+                [ngClass]="{'opened': (sideDrawerOpened | async)}"
+                infiniteScroll
+                [infiniteScrollDistance]="2"
+                [infiniteScrollThrottle]="90"
+                [scrollWindow]="false"
+                (scrolled)="onSidePanelScroll()">
+            </div>
     </ngx-aside>
 </div>

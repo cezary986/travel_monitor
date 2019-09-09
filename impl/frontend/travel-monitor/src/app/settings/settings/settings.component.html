@@ -1,0 +1,17 @@
+<mat-tab-group mat-stretch-tabs>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">account_circle</mat-icon>
+            {{ 'settings.user_settings.title' | translate }}
+        </ng-template>
+        <app-user-settings></app-user-settings>
+    </mat-tab>
+
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">settings_applications</mat-icon>
+            {{ 'settings.application_settings.title' | translate }}
+        </ng-template>
+        Content 2
+    </mat-tab>
+</mat-tab-group>

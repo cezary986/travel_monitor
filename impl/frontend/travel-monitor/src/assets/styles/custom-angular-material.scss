@@ -1,0 +1,29 @@
+// custom material design
+@mixin custom-angular-material(
+    $background,
+    $primary,
+    $accent,
+    $is-dark
+) {
+    mat-card.semi-transparent {
+        background-color: rgba($background, 0.92) !important;
+    }
+
+    .semi-transparent {
+        background-color: rgba($background, 0.92) !important;
+    }
+
+    .mat-paper {
+        background-color: $background !important;
+    }
+
+    .mat-tab-list {
+        background-color: $background !important;
+    }
+
+    .mat-tab-label-active {
+        .mat-tab-label-content {
+            color: $primary !important;
+        }
+    }
+}

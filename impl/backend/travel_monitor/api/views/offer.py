@@ -38,7 +38,7 @@ class OffersListView(APIView):
             travel = Travel.objects.get(pk=travel_id)
         except ObjectDoesNotExist:
             return JsonResponse({"message": 'No travel with given id exist'}, status=404)
-        offers = Offer.objects.filter(travel=travel, date_from__gt=datetime.datetime.now())
+        offers = Offer.objects.filter(travel=travel, date_from__gt=datetime.datetime.now()).order_by('-created')
         return self._make_paginated_response(offers)
     
     def _make_paginated_response(self, queryset):
@@ -63,6 +63,7 @@ class OffersListView(APIView):
         serializer = OfferSerializer(data=data)
         if serializer.is_valid():
             model = serializer.save()
+            model.creator = request.user
             model.travel = travel
             model.save()
             thread = Thread(target=scrapOffer, args = [model, True])

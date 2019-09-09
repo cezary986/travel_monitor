@@ -1,22 +1,24 @@
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 /**
  * Class handling paginated data served by API
  */
 export class PaginatedResponse<T> {
 
-    private static readonly DEFAULT_LIMIT = 20;
-    private data: BehaviorSubject<T[]>;
-    private url: string;
-    private limit: number;
-    private http: HttpClient;
-    private totalCount: number;
-    private additionalParams: {name: string, value: string | number}[]
+    protected static readonly DEFAULT_LIMIT = 20;
+    protected data: BehaviorSubject<T[]>;
+    protected loading: Subject<boolean>;
+    protected url: string;
+    protected limit: number;
+    protected http: HttpClient;
+    protected totalCount: number;
+    protected additionalParams: {name: string, value: string | number}[]
 
-    private nextPageUrl: string;
-    private previousPageUrl: string;
-    private onDiscardListener: () => void;
+    protected nextPageUrl: string;
+    protected previousPageUrl: string;
+    protected onDiscardListener: () => void;
 
     /**
      * @param http http client for fetching data
@@ -35,7 +37,8 @@ export class PaginatedResponse<T> {
         this.http = http;
         this.limit = limit;
         this.additionalParams = additionalParams;
-        this.data = new BehaviorSubject<T[]>(undefined);
+        this.data = new BehaviorSubject<T[]>([]);
+        this.loading = new Subject();
     }
 
     /**
@@ -91,10 +94,12 @@ export class PaginatedResponse<T> {
      * method can only be called after fetching some other page
      */
     public nextPage(): boolean {
+        
         if (this.nextPageUrl === undefined) {
             throw Error('Cannot fetch next page if no page was fetched before');
         }
         if (this.nextPageUrl != null) {
+            this.loading.next(true);
             this.fetchPage(this.nextPageUrl);
             return true;
         } else {
@@ -111,6 +116,7 @@ export class PaginatedResponse<T> {
             throw Error('Cannot fetch previous page if no page was fetched before');
         }
         if (this.previousPageUrl != null) {
+            this.loading.next(true);
             this.fetchPage(this.previousPageUrl);
             return true;
         } else {
@@ -122,37 +128,20 @@ export class PaginatedResponse<T> {
      * @param number numbe of page
      */
     public fetchPageByNumber(number: number) {
-        this.getPaginatedData(number * this.limit, this.limit);
+        if (number * this.limit < this.totalCount) {
+            this.loading.next(true);
+            this.getPaginatedData(number * this.limit, this.limit);
+        }
     }
 
     private fetchPage(url: string) {
         this.http.get<T[]>(url).subscribe((res: any) => {
-            this.nextPageUrl = res.next;
-            this.previousPageUrl = res.previous;
+            this.nextPageUrl = this.rewriteUrl(res.next);
+            this.previousPageUrl = this.rewriteUrl(res.previous);
             this.totalCount = res.count;
             this.data.next(res.results);
+            this.loading.next(false);
         });
-    }
-
-    public _updateRecord(record: T, uniqueField: string = 'id') {
-        const values = this.data.value;
-        const elementIndex = values.findIndex(el => { 
-            return el[uniqueField] === record[uniqueField];
-        });
-        if (elementIndex >= 0) {
-            values[elementIndex] = record;
-            this.data.next(values);
-        }
-    }
-
-    public _add_record(record: T) {
-        const values = this.data.value;
-        values.unshift(record);
-        if (values.length > this.limit) {
-            values.splice(0, values.length - this.limit);
-        }
-        this.totalCount++;
-        this.data.next(values);
     }
 
     public setOnDiscardListener(listener: () => void) {
@@ -175,5 +164,46 @@ export class PaginatedResponse<T> {
 
     public setLimit(limit: number) {
         this.limit = limit;
+    }
+
+    private rewriteUrl(url: string): string {
+        if (environment.production || url == null) {
+            return url;
+        } else {
+            return url.replace('http://127.0.0.1:8080/api/', environment.apiAddress);
+        }
+    }
+
+    public isLoading(): Observable<boolean> {
+        return this.loading;
+    }
+}
+
+/**
+ * This class extends PaginateReponse class allowing manually changing
+ * its internal data.
+ */
+export class MutablePaginatedResponse<T> extends PaginatedResponse<T> {
+
+    public _updateRecord(record: T, uniqueField: string = 'id') {
+        const values = this.data.value;
+        const elementIndex = values.findIndex(el => { 
+            return el[uniqueField] === record[uniqueField];
+        });
+        if (elementIndex >= 0) {
+            values[elementIndex] = record;
+            this.data.next(values);
+        }
+    }
+
+    public _add_record(record: T) {
+        const values = this.data.value;
+        values.unshift(record);
+        if (values.length > this.limit) {
+            values.splice(values.length - 1, values.length - this.limit);
+        }
+        this.totalCount++;
+        
+        this.data.next(values);
     }
 }

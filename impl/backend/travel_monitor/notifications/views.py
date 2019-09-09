@@ -46,7 +46,7 @@ class NotificationsListView(APIView):
         notification_filter = _get_user_filter_or_create(request.user)
         notifications = Notification.objects.filter(
             user=request.user, 
-            event__type__in=notification_filter.types_enabled.all())
+            event__type__in=notification_filter.types_enabled.all()).order_by('-event__timestamp')
         try:
             notifications = self._filter_data(notifications, notification_filter)
             return self.make_paginated_response(notifications)

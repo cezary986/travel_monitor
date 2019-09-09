@@ -5,7 +5,7 @@
 <mde-popover #appPopover="mdePopover" [mdePopoverOverlapTrigger]="false">
     <mat-card style="max-width: 300px">
         <mat-card-content>
-            <mat-slide-toggle (change)="onThemeToogleChange($event)"></mat-slide-toggle>
+            <mat-slide-toggle [checked]="(currentTheme | async) == darkTheme" (change)="onThemeToogleChange($event)"></mat-slide-toggle>
         </mat-card-content>
     </mat-card>
 </mde-popover>

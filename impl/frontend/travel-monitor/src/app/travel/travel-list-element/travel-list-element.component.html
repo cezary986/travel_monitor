@@ -1,5 +1,8 @@
-<mat-card *ngIf="travel !== undefined" [@listElement] (click)="onClick.emit(travel)" class="{{ 'mat-card travel-list-element ' + (embeded ? 'embeded' : '') }}">
+<mat-card *ngIf="travel !== undefined" [@listElement] (click)="onClick.emit(travel)" [ngClass]="{'embeded': embeded}" class="mat-card travel-list-element semi-transparent">
     <mat-card-header>
+        <span class="avatar" *ngIf="travel.creator !== null">
+            <app-user-avatar [user]="travel.creator" [size]="'25px'"></app-user-avatar>
+        </span>
         <mat-card-title *ngIf="!editing">{{ travel.title }}</mat-card-title>
         <input #titleInput *ngIf="editing" class="travel-title-input" type="text" [(ngModel)]="editiedTitle" (focusout)="onSaveButtonClick()" (keyup.enter)="onSaveButtonClick()">
         <button (click)="$event.stopPropagation();" *ngIf="!editing" class="menu-button right-align" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Dodatkowe akcje dla podróży">

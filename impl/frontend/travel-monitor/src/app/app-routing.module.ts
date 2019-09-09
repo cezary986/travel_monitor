@@ -15,6 +15,10 @@ export const ROUTES = {
     route: 'travel/:travelId',
     url: (travelId: number) => { return 'travel/' + travelId}
   },
+  settings: {
+    route: 'settings',
+    url: () => { return 'settings'}
+  },
 }
 
 const routes: Routes = [
@@ -35,6 +39,11 @@ const routes: Routes = [
   {
     path: ROUTES.travelDetails.route,
     loadChildren: () => import('./offer/offer.module').then(mod => mod.OfferModule),
+    canActivate: [AuthGuardService],
+  },
+  {
+    path: ROUTES.settings.route,
+    loadChildren: () => import('./settings/settings.module').then(mod => mod.SettingsModule),
     canActivate: [AuthGuardService],
   },
 ];

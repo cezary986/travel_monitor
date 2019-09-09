@@ -1,0 +1,17 @@
+{
+    "application_settings": {
+        "title": "Ustawienia aplikacji"
+    },
+    "user_settings": {
+        "title": "Ustawienia konta",
+        "fields": {
+            "username": "Nazwa użytkownika",
+            "email": "Adres email",
+            "first_name": "Imię",
+            "last_name": "Nazwisko"
+        },
+        "hints": {
+            "email": "Kiedyś będą pod niego wysyłane powiadomienia o ofertach"
+        }
+    }
+}

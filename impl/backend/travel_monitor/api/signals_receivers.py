@@ -3,8 +3,9 @@ import api.signals as signals
 from notifications.helpers import send_notification
 from notifications.serializers import EventSerializer
 
+from api.serializers import UserProfileSerializer, OfferSerializer
+
 def connect_receivers():
-    print('Connecting receivers')
     signals.travel_create.connect(travel_create)
     signals.travel_delete.connect(travel_delete)
     signals.offer_create.connect(offer_create)
@@ -18,7 +19,10 @@ def travel_create(sender, **kwargs):
     title='Dodano nową podróż!'
     message=user.username + ' dodał(a) nową podróż o nazwie: ' + travel.title
     author=user
-    data = {'travel_id': travel.pk}
+    data = {
+        'travel_id': travel.pk,
+        'author': UserProfileSerializer(user).data
+    }
     event = send_notification(
         type='travel_create', 
         title=title, 
@@ -34,11 +38,15 @@ def travel_delete(sender, **kwargs):
     title = 'Usunięto podróż!'
     message = user.username + ' usunął(a) podróż o nazwie: ' + travel.title
     author = user
+    data = {
+        'author': UserProfileSerializer(user).data
+    }
     send_notification(
         type='travel_delete', 
         title=title, 
         author=author, 
-        message=message
+        message=message,
+        data=data
     )
 
 def offer_elapse(sender, **kwargs):
@@ -46,7 +54,8 @@ def offer_elapse(sender, **kwargs):
     send_notification(
         type='offer_elapse', 
         title='Oferta wygasła!', 
-        message= 'Oferta: ' + offer.title + ' wygasła'
+        message= 'Oferta: ' + offer.title + ' wygasła',
+        data=OfferSerializer(offer).data
     )
 
 def offer_create(sender, **kwargs):
@@ -58,7 +67,10 @@ def offer_create(sender, **kwargs):
         title='Dodano nową oferte!', 
         message=message,
         author=user,
-        data={'offer_id': offer.pk}
+        data={
+            'offer_id': offer.pk,
+            'author': UserProfileSerializer(user).data
+        }
     )
     
 def offer_delete(sender, **kwargs):
@@ -70,6 +82,9 @@ def offer_delete(sender, **kwargs):
         title='Usunięto oferte!', 
         message=message,
         author=user,
+        data={
+            'author': UserProfileSerializer(user).data
+        }
     )
 
 def test(sender, **kwargs):

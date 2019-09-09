@@ -9,13 +9,16 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { AvatarModule } from '../avatar/avatar.module';
+import { TimeagoModule } from 'ngx-timeago';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
     NotificationsButtonComponent,
     NotificationsShortListComponent,
     NotificationsListComponent,
-    NotificationsListElementComponent
+    NotificationsListElementComponent,
   ],
   imports: [
     CommonModule,
@@ -23,10 +26,16 @@ import { AvatarModule } from '../avatar/avatar.module';
     MatMenuModule,
     MatBadgeModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatExpansionModule,
+    MatProgressSpinnerModule,
+    TimeagoModule.forChild()
   ],
   exports: [
     NotificationsButtonComponent,
+    NotificationsListComponent
+  ],
+  entryComponents: [
     NotificationsListComponent
   ]
 })

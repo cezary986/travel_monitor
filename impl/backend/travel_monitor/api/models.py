@@ -34,6 +34,7 @@ class Offer(models.Model):
     title = models.CharField(max_length=200, null=True)
     created = models.DateTimeField(auto_now_add=True)
     url = models.CharField(max_length=600, null=False)
+    creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     photo_url = models.CharField(max_length=600, null=True)
     last_price = models.ForeignKey('Price', related_name='last_price', null=True, on_delete=models.SET_NULL)
     current_price = models.ForeignKey('Price', related_name='current_price', null=True, on_delete=models.SET_NULL)
@@ -48,7 +49,7 @@ class Offer(models.Model):
         unique_together = ('travel', 'url')
 
 class Travel(models.Model):
-    creator = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created = models.DateTimeField(auto_now_add=True)
     refreshed = models.DateTimeField(null=True)
     title = models.CharField(max_length=200, null=False)

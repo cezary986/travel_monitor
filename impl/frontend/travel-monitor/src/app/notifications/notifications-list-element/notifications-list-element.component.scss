@@ -1,0 +1,40 @@
+
+.notification {
+    max-height: 47px;
+    height:  47px;
+    min-width: 100px;
+}
+
+.avatar-wrapper {
+    display: inline-flex;
+    margin-right: 10px;
+}
+
+.notification-icon {
+    font-size: 37px;
+    margin: 0;
+    position: relative;
+    top: 4px;
+    left: -4.5px;
+    margin-right: 17px;
+}
+
+.notification-content {
+    display: inline-flex;
+    position: relative;
+}
+
+.notification-title {
+    max-width: 275px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    position: relative;
+    top: -14px;
+}
+
+.notification-date {
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    opacity: 0.6;
+}

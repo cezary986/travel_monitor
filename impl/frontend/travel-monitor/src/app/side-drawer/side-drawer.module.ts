@@ -13,7 +13,8 @@ import {MatIconModule} from '@angular/material/icon';
     CommonModule,
     MatRippleModule,
     BottomNavModule,
-    MatIconModule
+    MatIconModule,
+    
   ],
   exports: [
     SideDrawerComponent

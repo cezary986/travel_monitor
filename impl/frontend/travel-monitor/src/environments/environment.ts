@@ -1,9 +1,9 @@
 
 export const environment = {
   production: false,
-  apiAddress: 'http://localhost:90/mymysic-server/api/',
+  apiAddress: 'http://localhost:90/travello-server/api/',
   socketApiAddress: 'ws://localhost:8080/ws/',
-  fileServerAddress: 'http://localhost:90/mymysic-server',
+  fileServerAddress: 'http://localhost:90/travello-server',
   endpoints: {
     login: () => { return environment.apiAddress + 'auth/login';},
     logout: () => { return environment.apiAddress + 'auth/logout';},

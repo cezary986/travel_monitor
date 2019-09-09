@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from '../models/user';
 import { map } from 'rxjs/operators';
@@ -13,22 +13,27 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class UserService {
 
+  private static profile: BehaviorSubject<User> = null;
+
   constructor(
     private http: HttpClient,
     private messagingService: MessagingService,
     private cookieService: CookieService
   ) { }
 
-  public getProfile(): Observable<User> {
-    return this.http.get<User>(environment.endpoints.profile())
-      .pipe(map((profile: User) => {
-        // relative image url to absolute
-        if (profile.avatar != null) {
-          profile.avatar.image = getImageSrc(profile.avatar.image);
-          // this.subscribeToFirebaseCloudMessaging(profile.username);
-        }
-        return profile;
-      }));
+  public getProfile(forceReload: boolean = false): Observable<User> {
+    if (forceReload || UserService.profile == null) {     
+      UserService.profile = new BehaviorSubject(null);
+      this.http.get<User>(environment.endpoints.profile())
+        .pipe(map((profile: User) => {
+          // relative image url to absolute
+          if (profile.avatar != null) {
+            profile.avatar.image = getImageSrc(profile.avatar.image);
+          }
+          UserService.profile.next(profile);
+        })).subscribe(() => {});
+    }
+    return UserService.profile;
   }
 
   private subscribeToFirebaseCloudMessaging(username: string) {

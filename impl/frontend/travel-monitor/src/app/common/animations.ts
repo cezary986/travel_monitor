@@ -63,7 +63,6 @@ export class AnimationsFactory {
             animationArray.push(state('*', style(normalStateStyles)))
         }
         const a =  trigger(triggerName, animationArray);
-        console.log(a);
         return a;
     }
 

@@ -1,1 +1,7 @@
-<p>notifications-list works!</p>
+<div class="notification-list" *ngIf="notifications != undefined">
+    <button *ngFor="let notification of (notifications | async)" class="notification" mat-menu-item>
+        <app-notifications-list-element [notification]="notification"></app-notifications-list-element>
+    </button>
+</div>
+<!-- loading spinner -->
+<mat-spinner [diameter]="50" class="list-loader" *ngIf="loading != null && loading | async"></mat-spinner>

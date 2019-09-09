@@ -1,0 +1,16 @@
+<!-- DROP CONTAINER -->
+<div *ngIf="drop" #dropContainer class="drop-container">
+    <div class="overlayer" [ngClass]="{'active': dragEnter}"></div>
+    <div class="drop-container-content">
+        <mat-icon>file_upload</mat-icon>
+        <h3 class="mat-title"> {{ 'file_upload.drag_and_drop_here' | translate }}</h3>
+        <!-- CHOOSE FILE BUTTON -->
+        <button (click)="onChooseFileButtonClick()" mat-raised-button class="centered" color="primary">
+            {{ 'file_upload.choose_from_disk' | translate }}
+        </button>
+    </div>
+</div>
+<input (change)="onFileChosen($event)" [multiple]="multiple" type="file" id="file-input" hidden aria-hidden="true"
+    #fileInput />
+<!-- LIST OF SELECTED FILES -->
+<app-file-list [files]="filesArray" (onFileDelete)="onFileDeleteClick($event)"></app-file-list>

@@ -1,8 +1,8 @@
 <mat-toolbar class="navbar" color="primary">
-  <!-- <button *ngIf="isLoggedIn | async" (click)="onMenuClick.emit()" class="menu-button" mat-icon-button
-    aria-label="Example icon-button with a heart icon">
+  <button *ngIf="isLoggedIn | async" (click)="onMenuButtonClick()" class="menu-button" mat-icon-button
+    aria-label="Menu">
     <mat-icon>menu</mat-icon>
-  </button> -->
+  </button>
   <img src="assets/images/logo.svg" alt="logo" class="navbar-logo">
   Travel Monitor
   <div class="spacer"></div>

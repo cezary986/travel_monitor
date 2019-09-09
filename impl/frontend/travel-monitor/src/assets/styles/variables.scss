@@ -39,8 +39,3 @@ $color-success: green;
 .more-info-icon {
   cursor: pointer;
 }
-
-
-@mixin variables-mixin($theme) {
-  $card-backgroud:  map-get($theme, background) !global;
-}

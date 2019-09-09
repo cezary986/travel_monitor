@@ -1,4 +1,5 @@
 import { Injectable, ComponentFactoryResolver, ApplicationRef, Injector, EmbeddedViewRef, ElementRef } from '@angular/core';
+import { SidePanelDataStoreService } from './side-panel-data-store.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,8 @@ export class SidePanelService {
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,
     private appRef: ApplicationRef,
-    private injector: Injector
+    private injector: Injector,
+    private dataStore: SidePanelDataStoreService
   ) { }
 
   public setPanel(sidePanel, container: ElementRef) {
@@ -30,9 +32,13 @@ export class SidePanelService {
     }
   }
 
-  public show(component: any) {
+  public show(component: any, data: {key: string, value: any}[]) {
+    for(let i = 0; i < data.length; i++) {
+      this.dataStore.putData(data[i].key, data[i].value);
+    }
     if (this.isOpened) {
       this.clearComponent();
+      this.dataStore.clear();
     }
     this.isOpened = true;
     this.sidePanel.show();
@@ -42,7 +48,8 @@ export class SidePanelService {
 
     const domElem = (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
     this.container.nativeElement.appendChild(domElem);
-  
+    console.log(this.dataStore);
+    
     this.componentRef = componentRef;
   }
 
@@ -53,6 +60,7 @@ export class SidePanelService {
   }
 
   private clearComponent() {
+    this.dataStore.clear();
     this.appRef.detachView(this.componentRef.hostView);
     this.componentRef.destroy();
   }

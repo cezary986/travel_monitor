@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { PaginatedResponse } from 'src/app/common/paginated-response';
+import { PaginatedResponse } from 'src/app/pagination/paginated-response';
 import { NotificationService } from '../service/notification.service';
 import { Notification } from 'src/app/notifications/models/notification';
 import { take } from 'rxjs/operators';

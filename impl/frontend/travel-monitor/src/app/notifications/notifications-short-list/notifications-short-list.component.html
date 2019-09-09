@@ -1,6 +1,6 @@
-<div *ngIf="notifications != undefined">
-    <button *ngFor="let notification of (notifications | async)" mat-menu-item>
+<div class="notification-short-list" *ngIf="notifications != undefined">
+    <button *ngFor="let notification of (notifications | async)" class="notification" mat-menu-item>
         <app-notifications-list-element [notification]="notification"></app-notifications-list-element>
     </button>
-    <button class="show-all-button" mat-button color="accent">Pokaż wszystkie</button>
+    <button (click)="onShowAllNotificationsClick()" class="show-all-button" mat-button color="accent">Pokaż wszystkie</button>
 </div>

@@ -31,7 +31,7 @@ export class TravelAddComponent implements OnInit {
     this.collapsed = false;
     setTimeout(function () {
       this.titleInput.nativeElement.focus();
-    }.bind(this), 200)
+    }.bind(this), 100)
   }
 
   public onSaveButtonClick() {
@@ -39,7 +39,7 @@ export class TravelAddComponent implements OnInit {
       this.dataStore.addTravel(travel);
       this.clearForm();
       this._snackBar.open("Dodano nową podróż!", null, 
-      // { duration: environment.snackBarDuration }
+      { duration: environment.snackBarDuration }
       )
     }, (error) => {
       this.clearForm();

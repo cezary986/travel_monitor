@@ -5,8 +5,9 @@ import { NavbarDataStoreService } from '../data-store.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Observable } from 'rxjs';
 import { AppLoadingService } from 'src/app/common/services/app-loading.service';
-import { SidePanelService } from 'src/app/common/services/side-panel.service';
+import { SidePanelService } from 'src/app/side-panel/side-panel.service';
 import { TravelListComponent } from 'src/app/travel/travel-list/travel-list.component';
+import { SideDrawerService } from 'src/app/side-drawer/service/side-drawer.service';
 
 @Component({
   selector: 'app-navbar',
@@ -26,6 +27,7 @@ export class NavbarComponent implements OnInit {
     private dataStore: NavbarDataStoreService,
     private authService: AuthService,
     private appLoadingService: AppLoadingService,
+    private sideDrawerService: SideDrawerService
   ) { 
     this.appLoading = this.appLoadingService.listenToAppLoading();
   }
@@ -37,8 +39,6 @@ export class NavbarComponent implements OnInit {
         this.dataStore.setUser(this.userService.getProfile());
         this.dataStore.getUser().subscribe((user: User) => {
           this.user = user;
-          console.log(user);
-          
         });
       }
     }) 
@@ -46,5 +46,9 @@ export class NavbarComponent implements OnInit {
 
   public onLogoutClick() {
     this.authService.logout().subscribe((res) => {})
+  }
+
+  onMenuButtonClick() {
+    this.sideDrawerService.toogle();
   }
 }

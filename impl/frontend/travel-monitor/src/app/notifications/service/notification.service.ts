@@ -6,7 +6,8 @@ import { OfferNotification } from '../../common/models/offer-notification';
 import { environment } from 'src/environments/environment';
 import { SocketConnection } from '../../common/sockets/socket-connection';
 import { NotificationMessage } from '../models/notification-message';
-import { PaginatedResponse } from '../../common/paginated-response';
+import { PaginatedResponse, MutablePaginatedResponse } from '../../pagination/paginated-response';
+import { console } from 'src/app/common/debug-console';
 
 @Injectable({
   providedIn: 'root'
@@ -15,14 +16,14 @@ export class NotificationService {
 
   private notifications: BehaviorSubject<Notification[]> = new BehaviorSubject<Notification[]>([]);
   private notificationsHashMap = {};
-  private paginatedResponses: PaginatedResponse<Notification>[] = []
+  private paginatedResponses: MutablePaginatedResponse<Notification>[] = []
 
   constructor(
     private http: HttpClient,
   ) {}
 
   public getNotifications(readed?: string): PaginatedResponse<Notification> {
-    const paginatedResponse = new PaginatedResponse<Notification>(
+    const paginatedResponse = new MutablePaginatedResponse<Notification>(
       this.http, 
       environment.endpoints.notifications()
       );
@@ -32,7 +33,7 @@ export class NotificationService {
     });
     this.paginatedResponses.push(paginatedResponse);
     paginatedResponse.getDataObservable().subscribe((data) => {
-      this.addNotifications(data, paginatedResponse);
+      //this.addNotifications(data, paginatedResponse);
     })
     this.connectToNotificationSocket();
     return paginatedResponse;
@@ -93,10 +94,10 @@ export class NotificationService {
     socketConnection.connect().subscribe((state: string) => {
       switch (state) {
         case 'opened': {
-          console.log('Notification socket connected');
+          console.debug('Notification socket connected');
         }
         case 'closed': {
-          console.log('Notification socket closed');
+          console.error('Notification socket closed');
         }
       }
     });

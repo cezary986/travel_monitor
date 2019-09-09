@@ -1,0 +1,6 @@
+<div class="wrapper" *ngIf="user != null">
+    <app-user-avatar class="avatar" [user]="user" [size]="size"></app-user-avatar>
+    <button (click)="onEditButtonClick()" [matTooltip]="'avatar.change_avatar' | translate" mat-mini-fab color="primary" class="edit-button">
+        <mat-icon>mode_edit</mat-icon>
+    </button>
+</div>

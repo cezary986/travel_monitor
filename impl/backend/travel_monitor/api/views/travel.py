@@ -30,7 +30,7 @@ class TravelsListView(APIView):
     )
     @login_required_view
     def get(self, request, format=None):
-        travels = Travel.objects.all()
+        travels = Travel.objects.all().order_by('-created')
         return self._make_paginated_response(travels)
 
     def _make_paginated_response(self, queryset):
@@ -51,6 +51,8 @@ class TravelsListView(APIView):
         serializer = TravelSerializer(data=data)
         if serializer.is_valid():
             travel = serializer.save()
+            travel.creator = request.user
+            travel.save()
             # send notification
             travel_create.send(sender=self.__class__, user=request.user, travel=travel)
             return JsonResponse(serializer.data, status=201)

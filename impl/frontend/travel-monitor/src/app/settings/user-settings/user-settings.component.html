@@ -1,0 +1,41 @@
+<mat-card class="card-container semi-transparent">
+    <div class="grid">
+        <div class="col-6_sm-12">
+            <app-avatar-uploader [user]="user | async"></app-avatar-uploader>
+        </div>
+        <div class="col-6_sm-12">
+            <!-- PASSWORD -->
+            <mat-form-field appearance="outline" class="form-field-full-width">
+                <mat-label>{{ 'settings.user_settings.fields.first_name' | translate }}</mat-label>
+                <input matInput placeholder="Imię">
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="grid">
+        <div class="col-6_sm-12">
+            <!-- USERNAME -->
+            <mat-form-field appearance="outline" class="form-field-full-width">
+                <mat-label>{{ 'settings.user_settings.fields.username' | translate }}</mat-label>
+                <input matInput placeholder="Nazwa użytkownika">
+            </mat-form-field>
+            <!-- EMAIL -->
+            <mat-form-field appearance="outline" class="form-field-full-width">
+                <mat-label>{{ 'settings.user_settings.fields.email' | translate }}</mat-label>
+                <input matInput placeholder="Email">
+                <mat-hint>{{ 'settings.user_settings.hints.email' | translate }}</mat-hint>
+            </mat-form-field>
+        </div>
+        <div class="col-6_sm-12">
+            <!-- FIRST NAME -->
+            <mat-form-field appearance="outline" class="form-field-full-width">
+                <mat-label>{{ 'settings.user_settings.fields.first_name' | translate }}</mat-label>
+                <input matInput placeholder="Imię">
+            </mat-form-field>
+            <!-- LAST NAME -->
+            <mat-form-field appearance="outline" class="form-field-full-width">
+                <mat-label>{{ 'settings.user_settings.fields.last_name' | translate }}</mat-label>
+                <input matInput placeholder="Nazwisko">
+            </mat-form-field>
+        </div>
+    </div>
+</mat-card>

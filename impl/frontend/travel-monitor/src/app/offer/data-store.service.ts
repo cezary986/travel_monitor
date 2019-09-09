@@ -68,8 +68,6 @@ export class DataStoreService {
               const index = this.offersIndexedHashArray[notification.updated[i].id];
               array[index] = notification.updated[i];
             }
-            console.log(array);
-            
             this.offers.next(array);
           }
         });
