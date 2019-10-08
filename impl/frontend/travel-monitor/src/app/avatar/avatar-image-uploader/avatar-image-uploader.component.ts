@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FileUploadComponent } from 'src/app/common/components/file-upload/file-upload/file-upload.component';
 import { FormControl } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-avatar-image-uploader',
@@ -16,7 +17,7 @@ export class AvatarImageUploaderComponent implements OnInit {
   @ViewChild('fileUploader', null) fileUploaderComponent: FileUploadComponent;
   private fileUploaderFormControl: FormControl = null; 
 
-  constructor() { }
+  constructor(public dialogRef: MatDialogRef<AvatarImageUploaderComponent>) { }
 
   ngOnInit() {
     setTimeout(() => {
@@ -29,5 +30,17 @@ export class AvatarImageUploaderComponent implements OnInit {
       this.selectedFile = files[0]; 
       this.state = 'cropping';
     }
+  }
+
+  public imageCropped(image) {
+    this.selectedFile = image;
+  }
+
+  public onSubmit() {
+    
+  }
+
+  public onDismiss() {
+    this.dialogRef.close();
   }
 }
