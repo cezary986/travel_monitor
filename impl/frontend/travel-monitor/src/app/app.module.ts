@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,7 +15,6 @@ import { TravelModule } from './travel/travel.module';
 import { SideDrawerModule } from './side-drawer/side-drawer.module';
 import { HeadersInterceptor } from './interceptors/headers-interceptor';
 import { NgxAsideModule } from 'ngx-aside';
-import { MessagingService } from './common/services/messaging.service';
 import { environment } from 'src/environments/environment';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -29,6 +28,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { NgReduxModule, NgRedux, DevToolsExtension } from '@angular-redux/store';
+import { IAppState, rootReducer, INITIAL_STATE } from './store';
 
 @NgModule({
   declarations: [
@@ -48,9 +49,6 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
     MatToolbarModule,
     MatIconModule,
     MatButtonModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFireDatabaseModule,
-    AngularFireAuthModule,
     AngularFireMessagingModule,
     InfiniteScrollModule,
     TimeagoModule.forRoot({ intl: { provide: TimeagoIntl, useClass: TimeagoIntl } }),
@@ -63,12 +61,12 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
         deps: [HttpClient]
       },
     }),
+    NgReduxModule
   ],
   providers: [
     CookieService,
     AuthService,
     AuthGuardService,
-    MessagingService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HeadersInterceptor,
@@ -79,9 +77,17 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(private translateService: TranslateService) {
+  constructor(
+    private translateService: TranslateService,
+    ngRedux: NgRedux<IAppState>,
+    devTools: DevToolsExtension
+  ) {
+
     this.translateService.setDefaultLang('pl');
     this.translateService.use('pl');
+
+    const enhancers = (isDevMode() && devTools.isEnabled()) ? [devTools.enhancer()] : [];
+    ngRedux.configureStore(rootReducer, INITIAL_STATE, [], enhancers);
   }
 }
 

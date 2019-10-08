@@ -4,6 +4,9 @@ import { environment } from 'src/environments/environment';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { ROUTES } from '../app-routing.module';
+import { NgRedux } from '@angular-redux/store';
+import { IAppState, USER_LOGIN, USER_LOGOUT } from '../store';
+import { USER_SET_LOGGED_IN } from '../common/store/user/actions';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +18,7 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router,
+    private redux: NgRedux<IAppState>
   ) {
     this.checkLoginStatus();
     this.loggedIn.subscribe((loggedIn: boolean) => {
@@ -32,7 +36,8 @@ export class AuthService {
     const res = this.http.post<any>(environment.endpoints.login(), JSON.stringify(body));
     res.subscribe((res) => {
       this.loggedIn.next(true);
-    })
+      this.redux.dispatch({type: USER_SET_LOGGED_IN, payload: true});
+    });
     return res;
   }
 
@@ -41,6 +46,7 @@ export class AuthService {
       environment.endpoints.checkLogin());
     status.subscribe((res) => {
       this.loggedIn.next(res.logged_in);
+      this.redux.dispatch({type: USER_SET_LOGGED_IN, payload: res.logged_in});
     });
   }
 
@@ -49,15 +55,8 @@ export class AuthService {
       environment.endpoints.logout(), {});
     result.subscribe((res) => {
       this.loggedIn.next(false);
+      this.redux.dispatch({type: USER_SET_LOGGED_IN, payload: false});
     });
     return result;
-  }
-
-  public isLoggedIn(): boolean {
-    return this.loggedIn.value;
-  }
-
-  public listenToLoginStatus(): Observable<boolean> {
-    return this.loggedIn;
   }
 }

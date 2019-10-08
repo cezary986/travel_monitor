@@ -2,6 +2,10 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
+import { select } from '@angular-redux/store';
+import { IAppState } from 'src/app/store';
+import { Observable } from 'rxjs';
+import { ROUTES } from 'src/app/app-routing.module';
 
 
 @Component({
@@ -11,8 +15,9 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
+  @select((s: IAppState) => s.user.loggedIn) loggedIn: Observable<boolean>;
   loginForm: FormGroup;
-  public hasError: boolean = false;
+  public hasError = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -21,11 +26,11 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.authService.listenToLoginStatus().subscribe((loggedIn) => {
+    this.loggedIn.subscribe((loggedIn) => {
       if (loggedIn) {
-        this.router.navigate(['travels']);
+        this.router.navigate([ROUTES.travelsList.route]);
       }
-    })
+    });
     this.loginForm = this.formBuilder.group({
       username: ['', [
         Validators.required,

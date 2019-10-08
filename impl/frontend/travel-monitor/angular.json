@@ -26,9 +26,7 @@
             "baseHref": "travello",
             "assets": [
               "src/favicon.ico",
-              "src/assets",
-              "src/firebase-messaging-sw.js",
-              "src/manifest.json"
+              "src/assets"
             ],
             "styles": [
               "src/styles.scss",
@@ -90,9 +88,7 @@
             "karmaConfig": "karma.conf.js",
             "assets": [
               "src/favicon.ico",
-              "src/assets",
-              "src/firebase-messaging-sw.js",
-              "src/manifest.json"
+              "src/assets"
             ],
             "styles": [
               "src/styles.scss"

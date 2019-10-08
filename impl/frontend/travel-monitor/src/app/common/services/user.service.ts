@@ -5,8 +5,10 @@ import { environment } from 'src/environments/environment';
 import { User } from '../models/user';
 import { map } from 'rxjs/operators';
 import { getImageSrc, generateUUID } from '../utils';
-import { MessagingService } from './messaging.service';
 import { CookieService } from 'ngx-cookie-service';
+import { NgRedux } from '@angular-redux/store';
+import { IAppState } from 'src/app/store';
+import { SET_USER } from '../store/user/actions';
 
 @Injectable({
   providedIn: 'root'
@@ -17,12 +19,11 @@ export class UserService {
 
   constructor(
     private http: HttpClient,
-    private messagingService: MessagingService,
-    private cookieService: CookieService
+    private redux: NgRedux<IAppState>
   ) { }
 
   public getProfile(forceReload: boolean = false): Observable<User> {
-    if (forceReload || UserService.profile == null) {     
+    if (forceReload || UserService.profile == null) {
       UserService.profile = new BehaviorSubject(null);
       this.http.get<User>(environment.endpoints.profile())
         .pipe(map((profile: User) => {
@@ -31,18 +32,9 @@ export class UserService {
             profile.avatar.image = getImageSrc(profile.avatar.image);
           }
           UserService.profile.next(profile);
+          this.redux.dispatch({type: SET_USER, payload: profile});
         })).subscribe(() => {});
     }
     return UserService.profile;
-  }
-
-  private subscribeToFirebaseCloudMessaging(username: string) {
-    let userId = this.cookieService.get('fcm_use_id');
-    if (userId == null) {
-      userId = username + '_' + generateUUID();
-      this.cookieService.set('fcm_use_id', userId);
-    }
-    this.messagingService.requestPermission(userId)
-    this.messagingService.receiveMessage();
   }
 }

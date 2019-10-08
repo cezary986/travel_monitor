@@ -14,7 +14,7 @@ export class SnackbarService {
 
   public info(message: string) {
     this._snackBar.openFromComponent(SnackbarInfoComponent, {
-      // duration: environment.snackBarDuration,
+      duration: environment.snackBarDuration,
       data: {
         message: message,
       }

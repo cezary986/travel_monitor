@@ -108,7 +108,7 @@ class TravelDetailView(APIView):
                 travel = Travel.objects.get(pk=travel_id)
             except ObjectDoesNotExist:
                 return JsonResponse({"message": 'No travel with given id exist'}, status=404)
-            travel.title = data.title
+            travel.title = data['title']
             travel.save()
             serializer = TravelSerializer(travel)
             return JsonResponse(serializer.data, safe=False, status=201)

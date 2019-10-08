@@ -1,0 +1,4 @@
+
+export const SET_USER_INIT_STATE = 'SET_USER_INIT_STATE';
+export const SET_USER = 'SET_USER';
+export const USER_SET_LOGGED_IN = 'USER_SET_LOGGED_IN';

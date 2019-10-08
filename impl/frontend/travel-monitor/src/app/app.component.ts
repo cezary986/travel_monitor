@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SidePanelService } from './side-panel/side-panel.service';
-import { MessagingService } from './common/services/messaging.service';
 import { Observable } from 'rxjs';
 import { ScrollService } from './scroll/scroll.service';
 import { SideDrawerService } from './side-drawer/service/side-drawer.service';
 import { TranslateService } from '@ngx-translate/core';
+import { NgRedux, select } from '@angular-redux/store';
+import { IAppState } from './store';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class AppComponent implements OnInit {
 
+  @select((s: IAppState) => s.user.loggedIn) loggedIn: Observable<boolean>;
   title = 'travello';
   opened: boolean;
   @ViewChild('sidePanel', null) sidePanel;
@@ -23,17 +25,15 @@ export class AppComponent implements OnInit {
   constructor(
     private sidePanelService: SidePanelService,
     private scrollService: ScrollService,
-    private messagingService: MessagingService,
     private sideDrawerService: SideDrawerService,
-    private translateService: TranslateService
-  ) { 
+    private translateService: TranslateService,
+    private redux: NgRedux<IAppState>
+  ) {
     this.sideDrawerOpened = this.sideDrawerService.isOpened();
   }
 
   ngOnInit(): void {
     this.sidePanelService.setPanel(this.sidePanel, this.sidePanelContainer);
-
-    this.message = this.messagingService.currentMessage
   }
 
   public onContainerScroll() {

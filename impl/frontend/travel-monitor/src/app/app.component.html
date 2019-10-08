@@ -1,7 +1,6 @@
-<app-side-drawer style="position: absolute" [contentContainer]="mainContainer"></app-side-drawer>
+<app-side-drawer *ngIf="loggedIn | async" style="position: absolute" [contentContainer]="mainContainer"></app-side-drawer>
 <div>
     <app-navbar (onMenuClick)="sidenav.toggle()"></app-navbar>
-    {{ message | async | json}}
     <mat-sidenav-container  class="main-container">
         <mat-sidenav-content
             #mainContainer

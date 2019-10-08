@@ -33,7 +33,7 @@ import { MatDividerModule } from '@angular/material/divider';
 export class FileUploadModule {
   constructor(private translateService: TranslateService) {
     // loads module translations
-    if (translateService.defaultLang != null) {
+    if (Object.keys(translateService.translations).length !== 0 && translateService.translations.constructor !== Object) {
       this.setupTranslations();
     } else {
       this.translateService.store.onDefaultLangChange.subscribe(a => {

@@ -23,23 +23,14 @@ export const environment = {
       }
       return url;
     },
-    notification: (notificationId: number) => { return environment.apiAddress + 'notifications/' + notificationId;},
-    notificationsFilter: () => { return environment.apiAddress + 'notifications/filter';},
-    notificationsTypes: () => { return environment.apiAddress + 'notifications/types';},
-    supportedDomains: () => { return environment.apiAddress + 'supported_domains';},
-    offersSocket: () => { return environment.socketApiAddress + 'offers'},
-    notificationsSocket: () => { return environment.socketApiAddress + 'notifications'}
+    notification: (notificationId: number) => environment.apiAddress + 'notifications/' + notificationId,
+    notificationsFilter: () => environment.apiAddress + 'notifications/filter',
+    notificationsTypes: () => environment.apiAddress + 'notifications/types',
+    supportedDomains: () => environment.apiAddress + 'supported_domains',
+    offersSocket: () => environment.socketApiAddress + 'offers',
+    notificationsSocket: () => environment.socketApiAddress + 'notifications'
   },
   snackBarDuration: 3000,
-  firebase: {
-    apiKey: "AIzaSyDiDRUFQz9lOxkHVPYMkLqAR3IZv8uReN0",
-    authDomain: "travel-monitor-1c234.firebaseapp.com",
-    databaseURL: "https://travel-monitor-1c234.firebaseio.com",
-    projectId: "travel-monitor-1c234",
-    storageBucket: "",
-    messagingSenderId: "802742362191",
-    appId: "1:802742362191:web:4882b1a92622785f"
-  }
 };
 
 /*

@@ -3,3 +3,5 @@
 /impl/.vscode/
 impl/frontend/travel-monitor/src/assets/images/logo.png
 impl/backend/travel_monitor/travel_monitor/firebase_settings.py
+impl/backend/drivers/geckodriver.exe
+impl/geckodriver.log

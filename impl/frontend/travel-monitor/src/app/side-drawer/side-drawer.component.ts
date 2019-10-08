@@ -1,26 +1,30 @@
-import { Component, OnInit, Input, ElementRef, ViewChild, Renderer2 } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, ViewChild, Renderer2, AfterViewChecked, OnDestroy } from '@angular/core';
 import { timeout } from 'q';
 import { BottomNavItem } from 'ngx-bottom-nav';
 import { SideDrawerService } from './service/side-drawer.service';
 import { ROUTES } from '../app-routing.module';
 import { Router, Event, NavigationStart, NavigationEnd, NavigationError, ActivatedRoute } from '@angular/router';
 import { SIDE_DRAWER_CONFIG } from './side-drawe-config';
+import { NgRedux, select } from '@angular-redux/store';
+import { IAppState } from '../store';
+import { Observable } from 'rxjs';
+import { User } from '../common/models/user';
 
 @Component({
   selector: 'app-side-drawer',
   templateUrl: './side-drawer.component.html',
   styleUrls: ['./side-drawer.component.scss']
 })
-export class SideDrawerComponent implements OnInit {
+export class SideDrawerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   @Input() contentContainer: any;
   @ViewChild('sideDrawerContainer', null) sideDrawerContainer: ElementRef;
   @ViewChild('curtainDown', null) curtainDown: ElementRef;
   @ViewChild('curtainUpper', null) curtainUpper: ElementRef;
-  private opened: boolean = false;
+  private opened = false;
   private selectedElementIndex: number = null;
-  private collapsedWidth: string = '72px';
-  private expandedWidth: string = '250px';
+  private collapsedWidth = '72px';
+  private expandedWidth = '250px';
 
   public elements: any[] = SIDE_DRAWER_CONFIG;
 
@@ -28,7 +32,7 @@ export class SideDrawerComponent implements OnInit {
     private renderer: Renderer2,
     private sideDrawerService: SideDrawerService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
@@ -36,9 +40,34 @@ export class SideDrawerComponent implements OnInit {
       if (isOpened !== null && isOpened != this.opened) {
         this.toogle();
       }
-    })
+    });
     this.subscribeToRouteChanges();
-    setTimeout(function () {
+    // setTimeout(function () {
+    //   if (this.opened) {
+    //     this.opened = false;
+    //     this.toogle();
+    //   } else {
+    //     this.opened = true;
+    //     this.toogle();
+    //   }
+    //   this.onItemSelect(this.selectedElementIndex);
+    //   this.onItemSelect(this.tryToMatchElementToRoute());
+    // }.bind(this), 0);
+  }
+
+  ngOnDestroy(): void {
+    if (this.contentContainer.length !== undefined) {
+      for (let i = 0; i < this.contentContainer.length; i++) {
+        this.contentContainer[i].style.marginLeft = 0;
+      }
+    } else {
+      this.contentContainer.style.marginLeft = 0;
+    }
+  }
+
+  ngAfterViewChecked(): void {
+    setTimeout(() => {
+      this.markElementFromUrl(this.router.url);
       if (this.opened) {
         this.opened = false;
         this.toogle();
@@ -46,25 +75,32 @@ export class SideDrawerComponent implements OnInit {
         this.opened = true;
         this.toogle();
       }
-      this.onItemSelect(this.selectedElementIndex);
-    }.bind(this), 0);
+    }, 500);
   }
 
   public toogle() {
     this.setupContainer();
     if (this.opened) {
-      this.renderer.removeClass(this.sideDrawerContainer.nativeElement, 'opened')
-      this.renderer.addClass(this.sideDrawerContainer.nativeElement, 'collapsed')
-      this.setContainerMargin();
+      this.collapse();
     } else {
-      this.renderer.removeClass(this.sideDrawerContainer.nativeElement, 'collapsed')
-      this.renderer.addClass(this.sideDrawerContainer.nativeElement, 'opened')
-      this.setContainerMargin();
-      if (this.collapsedWidth === undefined) {
-        this.collapsedWidth = this.contentContainer.style.marginLeft
-      }
+      this.open();
     }
     this.opened = !this.opened;
+  }
+
+  private open() {
+    this.renderer.removeClass(this.sideDrawerContainer.nativeElement, 'collapsed')
+    this.renderer.addClass(this.sideDrawerContainer.nativeElement, 'opened')
+    this.setContainerMargin();
+    if (this.collapsedWidth === undefined) {
+      this.collapsedWidth = this.contentContainer.style.marginLeft
+    }
+  }
+
+  private collapse() {
+    this.renderer.removeClass(this.sideDrawerContainer.nativeElement, 'opened')
+    this.renderer.addClass(this.sideDrawerContainer.nativeElement, 'collapsed')
+    this.setContainerMargin();
   }
 
   private setupContainer() {
@@ -125,25 +161,24 @@ export class SideDrawerComponent implements OnInit {
 
   private subscribeToRouteChanges() {
     this.router.events.subscribe((event: Event) => {
-
       if (event instanceof NavigationStart) {
-        const index = this.tryToMatchElementToRoute(event.url);
-        if (this.selectedElementIndex != index) {
-          this.markItemAsSelected(index);
-        }
+        this.markElementFromUrl(event.url);
       }
       if (event instanceof NavigationEnd) {
-        if (this.selectedElementIndex == null) {
-          const index = this.tryToMatchElementToRoute(event.url);
-          if (this.selectedElementIndex != index) {
-            this.markItemAsSelected(index);
-          }
-        }
-
+        this.markElementFromUrl(event.url);
       }
       if (event instanceof NavigationError) {
         this.deselectCurrentElement();
       }
     });
+  }
+
+  private markElementFromUrl(url: string) {
+    if (this.selectedElementIndex == null) {
+      const index = this.tryToMatchElementToRoute(url);
+      if (this.selectedElementIndex != index) {
+        this.markItemAsSelected(index);
+      }
+    }
   }
 }

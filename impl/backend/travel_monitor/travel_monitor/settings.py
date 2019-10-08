@@ -186,12 +186,6 @@ STATICFILES_DIRS = [
   os.path.join(BASE_DIR, 'backend', 'static')
 ]
 
-import travel_monitor.firebase_settings as firebase_settings
-
-API_KEY = firebase_settings.API_KEY
-
-
-
 
 # <AVATARS>
 AVATAR_SIZE = 100

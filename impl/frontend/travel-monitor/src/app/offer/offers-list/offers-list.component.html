@@ -1,8 +1,8 @@
 <app-offer-list-header></app-offer-list-header>
 <!-- loading spinner -->
-<mat-spinner [diameter]="50" class="list-loader" *ngIf="loading"></mat-spinner>
+<mat-spinner [diameter]="50" class="list-loader" *ngIf="loading !== null && (loading | async)"></mat-spinner>
 <!-- add offer component -->
 <app-offer-add [travelId]="travelId"></app-offer-add>
 <!-- list of offers -->
-<app-offer-list-element *ngFor="let offer of offers" [offer]="offer" (onDeleteClick)="onOfferDeleteClick($event)">
+<app-offer-list-element *ngFor="let offer of offersData" [offer]="offer" (onDeleteClick)="onOfferDeleteClick($event)">
 </app-offer-list-element>

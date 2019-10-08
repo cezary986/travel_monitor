@@ -10,7 +10,7 @@ from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
-FIREFOX_DRIVER_PATH = r"C:/Users/Cezary/Documents/Rasberry/Projects/Travello/webdrivers/geckodriver.exe"
+FIREFOX_DRIVER_PATH = r"C:/Users/cezar/OneDrive/Dokumenty/Rasberry/Projects/travel_monitor/impl/backend/drivers/geckodriver.exe"
 FIREFOX_BINARY_PATH = r"C:/Program Files/Mozilla Firefox/firefox.exe"
 
 """

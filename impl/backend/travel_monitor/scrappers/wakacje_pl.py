@@ -58,13 +58,14 @@ class WakacjePlScrapper(BaseScrapper):
         return domElement.text
 
     def extract_offer_photo_url(self, driver):
-        domElement = WebDriverWait(driver, TIMEOUT).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.offerCont > div.fullContainer > div.photoCont.lightBoxGallery > img')))
+        domElement = WebDriverWait(driver, TIMEOUT).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'img.photo')))
         return domElement.get_attribute("src")
 
 
     def extract_offer_dates(self, driver):
         domElement = WebDriverWait(driver, TIMEOUT).until(ec.visibility_of_element_located((By.CSS_SELECTOR, '#calculator > div > div:nth-child(2) > span.sc-6911oo-1.bfVcIf')))
-        dates = domElement.text.split(' - ')
+        dates = domElement.text.split(' ')
+        print(dates)
         date_from = datetime.datetime.strptime(dates[0],"%d.%m.%Y")
-        date_to = datetime.datetime.strptime(dates[1].split(' / ')[0],"%d.%m.%Y")
+        date_to = datetime.datetime.strptime(dates[2],"%d.%m.%Y")
         return date_from, date_to

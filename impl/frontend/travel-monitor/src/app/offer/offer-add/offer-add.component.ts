@@ -7,6 +7,10 @@ import { SnackbarService } from 'src/app/snackbar/snackbar.service';
 import { SupportedDomainsService } from 'src/app/common/services/supported-domains.service';
 import { getUrlDomainIfSupported } from '../utils';
 import { supportedDomainValidator } from '../validators/supported-domain-validator';
+import { NgRedux } from '@angular-redux/store';
+import { IAppState } from 'src/app/store';
+import { ADD_OFFER } from '../store/actions';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-offer-add',
@@ -23,11 +27,11 @@ export class OfferAddComponent implements OnInit {
   public initialized: boolean = false;
 
   constructor(
-    private dataStore: DataStoreService,
     private offerService: OfferService,
     private supportedDomainsService: SupportedDomainsService,
     private snackBarService: SnackbarService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private redux: NgRedux<IAppState>
   ) { }
 
   ngOnInit() {
@@ -56,10 +60,10 @@ export class OfferAddComponent implements OnInit {
       url
     )
       .subscribe((offer: Offer) => {
-        this.dataStore.addNewOffer(offer);
+        this.redux.dispatch({type: ADD_OFFER, payload: offer});
         this.clearForm();
         this.snackBarService.info('Zapisano nową oferte. Jej dane mogą być widoczne dopier po chwili');
-      })
+      });
   }
 
   public clearForm() {

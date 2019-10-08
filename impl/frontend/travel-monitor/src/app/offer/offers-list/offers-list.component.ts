@@ -6,6 +6,12 @@ import { DataStoreService } from '../data-store.service';
 import { SnackbarService } from 'src/app/snackbar/snackbar.service';
 import { Travel } from 'src/app/common/models/travel';
 import { TravelService } from 'src/app/common/services/travel.service';
+import { InfiniteScrollDataProvider } from 'src/app/pagination/infinite-scroll-data-provider';
+import { Observable } from 'rxjs';
+import { NgRedux, select } from '@angular-redux/store';
+import { IAppState } from 'src/app/store';
+import { SET_OFFERS_LIST, DELETE_OFFER } from '../store/actions';
+import { IOffersState } from '../store/store';
 
 @Component({
   selector: 'app-offers-list',
@@ -14,9 +20,10 @@ import { TravelService } from 'src/app/common/services/travel.service';
 })
 export class OffersListComponent implements OnInit, OnDestroy {
 
+  @select((s: IAppState) => s.offers) offersObject: Observable<IOffersState>;
   private travelId: number;
-  public offers: Offer[];
-  public loading: boolean = true;
+  public offersData: Offer[];
+  public loading: Observable<boolean> = null;
 
   constructor(
     private dataStore: DataStoreService,
@@ -25,40 +32,45 @@ export class OffersListComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private snackBarService: SnackbarService,
+    private redux: NgRedux<IAppState>
   ) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
-      this.travelId = Number.parseInt(params.get("travelId"));
+      this.travelId = Number.parseInt(params.get('travelId'), 10);
       this.fetchOffers();
       this.fetchTravel();
-    })
+    });
   }
 
-  ngOnDestroy(): void {
-    this.dataStore.stopListeningToOffersChanges();
-  }
+  ngOnDestroy(): void {}
 
   private fetchOffers() {
-    this.offerService.getOffers(this.travelId).subscribe((offers: Offer[]) => { 
-      this.dataStore.setOffers(offers);
-      this.dataStore.getOffers().subscribe((offers: Offer[]) => {
-        this.offers = offers;
-        this.loading = false;
-      })
-      this.dataStore.startListeningToOffersChanges();
-    })
+    const paginatedResponse = this.offerService.getOffers(this.travelId);
+    paginatedResponse.setLimit(20);
+    const infiniteScrollData = new InfiniteScrollDataProvider<Offer>(paginatedResponse);
+    const data = infiniteScrollData.getDataObservable();
+    this.loading = infiniteScrollData.isLoading();
+    infiniteScrollData.getFirstPortion();
+    data.subscribe(offers => {
+      this.redux.dispatch({type: SET_OFFERS_LIST, payload: offers});
+    });
+    this.offersObject.subscribe((state: IOffersState) => {
+      if (state.offers !== null) {
+        this.offersData = Object.values(state.offers).reverse() as Offer[];
+      }
+    });
   }
 
   private fetchTravel() {
     this.travelService.getTravel(this.travelId).subscribe((travel: Travel) => {
       this.dataStore.setTravel(travel);
-    })
+    });
   }
 
   public onOfferDeleteClick(offer: Offer) {
     this.offerService.deleteOffer(offer.id).subscribe((res) => {
-      this.dataStore.removeOffer(offer);
+      this.redux.dispatch({type: DELETE_OFFER, payload: offer});
       this.snackBarService.info('Offerta została usunięta');
     });
   }

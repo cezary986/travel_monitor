@@ -6,6 +6,10 @@ import { environment } from 'src/environments/environment';
 import { OfferNotification } from '../models/offer-notification';
 import { NotificationService } from '../../notifications/service/notification.service';
 import { SocketConnection } from '../sockets/socket-connection';
+import { PaginatedResponse } from 'src/app/pagination/paginated-response';
+import { NgRedux } from '@angular-redux/store';
+import { IAppState } from 'src/app/store';
+import { ADD_OFFER, UPDATE_OFFER } from 'src/app/offer/store/actions';
 
 @Injectable({
   providedIn: 'root'
@@ -16,13 +20,14 @@ export class OfferService {
 
   constructor(
     private http: HttpClient,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private redux: NgRedux<IAppState>
   ) {
-    this.connectToNotificationSocket();
+    this.connectToOffersSocket();
   }
 
   public getOffers(travelId: number) {
-    return this.http.get<Offer[]>(environment.endpoints.offers(travelId));
+    return new PaginatedResponse<Offer>(this.http, environment.endpoints.offers(travelId));
   }
 
   public addOfferToTravel(
@@ -31,7 +36,7 @@ export class OfferService {
   ): Observable<Offer> {
     return this.http.post<Offer>(
       environment.endpoints.offers(travelId),
-      JSON.stringify({ url: url }),
+      { url: url },
     );
   }
 
@@ -46,7 +51,7 @@ export class OfferService {
     );
   }
 
-  private connectToNotificationSocket() {
+  private connectToOffersSocket() {
     const socketConnection = new SocketConnection<OfferNotification>(environment.endpoints.offersSocket());
     socketConnection.connect().subscribe((state: string) => {
       switch(state) {
@@ -59,8 +64,10 @@ export class OfferService {
       }
     });
     socketConnection.getData().subscribe((offerNotification: OfferNotification) => {
-      this.offersNotifications.next(offerNotification);
-      console.log(offerNotification);
+      for (let i = 0; i < offerNotification.updated.length; i++) {
+        const element = offerNotification.updated[i];
+        this.redux.dispatch({type: UPDATE_OFFER, payload: offerNotification.updated[i]}) 
+      }
       this.notificationService.addOffersNotification(offerNotification);
     });
   }

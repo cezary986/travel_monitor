@@ -1,5 +1,5 @@
 <mat-toolbar class="navbar" color="primary">
-  <button *ngIf="isLoggedIn | async" (click)="onMenuButtonClick()" class="menu-button" mat-icon-button
+  <button *ngIf="loggedIn | async" (click)="onMenuButtonClick()" class="menu-button" mat-icon-button
     aria-label="Menu">
     <mat-icon>menu</mat-icon>
   </button>
@@ -9,23 +9,23 @@
   <!-- Theme selection component -->
   <app-theme-switch class="navbar-element"></app-theme-switch>
   <!-- Notifications -->
-  <app-notifications-button *ngIf="isLoggedIn | async" class="navbar-element"></app-notifications-button>
+  <app-notifications-button *ngIf="loggedIn | async" class="navbar-element"></app-notifications-button>
   <!-- User avatar -->
-  <button (click)="userPopupOpened = true;" *ngIf="isLoggedIn | async" mat-icon-button [mdePopoverTriggerFor]="userPopover" mdePopoverTriggerOn="click" #popoverTrigger="mdePopoverTrigger">
-    <app-user-avatar class="avatar" [user]="user"></app-user-avatar>
+  <button (click)="userPopupOpened = true;" *ngIf="loggedIn | async" mat-icon-button [mdePopoverTriggerFor]="userPopover" mdePopoverTriggerOn="click" #popoverTrigger="mdePopoverTrigger">
+    <app-user-avatar class="avatar" [user]="user | async"></app-user-avatar>
   </button>
 
   <mde-popover #userPopover="mdePopover" [mdePopoverOverlapTrigger]="false">
-      <mat-card *ngIf="user != undefined" class="user-popover">
+      <mat-card *ngIf="(user | async) != undefined" class="user-popover">
           <div class="mat-h2 username-header">
               <div class="grid">
                 <div class="col-3">
-                  <app-user-avatar [user]="user" [size]="'60px'"></app-user-avatar>
+                  <app-user-avatar [user]="user | async" [size]="'60px'"></app-user-avatar>
                 </div>
                 <div class="col-8">
-                  <div>{{ user.username }}</div>
+                  <div>{{ (user | async).username }}</div>
                   <div>
-                    <span>{{ user.email }}</span>
+                    <span>{{ (user | async).email }}</span>
                   </div>
                 </div>
               </div>
