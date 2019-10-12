@@ -1,0 +1,23 @@
+<div class="wrapper">
+    <app-user-avatar
+        *ngFor="let user of users.slice(0, 4)"
+        [user]="user"
+        [size]="size">
+    </app-user-avatar>
+    <div 
+        class="more" 
+        *ngIf="users.length > 4" 
+        [ngStyle]="{'min-width': 'calc(' + size + ' - 10px)', 'height': 'calc(' + size + ' - 10px)'}"
+        [mdePopoverTriggerFor]="userPopover" 
+        mdePopoverTriggerOn="hover" 
+        #popoverTrigger="mdePopoverTrigger">
+        <span>{{ users.length - 4 }}+</span>
+    </div>
+</div>
+
+<!--  User list popover -->
+<mde-popover #userPopover="mdePopover" [mdePopoverOverlapTrigger]="false">
+    <mat-card class="user-list-popover">
+        <app-simple-user-list [users]="users.slice(4)"></app-simple-user-list>
+    </mat-card>
+</mde-popover>

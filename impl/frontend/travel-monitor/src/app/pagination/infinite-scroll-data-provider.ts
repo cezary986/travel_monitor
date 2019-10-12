@@ -27,6 +27,10 @@ export class InfiniteScrollDataProvider<T> {
         return this.data;
     }
 
+    public getErrorObservable(): Observable<any> {
+        return this.paginatedResponse.getErrorsObservable();
+    }
+
     public isLoading(): Observable<boolean> {
         return this.paginatedResponse.isLoading();
     }

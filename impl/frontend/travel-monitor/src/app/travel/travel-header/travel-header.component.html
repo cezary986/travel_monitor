@@ -1,0 +1,17 @@
+<mat-card *ngIf="travel !== null" [@listElement] (click)="onClick.emit(travel)"
+    class="mat-card travel-list-element semi-transparent">
+        <span class="avatar" *ngIf="users !== null">
+            <app-user-avatar-list [users]="users"></app-user-avatar-list>
+        </span>
+        <mat-card-title>{{ travel.title }}</mat-card-title>
+        <button (click)="$event.stopPropagation();" class="menu-button right-align" mat-icon-button
+            [matMenuTriggerFor]="menu" aria-label="Dodatkowe akcje dla podróży">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="onTravelEditClick(); $event.stopPropagation();">
+                <mat-icon>edit</mat-icon>
+                <span>Edytuj</span>
+            </button>
+        </mat-menu>
+</mat-card>

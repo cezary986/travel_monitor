@@ -63,10 +63,10 @@ class AvatarView(APIView):
             avatar_data = Avatar(user=request.user)
         if override:
             # Overwrite existing avatar
-            avatar_data.image = createImageFromRequesyBody(
-            request.body, avatar_data.image.path)
-        else:
-            avatar_data.image = createImageFromRequesyBody(request.body, None)
+            os.remove(avatar_data.image.path)
+                  
+        avatar_data.image = createImageFromRequesyBody(
+            request.body, None)
         try:
             avatar_data.save()
             saveImage(AVATAR_SIZE, AVATAR_SIZE, avatar_data.image)
@@ -74,4 +74,4 @@ class AvatarView(APIView):
             return JsonResponse(serializer.data, status=200)
         except Exception as error:
             serializer = MessageSerializer(Message('Error saving avatar'))
-            return JsonResponse(serializer.data, status=401)
+            return JsonResponse(serializer.data, status=500)

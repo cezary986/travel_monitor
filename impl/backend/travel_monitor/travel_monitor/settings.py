@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'drf_yasg',
     "fcm_django",
     "avatars",
-    "notifications"
+    "notifications",
+    'guardian',
 ]
 
 MIDDLEWARE = [
@@ -61,6 +62,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'travel_monitor.disable_csrf.DisableCSRF'
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend', # this is default
+    'guardian.backends.ObjectPermissionBackend',
+)
 
 ROOT_URLCONF = 'travel_monitor.urls'
 

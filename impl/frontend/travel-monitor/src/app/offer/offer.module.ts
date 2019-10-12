@@ -24,6 +24,9 @@ import { TravelModule } from '../travel/travel.module';
 import { RouterModule } from '@angular/router';
 import { PricesChartModalComponent } from './prices-chart-modal/prices-chart-modal.component';
 import { OfferListFiltersComponent } from './offer-list-filters/offer-list-filters.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { setupModuleTranslations } from '../common/utils/translate_helpers';
+import { TRANSLATIONS } from './i18n/pl';
 
 @NgModule({
   declarations: [
@@ -54,11 +57,22 @@ import { OfferListFiltersComponent } from './offer-list-filters/offer-list-filte
     ChartsModule,
     ReactiveFormsModule,
     FormsModule,
-    RouterModule
+    RouterModule,
+    TranslateModule
   ],
   entryComponents: [
     OfferEditModalComponent,
     PricesChartModalComponent
   ]
 })
-export class OfferModule { }
+export class OfferModule {
+
+  constructor(private translate: TranslateService) {
+    setupModuleTranslations(
+      this.translate,
+      'offers',
+      [
+        ['pl', TRANSLATIONS]
+      ]);
+  }
+}

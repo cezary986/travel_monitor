@@ -9,15 +9,15 @@
             <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="onTravelEditClick(); $event.stopPropagation();">
+            <button *ngIf="actions.edit" mat-menu-item (click)="onTravelEditClick(); $event.stopPropagation();">
                 <mat-icon>edit</mat-icon>
                 <span>Edytuj</span>
             </button>
-            <button mat-menu-item (click)="onTravelDeleteClick(); $event.stopPropagation();">
+            <button *ngIf="actions.delete" mat-menu-item (click)="onTravelDeleteClick(); $event.stopPropagation();">
                 <mat-icon>delete</mat-icon>
                 <span>Usuń</span>
             </button>
         </mat-menu>
         <button (click)="onCancelButtonClick()" *ngIf="editing" class="save-button right-align" mat-button>Anuluj</button>
     </mat-card-header>
-</mat-card>
+</mat-card> 

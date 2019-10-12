@@ -59,3 +59,8 @@ class Travel(models.Model):
     class Meta:
         app_label = 'api'
         unique_together = ('title', 'creator')
+        permissions = (
+            ('get_travel', 'See Travel'),
+            ('patch_travel', 'Edit Travel'),
+            ('remove_travel', 'Delete Travel'),
+        )

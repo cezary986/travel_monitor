@@ -1,3 +1,5 @@
+@import '../../../assets/styles/variables.scss';
+
 .travel-row {
   cursor: unset !important;
   padding-left: 0;
@@ -23,5 +25,8 @@
 
 mat-toolbar {
     position: relative;
-    margin-bottom: 65px;
+    margin-bottom: 0;
+    position: fixed;
+    z-index: 10;
+    display: contents;
 }

@@ -14,9 +14,11 @@ from drf_yasg.inspectors import SwaggerAutoSchema
 from drf_yasg.utils import swagger_auto_schema
 from threading import Thread
 from api.serializers import UserSerializer, UserProfileSerializer
+from api.schema import UsersListReponse
 from api.utils import Message
 from django.contrib.auth.models import User
-
+from rest_framework.pagination import LimitOffsetPagination
+from django.conf import settings
 
 class ProfileView(APIView):
 
@@ -37,17 +39,39 @@ class ProfileView(APIView):
         operation_description='Update current user data',
         responses={200: UserProfileSerializer}
     )
-    def patch(self, request, offer_id, format=None):
+    def patch(self, request, format=None):
         data = JSONParser().parse(request)
+        user = request.user
+        user.first_name = data.get('first_name', user.first_name)
+        user.last_name = data.get('last_name', user.last_name)
+        user.email = data.get('email', user.email)
+        user.save()
+        serializer = UserProfileSerializer(user)
+        return JsonResponse(serializer.data, safe=False, status=200)
+    
+class UsersListView(APIView):
 
-        if serializer.is_valid():
-            user = request.user
-            user.first_name = data.get('first_name', user.first_name)
-            user.last_name = data.get('last_name', user.last_name)
-            user.email = data.get('email', user.email)
-            user.save()
-            serializer = UserProfileSerializer(user)
-            return JsonResponse(serializer.data, status=201)
+    @login_required_view
+    @swagger_auto_schema(
+        operation_id='get_all_users',
+        operation_description='Get list of all users',
+        responses={200: UsersListReponse}
+    )
+    def get(self, request, format=None):
+        query = request.query_params.get('query', None)
+        users = None
+        if (query == None):
+            users = User.objects.all()
         else:
-            return JsonResponse(serializer.errors, safe=False, status=400)
+            users = User.objects.all().filter(username__contains=query)  
+        # exclude deamons users and  AnonymousUser
+        users = users.exclude(username=settings.DEAMON_LOGIN)  
+        users = users.exclude(username='AnonymousUser')  
+        return self._make_paginated_response(users)
+        
+    def _make_paginated_response(self, queryset):
+        paginator = LimitOffsetPagination()
+        queryset = paginator.paginate_queryset(queryset, self.request)
+        serializer = UserProfileSerializer(queryset, many=True)
+        return paginator.get_paginated_response(serializer.data)
     

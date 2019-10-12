@@ -9,6 +9,7 @@ export class PaginatedResponse<T> {
 
     protected static readonly DEFAULT_LIMIT = 20;
     protected data: BehaviorSubject<T[]>;
+    protected errors: BehaviorSubject<any>;
     protected loading: Subject<boolean>;
     protected url: string;
     protected limit: number;
@@ -18,6 +19,7 @@ export class PaginatedResponse<T> {
 
     protected nextPageUrl: string;
     protected previousPageUrl: string;
+    protected currentPageUrl: string;
     protected onDiscardListener: () => void;
 
     /**
@@ -38,16 +40,22 @@ export class PaginatedResponse<T> {
         this.limit = limit;
         this.additionalParams = additionalParams;
         this.data = new BehaviorSubject<T[]>([]);
+        this.errors = new BehaviorSubject<any>(null);
         this.loading = new Subject();
     }
 
     /**
      * Method setting additional request params. For example some filters.
-     * 
-     * @param additionalParams 
+     *
+     * @param additionalParams tablica z dodatkowymi parametrami
      */
     public setAdditionalParams(additionalParams: {name: string, value: string | number}[] = []) {
         this.additionalParams = additionalParams;
+        if (this.currentPageUrl === undefined) {
+            this.firstPage();
+        } else {
+            this.fetchPage(this.currentPageUrl);
+        }
     }
 
     private constructUrl(offset: number, limit: number): string {
@@ -83,6 +91,13 @@ export class PaginatedResponse<T> {
     }
 
     /**
+     * Returns observable to listen to erros while fetching data
+     */
+    public getErrorsObservable(): Observable<any> {
+        return this.errors;
+    }
+
+    /**
      * Simple method to fetch first page (offset = 0)
      */
     public firstPage() {
@@ -94,7 +109,6 @@ export class PaginatedResponse<T> {
      * method can only be called after fetching some other page
      */
     public nextPage(): boolean {
-        
         if (this.nextPageUrl === undefined) {
             throw Error('Cannot fetch next page if no page was fetched before');
         }
@@ -135,12 +149,15 @@ export class PaginatedResponse<T> {
     }
 
     private fetchPage(url: string) {
+        this.currentPageUrl = url;
         this.http.get<T[]>(url).subscribe((res: any) => {
             this.nextPageUrl = this.rewriteUrl(res.next);
             this.previousPageUrl = this.rewriteUrl(res.previous);
             this.totalCount = res.count;
             this.data.next(res.results);
             this.loading.next(false);
+        }, error => {
+            this.errors.next(error);
         });
     }
 

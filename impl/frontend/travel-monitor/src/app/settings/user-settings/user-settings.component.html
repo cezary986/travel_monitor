@@ -3,25 +3,24 @@
         <div class="col-6_sm-12">
             <app-avatar-uploader [user]="user | async"></app-avatar-uploader>
         </div>
-        <div class="col-6_sm-12">
+        <div class="col-6_sm-12 position-relative">
             <!-- PASSWORD -->
-            <mat-form-field appearance="outline" class="form-field-full-width">
-                <mat-label>{{ 'settings.user_settings.fields.first_name' | translate }}</mat-label>
-                <input matInput placeholder="Imię">
-            </mat-form-field>
+            <button (click)="openChangePasswordDialog()" mat-flat-button color="primary" class="change-password-button">
+                {{ 'settings.user_settings.fields.change_password' | translate }}
+            </button>
         </div>
     </div>
-    <div class="grid">
+    <form *ngIf="userSettingsForm !== null" [formGroup]="userSettingsForm" class="grid">
         <div class="col-6_sm-12">
             <!-- USERNAME -->
             <mat-form-field appearance="outline" class="form-field-full-width">
                 <mat-label>{{ 'settings.user_settings.fields.username' | translate }}</mat-label>
-                <input matInput placeholder="Nazwa użytkownika">
+                <input formControlName="username" matInput placeholder="Nazwa użytkownika">
             </mat-form-field>
             <!-- EMAIL -->
             <mat-form-field appearance="outline" class="form-field-full-width">
                 <mat-label>{{ 'settings.user_settings.fields.email' | translate }}</mat-label>
-                <input matInput placeholder="Email">
+                <input formControlName="email" matInput placeholder="Email">
                 <mat-hint>{{ 'settings.user_settings.hints.email' | translate }}</mat-hint>
             </mat-form-field>
         </div>
@@ -29,13 +28,22 @@
             <!-- FIRST NAME -->
             <mat-form-field appearance="outline" class="form-field-full-width">
                 <mat-label>{{ 'settings.user_settings.fields.first_name' | translate }}</mat-label>
-                <input matInput placeholder="Imię">
+                <input formControlName="first_name" matInput placeholder="Imię">
             </mat-form-field>
             <!-- LAST NAME -->
             <mat-form-field appearance="outline" class="form-field-full-width">
                 <mat-label>{{ 'settings.user_settings.fields.last_name' | translate }}</mat-label>
-                <input matInput placeholder="Nazwisko">
+                <input formControlName="last_name" matInput placeholder="Nazwisko">
             </mat-form-field>
         </div>
+    </form>
+    <div class="actions-container">
+        <button mat-button (click)="onDismiss()">
+            {{ 'settings.user_settings.cancel' | translate }}
+        </button>
+        <button mat-button color="primary" [disabled]="userSettingsForm !== null && (!userSettingsForm.touched || !userSettingsForm.valid)" (click)="onSubmit()"
+            cdkFocusInitial>
+            {{ 'settings.user_settings.submit' | translate }}
+        </button>
     </div>
 </mat-card>

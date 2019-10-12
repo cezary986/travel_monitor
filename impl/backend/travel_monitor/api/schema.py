@@ -1,4 +1,4 @@
-from api.serializers import TravelSerializer, PriceSerializer, OfferSerializer, OfferCommentSerializer
+from api.serializers import TravelSerializer, PriceSerializer, OfferSerializer, OfferCommentSerializer, UserProfileSerializer
 from rest_framework import serializers
 
 class PaginatedListResponse(serializers.Serializer):
@@ -8,6 +8,9 @@ class PaginatedListResponse(serializers.Serializer):
 
 class TravelsListReponse(PaginatedListResponse):
     results = TravelSerializer(many=True)
+
+class UsersListReponse(PaginatedListResponse):
+    results = UserProfileSerializer(many=True)
 
 class OffersListReponse(PaginatedListResponse):
     results = OfferSerializer(many=True)

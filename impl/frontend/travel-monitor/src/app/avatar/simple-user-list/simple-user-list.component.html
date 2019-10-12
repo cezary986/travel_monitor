@@ -1,0 +1,6 @@
+<mat-list *ngIf="users !== null">
+    <mat-list-item *ngFor="let user of users">
+        <app-user-avatar matListAvatar [user]="user" size="30px"></app-user-avatar>
+        <h3 matLine> {{ user.username }} </h3>
+    </mat-list-item>
+</mat-list>

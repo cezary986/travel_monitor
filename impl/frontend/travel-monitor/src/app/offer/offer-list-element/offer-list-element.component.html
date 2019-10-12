@@ -28,17 +28,16 @@
                     <!-- Title of offer -->
                     <mat-card-title class="offer-title">{{ offer.title }}</mat-card-title>
                 </div>
-                <div class="col-12 price-row grid">
-                    <div class="col-4_sm-12">
+                <div class="col-12 price-row grid padded">
+                    <div class="col-5_sm-12">
                         <span class=" date-range">
                             {{ offer.date_from | date:'dd.MM'}} -
                             {{ offer.date_to | date:'dd.MM'}}
                             <mat-icon class="date-range-icon">date_range</mat-icon>
                         </span>
                     </div>
-                    <div class="col-1"></div>
                     <!-- Prices -->
-                    <div class="col-6_sm-12 grid">
+                    <div class="col-7_sm-12 grid price-column">
                         <span class="col-6 last-price" *ngIf="offer.last_price != null"
                             matTooltip="{{ 'cena z: ' + (offer.last_price.timestamp | date:'dd.MM.yyyy HH:MM:SS')}}">
                             {{ offer.last_price.value }} zł

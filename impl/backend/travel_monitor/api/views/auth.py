@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
 import json
+from rest_framework.parsers import JSONParser
 import django
 from django import urls
 from django.contrib import auth
@@ -73,3 +74,31 @@ class LoginCheck(APIView):
     def get(self, request):  
         serializer = LoginCheckSerializer({ 'logged_in': request.user.is_authenticated})
         return JsonResponse(serializer.data, status=200) 
+
+        
+class PasswordChange(APIView):
+
+    @swagger_auto_schema(
+        operation_id='change_password',
+        operation_description='Change user password',
+        responses={200: MessageSerializer()}
+    )
+    def patch(self, request):
+        data = JSONParser().parse(request)
+        current_password = None
+        new_password = None
+        try:
+            current_password = data['current_password']
+        except KeyError:
+            return JsonResponse({'message': 'No "current_password" field in request body'}, status=500) 
+        try:
+            new_password = data['new_password']
+        except KeyError:
+            return JsonResponse({'message': 'No "new_password" field in request body'}, status=500) 
+
+        if not request.user.check_password(current_password):
+            return JsonResponse({'message': 'Ivalid password'}, status=401)
+        else:
+            request.user.set_password(new_password)
+            request.user.save()
+            return JsonResponse({'message': 'Password changes'}, status=200)

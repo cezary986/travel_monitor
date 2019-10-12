@@ -10,7 +10,7 @@ import { select, NgRedux } from '@angular-redux/store';
 export class AuthGuardService implements CanActivate {
 
   constructor(
-    public auth: AuthService, 
+    public auth: AuthService,
     public router: Router,
     private redux: NgRedux<IAppState>
   ) {}

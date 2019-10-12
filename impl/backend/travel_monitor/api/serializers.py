@@ -19,6 +19,7 @@ class UserProfileSerializer(AvatarUserSerializer):
     username = serializers.CharField(max_length=200, read_only=True)
     email = serializers.EmailField(max_length=400, read_only=True)
     first_name = serializers.CharField(max_length=200, read_only=True)
+    last_name = serializers.CharField(max_length=200, read_only=True)
     is_superuser = serializers.BooleanField(read_only=True)
     '''Here will be avatar field injected by  avatars.serializers.UserSerializer'''
 

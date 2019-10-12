@@ -10,7 +10,6 @@
         </button>
     </div>
 </div>
-<input (change)="onFileChosen($event)" [multiple]="multiple" type="file" id="file-input" hidden aria-hidden="true"
-    #fileInput />
+<input (change)="onFileChosen($event)" [multiple]="multiple" type="file" id="file-input" hidden aria-hidden="true" #fileInput />
 <!-- LIST OF SELECTED FILES -->
 <app-file-list [files]="filesArray" (onFileDelete)="onFileDeleteClick($event)"></app-file-list>

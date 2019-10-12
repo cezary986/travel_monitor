@@ -1,3 +1,4 @@
+@import '../variables.scss';
 
 :host {
   display: table !important;
@@ -11,7 +12,8 @@ $avatar-size: 30px;
   border-radius: 100%;
   transition: 1s all;
   overflow: hidden;
-  
+  position: relative;
+  z-index: 2;
 }
 
 .avatar-letter {
@@ -21,7 +23,8 @@ $avatar-size: 30px;
   margin: auto;
   text-align: center;
   position: relative;
-  font-size: 20px;
+  font-size: $avatar-letter-font-size;
+  z-index: 1;
 }
 
 .avatar-img {

@@ -1,7 +1,7 @@
 
 
 <h2 class="mat-h2 modal-title">{{ 'avatar.change_avatar' | translate }}</h2>
-
+<!-- FILE UPLOAD COMPONENT -->
 <app-file-upload
     *ngIf="state == 'fileSelecting'"
     #fileUploader
@@ -9,28 +9,27 @@
     [multiple]="false"
     [maxSize]="MAX_FILE_SIZE"
     [required]="true"
-    (files)="onFileChosen($event)">
+    (fileChangeEvent)="onFileChangeEvent($event)">
 </app-file-upload>
+<!-- IMAGE CROP COMPONENT -->
 <image-cropper
     *ngIf="state == 'cropping'"
-    [imageFileChanged]="selectedFile"
+    [imageChangedEvent]="imageChangeEvent"
     [maintainAspectRatio]="true"
     [aspectRatio]="2 / 2"
     [resizeToWidth]="100"
     format="jpg"
     (imageCropped)="imageCropped($event)"
-    (imageLoaded)="imageLoaded()"
-    (cropperReady)="cropperReady()"
     (loadImageFailed)="loadImageFailed()">
 </image-cropper>
 
-<img  *ngIf="state == 'cropping'" [src]="croppedImage" />
-
 <div class="modal-actions-container">
     <div class="spacer"></div>
+    <!-- DISMISS BUTTON -->
     <button (click)="onDismiss()" mat-button>
         {{ 'avatar.cancel' | translate }}
     </button>
+    <!-- SUBMIT BUTTON -->
     <button (click)="onSubmit()" [disabled]="fileUploaderFormControl == null || !fileUploaderFormControl.valid" mat-button color="primary">
         {{ 'avatar.submit' | translate }}
     </button>

@@ -1,12 +1,12 @@
 from django.urls import path
 
 from api.views.system import VersionView, SupportedDomainsView
-from api.views.auth import LoginView, LogoutView, LoginCheck
-from api.views.travel import TravelsListView, TravelDetailView
+from api.views.auth import LoginView, LogoutView, LoginCheck, PasswordChange
+from api.views.travel import TravelsListView, TravelDetailView, TravelUsersView
 from api.views.offer import OffersListView, OfferDetailView, OffersArchivedListView
 from api.views.offer_comment import OfferCommentsListView, OfferCommentDetailView
 from api.views.price import PricesListView
-from api.views.user import ProfileView
+from api.views.user import ProfileView, UsersListView
 from avatars.views import AvatarView
 from notifications.views import NotificationsListView, NotificationDetailView, NotificationFilterView
 
@@ -23,12 +23,15 @@ urlpatterns = [
     path('auth/login', LoginView.as_view(), name='login'),
     path('auth/logout', LogoutView.as_view(), name='logout'),
     path('auth/check_login', LoginCheck.as_view(), name='check_login'),
+    path('auth/password', PasswordChange.as_view(), name='change_password'),
     
+    path('user', UsersListView.as_view(), name='users'),
     path('user/profile', ProfileView.as_view(), name='profile'),
     path('user/avatar', AvatarView.as_view(), name='avatar'),
     
     path('travels', TravelsListView.as_view(), name='travels'),
     path('travels/<int:travel_id>', TravelDetailView.as_view(), name='travel_detail'),
+    path('travels/<int:travel_id>/users', TravelUsersView.as_view(), name='travel_users'),
     
     path('travels/<int:travel_id>/offers', OffersListView.as_view(), name='offers'),
     path('travels/<int:travel_id>/offers/archived', OffersArchivedListView.as_view(), name='offers_archived'),

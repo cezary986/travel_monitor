@@ -11,43 +11,46 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AvatarModule } from '../avatar/avatar.module';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { ChangePasswordComponent } from './change-password/change-password.component';
+import { setupModuleTranslations } from '../common/utils/translate_helpers';
+import { TRANSLATIONS } from './i18n/pl.js';
 
 @NgModule({
   declarations: [
     UserSettingsComponent,
-    SettingsComponent
+    SettingsComponent,
+    ChangePasswordComponent
   ],
   imports: [
     CommonModule,
     SettingsRoutingModule,
     AvatarModule,
     MatToolbarModule,
+    MatButtonModule,
     MatTabsModule,
     MatIconModule,
     MatCardModule,
+    MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
     TranslateModule.forChild()
+  ],
+  entryComponents: [
+    ChangePasswordComponent
   ]
 })
-export class SettingsModule { 
+export class SettingsModule {
 
   constructor(private translateService: TranslateService) {
-    // loads module translations
-    if (translateService.defaultLang != null) {
-      this.setupTranslations();
-    } else {
-      this.translateService.store.onDefaultLangChange.subscribe(a => {
-        this.setupTranslations();
-      })
-    }
-  }
-
-  private setupTranslations() {
-    const pl = require("./i18n/pl.json");
-    this.translateService.store.translations.pl['settings'] = pl;
+    setupModuleTranslations(
+      this.translateService,
+      'settings',
+      [
+        ['pl', TRANSLATIONS]
+      ]);
   }
 }

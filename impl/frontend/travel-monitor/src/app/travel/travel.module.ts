@@ -18,12 +18,14 @@ import { ExpandableButtonModule } from '../common/components/expandable-button/e
 import { SnackbarModule } from '../snackbar/snackbar.module';
 import { TimeagoIntl } from 'ngx-timeago';
 import { AvatarModule } from '../avatar/avatar.module';
+import { TravelHeaderComponent } from './travel-header/travel-header.component';
 
 @NgModule({
   declarations: [
     TravelListComponent,
     TravelAddComponent,
-    TravelListElementComponent
+    TravelListElementComponent,
+    TravelHeaderComponent
   ],
   imports: [
     CommonModule,
@@ -44,7 +46,8 @@ import { AvatarModule } from '../avatar/avatar.module';
   ],
   exports: [
     TravelListComponent,
-    TravelListElementComponent
+    TravelListElementComponent,
+    TravelHeaderComponent
   ]
 })
 export class TravelModule { }

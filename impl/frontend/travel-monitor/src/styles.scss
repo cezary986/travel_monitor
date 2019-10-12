@@ -114,3 +114,12 @@ aside.right {
     text-transform: uppercase;
   }
 }
+
+.position-relative {
+  position: relative;
+}
+
+.actions-container {
+  display: flex;
+  justify-content: flex-end;
+}

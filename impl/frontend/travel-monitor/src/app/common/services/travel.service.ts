@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Travel } from '../models/travel';
 import { PaginatedResponse } from '../../pagination/paginated-response';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,7 @@ export class TravelService {
   public createTravel(title: string): Observable<Travel> {
     return this.http.post<Travel>(
       environment.endpoints.travels(),
-      JSON.stringify({ title: title })
+      { title: title }
     );
   }
 
@@ -37,5 +38,9 @@ export class TravelService {
 
   public deteleTravel(travelId: number): Observable<any> {
     return this.http.delete<any>(environment.endpoints.travel(travelId));
+  }
+
+  public getUsersWithPermissionsForTravel(travelId: number): Observable<User[]> {
+    return this.http.get<User[]>(environment.endpoints.travelUsers(travelId));
   }
 }

@@ -148,3 +148,12 @@
     }
   }
 }
+
+.padded {
+  padding: 16px;
+}
+
+.price-column {
+  display: flex;
+  justify-content: flex-end;
+}

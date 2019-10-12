@@ -14,7 +14,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatIconModule
   ],
   entryComponents: [
-    SnackbarInfoComponent
+    SnackbarInfoComponent,
+    SnackbarErrorComponent
   ]
 })
 export class SnackbarModule { }

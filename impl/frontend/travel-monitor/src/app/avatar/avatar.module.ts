@@ -11,12 +11,21 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { FileUploadModule } from '../common/components/file-upload/file-upload.module';
 import { ModalModule } from '../common/components/modal/modal.module';
 import { ImageCropperModule } from 'ngx-image-cropper';
+import { setupModuleTranslations } from '../common/utils/translate_helpers';
+import { TRANSLATIONS } from './i18n/pl';
+import { UserAvatarListComponent } from './user-avatar-list/user-avatar-list.component';
+import { MdePopoverModule } from '@material-extended/mde';
+import { SimpleUserListComponent } from './simple-user-list/simple-user-list.component';
+import { MatListModule } from '@angular/material/list';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [
     UserAvatarComponent,
     AvatarUploaderComponent,
-    AvatarImageUploaderComponent
+    AvatarImageUploaderComponent,
+    UserAvatarListComponent,
+    SimpleUserListComponent
   ],
   imports: [
     CommonModule,
@@ -27,30 +36,28 @@ import { ImageCropperModule } from 'ngx-image-cropper';
     TranslateModule.forChild(),
     FileUploadModule,
     ModalModule,
-    ImageCropperModule
+    ImageCropperModule,
+    MdePopoverModule,
+    MatListModule,
+    MatCardModule
   ],
   entryComponents: [
     AvatarImageUploaderComponent
   ],
   exports: [
     UserAvatarComponent,
-    AvatarUploaderComponent
+    UserAvatarListComponent,
+    AvatarUploaderComponent,
   ]
 })
 export class AvatarModule {
-  constructor(private translateService: TranslateService) {
-    // loads module translations
-    if (Object.keys(translateService.translations).length !== 0 && translateService.translations.constructor !== Object) {
-      this.setupTranslations();
-    } else {
-      this.translateService.store.onDefaultLangChange.subscribe(a => {
-        this.setupTranslations();
-      });
-    }
-  }
 
-  private setupTranslations() {
-    const pl = require("./i18n/pl.json");
-    this.translateService.store.translations.pl['avatar'] = pl;
+  constructor(private translateService: TranslateService) {
+    setupModuleTranslations(
+      this.translateService,
+      'avatar',
+      [
+        ['pl', TRANSLATIONS]
+      ]);
   }
 }

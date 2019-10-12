@@ -1,0 +1,48 @@
+@import '~@angular/material/theming';
+@import '../variables.scss';
+
+app-user-avatar {
+    float: left;
+    margin-left: -10px;
+    border-radius: 50%;
+    transition: 0.2s all;
+    cursor: pointer;
+
+    &:hover {
+        @include mat-elevation(4);
+        z-index: 3;
+        transform: scale(1.08);
+    }
+}
+
+.wrapper {
+    padding-left: 10px;
+    display: flex;
+}
+
+.more {
+    border-radius: 1000px;
+    background-color: rgba(0, 0, 0, 0.26);
+    text-align: center;
+    font-size: calc(0.75 * #{$avatar-letter-font-size});
+    display: flex;
+    justify-content: center; /* align horizontal */
+    align-items: center; /* align vertical */
+    padding: 5px;
+    margin-left: -2px;
+    cursor: pointer;
+
+    span {
+        font-weight: 500;
+        display: inline-block;
+        vertical-align: middle;
+        line-height: normal;
+    }
+}
+
+.user-list-popover {
+    max-height: 200px;
+    overflow: auto;
+    padding-top: 0;
+    padding-bottom: 0;
+}

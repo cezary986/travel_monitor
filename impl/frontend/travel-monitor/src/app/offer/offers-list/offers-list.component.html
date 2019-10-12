@@ -1,4 +1,5 @@
-<app-offer-list-header></app-offer-list-header>
+<app-offer-list-header [travelId]="travelId"></app-offer-list-header>
+<div class="v-spacer"></div>
 <!-- loading spinner -->
 <mat-spinner [diameter]="50" class="list-loader" *ngIf="loading !== null && (loading | async)"></mat-spinner>
 <!-- add offer component -->

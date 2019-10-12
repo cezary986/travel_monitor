@@ -9,6 +9,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { NgRedux } from '@angular-redux/store';
 import { IAppState } from 'src/app/store';
 import { SET_USER } from '../store/user/actions';
+import { PaginatedResponse } from 'src/app/pagination/paginated-response';
 
 @Injectable({
   providedIn: 'root'
@@ -36,5 +37,24 @@ export class UserService {
         })).subscribe(() => {});
     }
     return UserService.profile;
+  }
+
+  public setAvatar(imageFile: File): Observable<any> {
+    return this.http.post(environment.endpoints.avatar(), imageFile);
+  }
+
+  public updateProfile(profile: User): Observable<User> {
+    return this.http.patch<User>(environment.endpoints.profile(), profile).pipe(map((profile) => {
+      profile.avatar.image = environment.fileServerAddress + profile.avatar.image;
+      return profile;
+    }));
+  }
+
+  public getUsersList(query: string = null): PaginatedResponse<User> {
+    const response = new PaginatedResponse<User>(this.http, environment.endpoints.users());
+    if (query !== null) {
+      response.setAdditionalParams([{name: 'query', value: query}]);
+    }
+    return response;
   }
 }

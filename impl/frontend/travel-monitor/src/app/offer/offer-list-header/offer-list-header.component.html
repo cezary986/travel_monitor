@@ -1,9 +1,6 @@
 <mat-toolbar>
-    <mat-toolbar-row class="travel-row">
-        <app-travel-list-element class="travel-element" [embeded]="true" [travel]="travel | async">
-        </app-travel-list-element>
-    </mat-toolbar-row>
-    <!-- <div class="filters">
-        <app-offer-list-filters class="filter-panel"></app-offer-list-filters>
-    </div> -->
+        <app-travel-header 
+            class="travel-element" 
+            [travelId]="travelId">
+        </app-travel-header>
 </mat-toolbar>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { DataStoreService } from '../data-store.service';
 import { Travel } from 'src/app/common/models/travel';
 import { Observable } from 'rxjs';
@@ -8,16 +8,7 @@ import { Observable } from 'rxjs';
   templateUrl: './offer-list-header.component.html',
   styleUrls: ['./offer-list-header.component.scss']
 })
-export class OfferListHeaderComponent implements OnInit {
+export class OfferListHeaderComponent {
 
-  public travel: Observable<Travel>;
-
-  constructor(
-    private dataStore: DataStoreService
-  ) { }
-
-  ngOnInit() {
-    this.travel = this.dataStore.getTravel();
-  }
-
+  @Input() travelId: number;
 }

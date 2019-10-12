@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TravelService } from 'src/app/common/services/travel.service';
-import { DataStoreService } from '../data-store.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { environment } from 'src/environments/environment';
+import { NgRedux } from '@angular-redux/store';
+import { IAppState } from 'src/app/store';
+import { ADD_TRAVEL } from 'src/app/common/store/travels/actions';
+import { SnackbarService } from 'src/app/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-travel-add',
@@ -20,8 +21,8 @@ export class TravelAddComponent implements OnInit {
 
   constructor(
     private travelService: TravelService,
-    private dataStore: DataStoreService,
-    private _snackBar: MatSnackBar
+    private redux: NgRedux<IAppState>,
+    private snackbarService: SnackbarService
   ) { }
 
   ngOnInit() {
@@ -36,14 +37,12 @@ export class TravelAddComponent implements OnInit {
 
   public onSaveButtonClick() {
     this.travelService.createTravel(this.travelName).subscribe((travel) => {
-      this.dataStore.addTravel(travel);
+      this.redux.dispatch({ type: ADD_TRAVEL, payload: travel });
       this.clearForm();
-      this._snackBar.open("Dodano nową podróż!", null, 
-      { duration: environment.snackBarDuration }
-      )
+      this.snackbarService.info("Dodano nową podróż!");
     }, (error) => {
       this.clearForm();
-    })
+    });
   }
 
   private clearForm() {

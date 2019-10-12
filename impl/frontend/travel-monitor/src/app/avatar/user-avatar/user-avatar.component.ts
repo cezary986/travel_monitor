@@ -1,7 +1,10 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { User } from 'src/app/common/models/user';
 import { AnimationsFactory } from 'src/app/common/animations';
-var seedrandom = require('seedrandom');
+import { select } from '@angular-redux/store';
+import { Observable } from 'rxjs';
+import { IAppState } from 'src/app/store';
+const seedrandom = require('seedrandom');
 
 @Component({
   selector: 'app-user-avatar',
@@ -10,6 +13,7 @@ var seedrandom = require('seedrandom');
 })
 export class UserAvatarComponent implements OnInit {
 
+  @select((s: IAppState) => s.user.profile) userProfile: Observable<User>;
   @Input() _user: User;
   @Input() set user(user: User) {
     if (user !== undefined && user !== null) {
@@ -19,17 +23,24 @@ export class UserAvatarComponent implements OnInit {
  }
   @Input() size: string = '30px';
   public backgroundColor: string = 'transparent';
+  public reload = false;
 
   constructor() { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.userProfile.subscribe((profile: User) => {
+      if (profile !== null && this._user !== undefined && profile.id === this._user.id) {
+        this._user.avatar = profile.avatar;
+      }
+    });
+  }
 
   /**
    * Generated unique backgroud color for text base avatars. 
    * It uses username as genrator's seed
    */
   private generateBackgroudColor() {
-    var generator = seedrandom(this._user.username);
+    const generator = seedrandom(this._user.username);
     this.backgroundColor = 'hsla(' + (generator() * 360) + ', 100%, 45%, 1)';
   }
 

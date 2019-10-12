@@ -23,6 +23,7 @@ from api.utils import Message
 from rest_framework.pagination import LimitOffsetPagination
 from api.schema import OffersListReponse
 import datetime
+from guardian.shortcuts import get_perms
 
 class OffersListView(APIView):
   
@@ -38,8 +39,12 @@ class OffersListView(APIView):
             travel = Travel.objects.get(pk=travel_id)
         except ObjectDoesNotExist:
             return JsonResponse({"message": 'No travel with given id exist'}, status=404)
-        offers = Offer.objects.filter(travel=travel, date_from__gt=datetime.datetime.now()).order_by('-created')
-        return self._make_paginated_response(offers)
+        # check persmissions
+        if request.user.has_perm('get_travel', travel):
+            offers = Offer.objects.filter(travel=travel, date_from__gt=datetime.datetime.now()).order_by('-created')
+            return self._make_paginated_response(offers)
+        else:
+            return JsonResponse({"message": 'You have no permission for this travel'}, status=403)
     
     def _make_paginated_response(self, queryset):
         paginator = LimitOffsetPagination()
@@ -59,18 +64,22 @@ class OffersListView(APIView):
             travel = Travel.objects.get(pk=travel_id)
         except ObjectDoesNotExist:
             return JsonResponse({"message": 'No travel with given id exist'}, status=404)    
-        data = JSONParser().parse(request)
-        serializer = OfferSerializer(data=data)
-        if serializer.is_valid():
-            model = serializer.save()
-            model.creator = request.user
-            model.travel = travel
-            model.save()
-            thread = Thread(target=scrapOffer, args = [model, True])
-            thread.start()
-            return JsonResponse(serializer.data, status=201)
-        
-        return JsonResponse(serializer.errors, status=400)
+        # check persmissions
+        if request.user.has_perm('patch_travel', travel):
+            data = JSONParser().parse(request)
+            serializer = OfferSerializer(data=data)
+            if serializer.is_valid():
+                model = serializer.save()
+                model.creator = request.user
+                model.travel = travel
+                model.save()
+                thread = Thread(target=scrapOffer, args = [model, True])
+                thread.start()
+                return JsonResponse(serializer.data, status=201)
+            else:
+                return JsonResponse(serializer.errors, status=400)
+        else:
+            return JsonResponse({"message": 'You have no permissions for this travel'}, status=403)    
 
 class OfferDetailView(APIView):
 
@@ -87,9 +96,14 @@ class OfferDetailView(APIView):
         except ObjectDoesNotExist:
             serializer = MessageSerializer(Message('No offer with given id exist'))
             return JsonResponse(serializer.data, status=404)
-        offer.delete()
-        serializer = MessageSerializer(Message('Offer deleted'))
-        return JsonResponse(serializer.data, safe=False, status=200)
+        # check persmissions
+        if request.user.has_perm('patch_travel', offer.travel):
+            offer.delete()
+            serializer = MessageSerializer(Message('Offer deleted'))
+            return JsonResponse(serializer.data, safe=False, status=200)
+        else:
+            return JsonResponse({"message": 'You have no permissions for this travel'}, status=403) 
+        
         
     @login_required_view
     @swagger_auto_schema(
@@ -107,13 +121,17 @@ class OfferDetailView(APIView):
             except ObjectDoesNotExist:
                 serializer = MessageSerializer(Message('No offer with given id exist'))
                 return JsonResponse(serializer.data, status=404)
-            offer.title = data.get('title', offer.title)
-            offer.url = data.get('url', offer.url)
-            offer.save()
-            serializer = OfferSerializer(offer)
-            thread = Thread(target=scrapOffer, args = [offer, True])
-            thread.start()
-            return JsonResponse(serializer.data, status=201)
+            # check persmissions
+            if request.user.has_perm('patch_travel', offer.travel):
+                offer.title = data.get('title', offer.title)
+                offer.url = data.get('url', offer.url)
+                offer.save()
+                serializer = OfferSerializer(offer)
+                thread = Thread(target=scrapOffer, args = [offer, True])
+                thread.start()
+                return JsonResponse(serializer.data, status=201)
+            else:
+                return JsonResponse({"message": 'You have no permissions for this travel'}, status=3) 
         else:
             return JsonResponse(serializer.errors, safe=False, status=400)
 
@@ -134,8 +152,14 @@ class OffersArchivedListView(APIView):
                 travel = Travel.objects.get(pk=travel_id)
             except ObjectDoesNotExist:
                 return JsonResponse({"message": 'No travel with given id exist'}, status=404)
-            offers = offers.filter(travel=travel)
-        return self._make_paginated_response(offers)
+            # check persmissions
+            if request.user.has_perm('get_travel', travel):
+                offers = offers.filter(travel=travel)
+                return self._make_paginated_response(offers)
+            else:
+                return JsonResponse({"message": 'You have no permissions for this travel'}, status=403) 
+        else:
+            return JsonResponse({"message": 'No travel id given'}, status=400)   
 
     def _make_paginated_response(self, queryset):
         paginator = LimitOffsetPagination()

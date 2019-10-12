@@ -12,21 +12,23 @@ export class FileUploadComponent implements OnInit {
 
   public static readonly ACCEPTS_IMAGES = 'image/jpeg, image/png, image/jpg, image/bmp'
 
-  @Input() drop?: boolean = true;
-  @Input() accepts?: string = '*'
-  @Input() multiple?: boolean = true;
-  @Input() maxSize?: number = null; // in bytes (null means no limit)
-  @Input() _required: boolean = false;
+  @Input() drop = true;
+  @Input() accepts = '*'
+  @Input() multiple = true;
+  @Input() maxSize: number = null; // in bytes (null means no limit)
+  @Input() _required = false;
   @Input() set required(value: boolean) {
-    if (value && this.formControl.validator != Validators.required) {
+    if (value && this.formControl.validator !== Validators.required) {
       this.formControl.setValidators(Validators.required);
     } else if (!value) {
       this.formControl.setValidators([]);
     }
+    this.formControl.updateValueAndValidity();
   }
 
   @Output() files: EventEmitter<File[]> = new EventEmitter();
   @Output() base64: EventEmitter<string[]> = new EventEmitter();
+  @Output() fileChangeEvent: EventEmitter<any> = new EventEmitter();
 
   @ViewChild('dropContainer', null) dropContainer;
   @ViewChild('fileInput', null) fileInput;
@@ -37,7 +39,7 @@ export class FileUploadComponent implements OnInit {
   private formControl: FormControl = new FormControl('', Validators.required);
 
   constructor() {
-    this.formControl = new FormControl('');
+    this.formControl = new FormControl(null);
   }
 
   ngOnInit() {
@@ -62,7 +64,7 @@ export class FileUploadComponent implements OnInit {
       evt.preventDefault();
       fileInput.files = evt.dataTransfer.files;
       this.onSelectedFilesChange();
-      this.files.emit(this.multiple ? fileInput.files : [fileInput.files[0]])
+      this.fileInput.nativeElement.dispatchEvent(new Event('change'));
       this.filesArray = fileInput.files;
       this.dragEnter = false;
     }.bind(this);
@@ -83,6 +85,9 @@ export class FileUploadComponent implements OnInit {
 
     if (this.files.observers.length > 0) {
       this.files.emit(this.multiple ? files : [files[0]]);
+    }
+    if (this.fileChangeEvent.observers.length > 0) {
+      this.fileChangeEvent.emit(event);
     }
     if (this.base64.observers.length > 0) {
       const observervables = [];

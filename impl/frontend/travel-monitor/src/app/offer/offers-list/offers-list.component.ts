@@ -12,6 +12,8 @@ import { NgRedux, select } from '@angular-redux/store';
 import { IAppState } from 'src/app/store';
 import { SET_OFFERS_LIST, DELETE_OFFER } from '../store/actions';
 import { IOffersState } from '../store/store';
+import { TranslateService } from '@ngx-translate/core';
+import { ROUTES } from 'src/app/app-routing.module';
 
 @Component({
   selector: 'app-offers-list',
@@ -21,7 +23,7 @@ import { IOffersState } from '../store/store';
 export class OffersListComponent implements OnInit, OnDestroy {
 
   @select((s: IAppState) => s.offers) offersObject: Observable<IOffersState>;
-  private travelId: number;
+  public travelId: number = null;
   public offersData: Offer[];
   public loading: Observable<boolean> = null;
 
@@ -32,6 +34,7 @@ export class OffersListComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private snackBarService: SnackbarService,
+    private translate: TranslateService,
     private redux: NgRedux<IAppState>
   ) { }
 
@@ -39,7 +42,6 @@ export class OffersListComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe(params => {
       this.travelId = Number.parseInt(params.get('travelId'), 10);
       this.fetchOffers();
-      this.fetchTravel();
     });
   }
 
@@ -60,6 +62,14 @@ export class OffersListComponent implements OnInit, OnDestroy {
         this.offersData = Object.values(state.offers).reverse() as Offer[];
       }
     });
+    infiniteScrollData.getErrorObservable().subscribe(error => {
+      if (error !== null && error.status !== undefined) {
+        if (error.status === 403) {
+          this.snackBarService.error(this.translate.instant('offers.toasts.errors.permissions_denied'));
+          this.router.navigate([ROUTES.travelsList.route]);
+        }
+      }
+    });
   }
 
   private fetchTravel() {
@@ -71,7 +81,7 @@ export class OffersListComponent implements OnInit, OnDestroy {
   public onOfferDeleteClick(offer: Offer) {
     this.offerService.deleteOffer(offer.id).subscribe((res) => {
       this.redux.dispatch({type: DELETE_OFFER, payload: offer});
-      this.snackBarService.info('Offerta została usunięta');
+      this.snackBarService.info(this.translate.instant('offers.toasts.info.offer_deleted'));
     });
   }
 }
