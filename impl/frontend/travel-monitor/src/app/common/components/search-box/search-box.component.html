@@ -1,0 +1,23 @@
+
+<div class="search-box-wrapper">
+    <input 
+        type="text"
+        class="search-box-input"
+        placeholder="{{ (placeholder !== null) ? placeholder : ('search_box.default_placeholder' | translate) }}" 
+        [(ngModel)]="query"
+        (keyup.enter)="onSearchButtonClick()"
+        (change)="onTextQueryChange($event)">
+    <button 
+        (click)="onClearButtonClick()"
+        *ngIf="query !== null && query.length > 0" 
+        mat-icon-button>
+        <mat-icon>close</mat-icon>
+    </button>
+    <button 
+        (click)="onSearchButtonClick()"
+        *ngIf="(query === null || query.length === 0) || withSubmit" 
+        mat-icon-button 
+        aria-hidden="true">
+        <mat-icon>search</mat-icon>
+    </button>
+</div>

@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 import json
-import datetime
+from django.utils import timezone
 from api.models import Travel, Offer, Price
 from travel_monitor.data_providers import DATA_PROVIDERS
 from channels.layers import get_channel_layer
@@ -21,7 +21,7 @@ async def send_notification_to_socker(offers_that_changed, token):
         extra_headers = [('Cookie', 'sessionid=' + token)]) as websocket:
         serializer = OfferSerializer(offers_that_changed, many=True)
         message = json.dumps({
-            'timestamp': datetime.datetime.now().isoformat(),
+            'timestamp': timezone.now().isoformat(),
             'updated': serializer.data,
         })
         await websocket.send(message)
@@ -94,7 +94,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         travels = Travel.objects.all()
         offers_changed = []
-        now = datetime.datetime.now()
+        now = timezone.now()
         for travel in travels:
             # check only travel offers that haven't started
             for offer in travel.offer_set.all().filter(date_from__gt=now):
@@ -104,5 +104,5 @@ class Command(BaseCommand):
                   continue
                 if (has_changed):
                     offers_changed.append(offer)
-        self.stdout.write(datetime.datetime.now().isoformat() + ' Travels data scapper and updated!') 
+        self.stdout.write(timezone.now().isoformat() + ' Travels data scapper and updated!') 
         send_notification(offers_changed=offers_changed)

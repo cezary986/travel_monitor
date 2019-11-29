@@ -7,7 +7,7 @@
             <div class="content">
                 <!-- Creation date -->
                 <div class="offer-created">
-                    dodano: {{ offer.created | date:'yyyy.MM.dd HH:MM'}}
+                    dodano: {{ offer.created | date:'yyyy.MM.dd HH:mm'}}
                     <!-- Menu button -->
                     <button (click)="$event.stopPropagation();" class="menu-button right-align" mat-icon-button
                         [matMenuTriggerFor]="menu" aria-label="Dodatkowe akcje dla oferty">
@@ -39,11 +39,11 @@
                     <!-- Prices -->
                     <div class="col-7_sm-12 grid price-column">
                         <span class="col-6 last-price" *ngIf="offer.last_price != null"
-                            matTooltip="{{ 'cena z: ' + (offer.last_price.timestamp | date:'dd.MM.yyyy HH:MM:SS')}}">
+                            matTooltip="{{ 'cena z: ' + (offer.last_price.timestamp | date:'dd.MM.yyyy HH:mm')}}">
                             {{ offer.last_price.value }} zł
                         </span>
                         <span class="col-6 price mat-h1" *ngIf="offer.current_price != null"
-                            matTooltip="{{ 'sprawdzona: ' + (offer.current_price.timestamp | date:'dd.MM.yyyy HH:MM:SS')}}">
+                            matTooltip="{{ 'sprawdzona: ' + (offer.current_price.timestamp | date:'dd.MM.yyyy HH:mm')}}">
                             {{ offer.current_price.value }} zł
                         </span>
                     </div>

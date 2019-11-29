@@ -34,6 +34,16 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.sidePanelService.setPanel(this.sidePanel, this.sidePanelContainer);
+
+    // FIXME: Kiedyś trzeba wymyśleć coś lepszego - najlepiej przenieść całośc razem z bocznym paskiem do nowego "głownego" modułu
+    this.loggedIn.subscribe(res => {
+      if (!res) {
+        setTimeout(() => {
+          // @ts-ignore
+          document.querySelector('mat-sidenav-content').style.marginLeft = 0;
+        }, 100);
+      }
+    });
   }
 
   public onContainerScroll() {

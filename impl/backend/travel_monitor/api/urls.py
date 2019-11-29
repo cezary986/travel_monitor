@@ -10,7 +10,6 @@ from api.views.user import ProfileView, UsersListView
 from avatars.views import AvatarView
 from notifications.views import NotificationsListView, NotificationDetailView, NotificationFilterView
 
-from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 
 from django.conf.urls import url

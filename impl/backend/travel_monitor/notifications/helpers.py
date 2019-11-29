@@ -5,7 +5,7 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from notifications.serializers import NotificationSerializer
 from notifications.models import Notification, NotificationsFilter
-from datetime import datetime
+from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 
 """ 
@@ -46,7 +46,7 @@ def _send_by_socket(event, audience_map):
     })
 
 def mark_as_readed(notification):
-    notification.readed = datetime.now()
+    notification.readed = timezone.now()
     notification.save()
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)("notifications", {

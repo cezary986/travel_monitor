@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Travel } from '../models/travel';
@@ -42,5 +42,23 @@ export class TravelService {
 
   public getUsersWithPermissionsForTravel(travelId: number): Observable<User[]> {
     return this.http.get<User[]>(environment.endpoints.travelUsers(travelId));
+  }
+
+  public grantUserAccessForTravel(travelId: number, user: User) {
+    return this.http.post<{ message: string }>(
+      environment.endpoints.travelUsers(travelId),
+      { user_id: user.id });
+  }
+
+  public removeUserAccessForTravel(travelId: number, user: User) {
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }),
+      body: {
+        user_id: user.id
+      }
+    };
+    return this.http.delete<{ message: string }>(environment.endpoints.travelUsers(travelId), options);
   }
 }

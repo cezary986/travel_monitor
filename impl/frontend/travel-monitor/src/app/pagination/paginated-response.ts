@@ -31,7 +31,7 @@ export class PaginatedResponse<T> {
      */
     constructor(
         http: HttpClient,
-        url: string, 
+        url: string,
         limit: number = PaginatedResponse.DEFAULT_LIMIT, 
         additionalParams: {name: string, value: string | number}[] = []
     ) {
@@ -51,11 +51,6 @@ export class PaginatedResponse<T> {
      */
     public setAdditionalParams(additionalParams: {name: string, value: string | number}[] = []) {
         this.additionalParams = additionalParams;
-        if (this.currentPageUrl === undefined) {
-            this.firstPage();
-        } else {
-            this.fetchPage(this.currentPageUrl);
-        }
     }
 
     private constructUrl(offset: number, limit: number): string {
@@ -166,6 +161,7 @@ export class PaginatedResponse<T> {
     }
 
     public discard() {
+        this.http = null;
         if (this.onDiscardListener !== undefined) {
             this.onDiscardListener();
         }

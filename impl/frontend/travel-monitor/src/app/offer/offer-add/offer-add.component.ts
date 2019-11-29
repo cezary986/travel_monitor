@@ -9,8 +9,7 @@ import { getUrlDomainIfSupported } from '../utils';
 import { supportedDomainValidator } from '../validators/supported-domain-validator';
 import { NgRedux } from '@angular-redux/store';
 import { IAppState } from 'src/app/store';
-import { ADD_OFFER } from '../store/actions';
-import { of } from 'rxjs';
+import { ADD_OFFER } from '../../common/store/offers/actions';
 
 @Component({
   selector: 'app-offer-add',

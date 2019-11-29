@@ -30,6 +30,7 @@ import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-transla
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgReduxModule, NgRedux, DevToolsExtension } from '@angular-redux/store';
 import { IAppState, rootReducer, INITIAL_STATE } from './store';
+import { SearchBoxComponent } from './common/components/search-box/search-box.component';
 
 @NgModule({
   declarations: [

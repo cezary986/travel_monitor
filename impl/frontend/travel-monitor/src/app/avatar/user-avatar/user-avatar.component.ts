@@ -4,6 +4,7 @@ import { AnimationsFactory } from 'src/app/common/animations';
 import { select } from '@angular-redux/store';
 import { Observable } from 'rxjs';
 import { IAppState } from 'src/app/store';
+import { environment } from 'src/environments/environment';
 const seedrandom = require('seedrandom');
 
 @Component({
@@ -19,6 +20,11 @@ export class UserAvatarComponent implements OnInit {
     if (user !== undefined && user !== null) {
       this._user = user;
       this.generateBackgroudColor();
+      if (user.avatar !== null) {
+        if (!user.avatar.image.startsWith("http")) {
+          user.avatar.image = environment.fileServerAddress + user.avatar.image;
+        }
+      }
     }
  }
   @Input() size: string = '30px';

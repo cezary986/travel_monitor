@@ -9,7 +9,7 @@ import { SidePanelService } from 'src/app/side-panel/side-panel.service';
 import { TravelListComponent } from 'src/app/travel/travel-list/travel-list.component';
 import { SideDrawerService } from 'src/app/side-drawer/service/side-drawer.service';
 import { NgRedux, select } from '@angular-redux/store';
-import { IAppState } from 'src/app/store';
+import { IAppState, USER_LOGOUT } from 'src/app/store';
 import { SET_USER } from 'src/app/common/store/user/actions';
 
 @Component({
@@ -33,7 +33,7 @@ export class NavbarComponent implements AfterViewInit {
     private appLoadingService: AppLoadingService,
     private sideDrawerService: SideDrawerService,
     private redux: NgRedux<IAppState>
-  ) { 
+  ) {
     this.appLoading = this.appLoadingService.listenToAppLoading();
   }
 
@@ -48,7 +48,9 @@ export class NavbarComponent implements AfterViewInit {
   }
 
   public onLogoutClick() {
-    this.authService.logout().subscribe((res) => {})
+    this.authService.logout().subscribe((res) => {
+      this.redux.dispatch({type: USER_LOGOUT, payload: null});
+    });
   }
 
   onMenuButtonClick() {

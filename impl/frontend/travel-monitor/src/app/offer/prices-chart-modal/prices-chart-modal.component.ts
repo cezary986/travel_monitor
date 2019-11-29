@@ -45,15 +45,8 @@ export class PricesChartModalComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.pricesService.getPrices(this.data.id).subscribe((prices: Price[]) => {
-      this.makeChart([
-        { timestamp: '2019-08-07T20:28:47', value: 264 },
-        { timestamp: '2019-08-06T20:28:47', value: 300 },
-        { timestamp: '2019-08-05T20:28:47', value: 320 },
-        { timestamp: '2019-08-04T20:28:47', value: 300 },
-        { timestamp: '2019-08-03T20:28:47', value: 289 },
-        { timestamp: '2019-08-02T20:28:47', value: 270 },
-      ]);
+    this.pricesService.getPrices(this.data.id).subscribe((prices: any) => {
+      this.makeChart(prices.results);
     });
   }
 

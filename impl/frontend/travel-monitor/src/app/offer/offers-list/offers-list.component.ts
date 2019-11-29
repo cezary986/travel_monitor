@@ -10,8 +10,8 @@ import { InfiniteScrollDataProvider } from 'src/app/pagination/infinite-scroll-d
 import { Observable } from 'rxjs';
 import { NgRedux, select } from '@angular-redux/store';
 import { IAppState } from 'src/app/store';
-import { SET_OFFERS_LIST, DELETE_OFFER } from '../store/actions';
-import { IOffersState } from '../store/store';
+import { SET_OFFERS_LIST, DELETE_OFFER, SET_OFFERS_TRAVEL } from '../../common/store/offers/actions';
+import { IOffersState } from '../../common/store/offers/store';
 import { TranslateService } from '@ngx-translate/core';
 import { ROUTES } from 'src/app/app-routing.module';
 
@@ -69,12 +69,6 @@ export class OffersListComponent implements OnInit, OnDestroy {
           this.router.navigate([ROUTES.travelsList.route]);
         }
       }
-    });
-  }
-
-  private fetchTravel() {
-    this.travelService.getTravel(this.travelId).subscribe((travel: Travel) => {
-      this.dataStore.setTravel(travel);
     });
   }
 

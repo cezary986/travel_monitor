@@ -1,0 +1,29 @@
+.list-avatar {
+  flex-shrink: unset !important;
+  width: unset !important;
+}
+
+.user-list-element {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.username {
+    margin-left: 16px;
+    transform: translateY(25%);
+}
+
+.right-align {
+    margin-left: auto;
+}
+
+.user-list {
+    max-height: 400px;
+}
+
+.no-results {
+  display: block;
+  opacity: 0.75;
+  text-align: center;
+}

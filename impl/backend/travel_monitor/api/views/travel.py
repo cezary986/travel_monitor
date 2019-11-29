@@ -160,6 +160,7 @@ class TravelUsersView(APIView):
         permission_name = "get_travel"
         user_with_permission = [ k for k, v in user_with_permission.items() if permission_name in v ]
         serializer = UserProfileSerializer(user_with_permission, many=True)
+        
         return JsonResponse(serializer.data, safe=False, status=200)   
       
     @login_required_view
@@ -186,12 +187,9 @@ class TravelUsersView(APIView):
         except ObjectDoesNotExist:
             serializer = MessageSerializer(Message('No user with given id exists'))
             return JsonResponse(serializer.data, status=404)
-        if user.has_perm('get_travel', travel):
-            remove_perm('get_travel', user, travel)
-        if user.has_perm('patch_travel', travel):
-            remove_perm('patch_travel', user, travel)
-        if user.has_perm('remove_travel', travel):
-            remove_perm('remove_travel', user, travel)
+        remove_perm('get_travel', user, travel)
+        remove_perm('patch_travel', user, travel)
+        remove_perm('remove_travel', user, travel)
         serializer = MessageSerializer(Message('Travel access removed'))
         return JsonResponse(serializer.data, status=200)
       
@@ -219,10 +217,8 @@ class TravelUsersView(APIView):
         except ObjectDoesNotExist:
             serializer = MessageSerializer(Message('No user with given id exists'))
             return JsonResponse(serializer.data, status=404)
-        if not user.has_perm('get_travel', travel):
-            assign_perm('get_travel', user, travel)
-        if not user.has_perm('patch_travel', travel):
-            assign_perm('patch_travel', user, travel)
+        assign_perm('get_travel', user, travel)
+        assign_perm('patch_travel', user, travel)
         serializer = MessageSerializer(Message('Travel access granted'))
         return JsonResponse(serializer.data, status=200)
         

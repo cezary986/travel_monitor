@@ -1,0 +1,37 @@
+<h1 mat-dialog-title>
+    {{ 'travels.share_travel_with_users' | translate}}
+</h1>
+<div 
+    mat-dialog-content
+    infiniteScroll
+    [infiniteScrollDistance]="2"
+    [infiniteScrollThrottle]="90"
+    [scrollWindow]="false"
+    (scrolled)="onListScrollBottom()">
+    <app-search-box 
+        [withSubmit]="true"
+        (searchButtonClick)="onSearchQueryChange($event)">
+    </app-search-box>
+    <mat-list *ngIf="users !== null"  class="user-list">
+        <mat-list-item *ngFor="let element of users">
+            <div class="user-list-element">
+                <app-user-avatar class="list-avatar" [size]="'40px'" matListAvatar [user]="element.user" size="30px"></app-user-avatar>
+                <h3 matLine class="username"> {{ element.user.username }} </h3>
+                <span *ngIf="element.user.id === currentUserId" class="primary right-align creator-badge">{{ 'travels.travel_creator' | translate }}</span>
+                <button class="list-btn right-align" *ngIf="!element.isAdded && element.user.id !== currentUserId" (click)="onUserAdd(element)" mat-stroked-button color="primary">
+                    <mat-icon>add</mat-icon>
+                    {{ 'travels.share_travel' | translate }}
+                </button>
+                <button class="list-btn right-align" *ngIf="element.isAdded && element.user.id !== currentUserId" (click)="onUserRemove(element)" mat-stroked-button color="primary">
+                    <mat-icon>clear</mat-icon>
+                    {{ 'travels.remove_travel' | translate }}
+                </button>
+            </div>
+            <mat-divider></mat-divider>
+        </mat-list-item>
+    </mat-list>
+    <span *ngIf="users.length === 0" class="mat-body no-results">{{ 'travels.no_results' | translate }}</span>
+</div>
+<div class="actions-container" mat-dialog-actions>
+    <button button mat-button (click)="dialogRef.close()" cdkFocusInitial>Ok</button>
+</div>

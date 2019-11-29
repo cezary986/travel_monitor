@@ -9,7 +9,7 @@ import { SocketConnection } from '../sockets/socket-connection';
 import { PaginatedResponse } from 'src/app/pagination/paginated-response';
 import { NgRedux } from '@angular-redux/store';
 import { IAppState } from 'src/app/store';
-import { ADD_OFFER, UPDATE_OFFER } from 'src/app/offer/store/actions';
+import { UPDATE_OFFER } from 'src/app/common/store/offers/actions';
 
 @Injectable({
   providedIn: 'root'

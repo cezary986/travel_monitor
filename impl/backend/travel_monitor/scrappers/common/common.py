@@ -53,7 +53,6 @@ class BaseScrapper:
         try:
             with closing(get(url, stream=True)) as resp:
                 if self.is_good_response(resp):
-                    print(resp.content)
                     return resp.content
                 else:
                     return None

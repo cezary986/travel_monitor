@@ -1,0 +1,15 @@
+
+.search-box-wrapper {
+    display: flex;
+    border-radius: 10000px;
+    background-color: #00000021;
+    overflow: hidden;
+
+    .search-box-input {
+        flex: auto;
+        background: transparent;
+        border: none !important;
+        outline: none !important;
+        padding-left: 16px;
+    }
+}
